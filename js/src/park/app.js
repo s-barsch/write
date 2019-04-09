@@ -1,7 +1,6 @@
-import React from "react";
+import * as React from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import * as date from "./date.js";
-//import "./index.css";
 import Top from "./top";
 import Text from "./text";
 import Texts from "./texts";

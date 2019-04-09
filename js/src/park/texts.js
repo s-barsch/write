@@ -1,6 +1,13 @@
-import React from "react";
+import * as React from "react";
 import Top from "./top";
 import Text from "./text";
+
+/*
+export interface Props {
+    delFn:
+    saveFn: 
+}
+*/
 
 export default class Texts extends React.Component {
     renderTexts(texts) {

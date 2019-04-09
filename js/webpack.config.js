@@ -1,21 +1,27 @@
-const webpack = require('webpack');
-const path = require('path');
+const webpack = require("webpack");
+const path = require("path");
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: "./src/index.tsx",
     mode:  "development",
     watch: true,
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: "bundle.js"
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js", ".jsx"]
     },
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: ["babel-loader"]
+                test: /\.(t|j)sx?$/,
+                use: { loader: 'awesome-typescript-loader' }
             }
         ]
-    }
+    },
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM",
+    },
+    devtool: "source-map"
 };
