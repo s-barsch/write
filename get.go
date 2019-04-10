@@ -1,20 +1,22 @@
 package main
 
 import (
-	"time"
+	"strings"
+	//"time"
 	"path/filepath"
 	"io/ioutil"
 )
 
 type Text struct {
+	Id   string		`json:"id"`
 	Path string		`json:"path"`
 	Body string		`json:"body"`
-	Mod  time.Time	`json:"mod"`
+	//Mod  time.Time	`json:"mod"`
 }
 
 type Texts []*Text
 
-var app = "/home/stef/go/src/writen-custom"
+var app = "/home/stef/go/src/write"
 var data = app + "/texts"
 
 func getTexts() (Texts, error) {
@@ -30,10 +32,19 @@ func getTexts() (Texts, error) {
 			return nil, err
 		}
 		texts = append(texts, &Text {
+			Id:   makeId(fi.Name()),
 			Path: path,
 			Body: string(b),
-			Mod:  fi.ModTime(),
+			//Mod:  fi.ModTime(),
 		})
 	}
 	return texts, nil
+}
+
+func makeId(name string) string {
+	i := strings.LastIndex(name, ".")
+	if i == -1 {
+		return name
+	}
+	return name[:i]
 }

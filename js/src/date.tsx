@@ -29,5 +29,6 @@ export function makeNumber(timestamp: string): number {
 }
 
 export function makePath(timestamp: string): string {
-  return "/local/text/" + makeMonth(timestamp) + "/" + makeFilename(timestamp);
+    return makeFilename(timestamp)
+  //return "/local/text/" + makeMonth(timestamp) + "/" + makeFilename(timestamp);
 }

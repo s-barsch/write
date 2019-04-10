@@ -11,6 +11,7 @@ func main() {
 	http.HandleFunc("/js/", serveJs)
 	http.HandleFunc("/api/", serveApi)
 	http.HandleFunc("/api/texts/", serveTexts)
+	http.HandleFunc("/api/text/", textApi)
 	http.ListenAndServe(":8231", nil)
 }
 
@@ -20,7 +21,6 @@ func serveJs(w http.ResponseWriter, r *http.Request) {
 
 func serveStatic(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./index.html")
-	fmt.Println("served index file");
 }
 
 func serveApi(w http.ResponseWriter, r *http.Request) {

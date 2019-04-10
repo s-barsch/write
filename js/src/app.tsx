@@ -27,6 +27,18 @@ export default class App extends React.Component<Props, State> {
         this.state = { Current: this.newText(), Locals: getLocals(), Texts: ts};
     }
 
+    componentDidMount() {
+        if (typeof window !== 'undefined') {
+            window.addEventListener("storage", () => { console.log("hello") });
+        }
+        if (this.state.Texts) {
+            return
+        }
+        fetch("/api/texts/")
+            .then(response => response.json())
+            .then(data => this.setState({ Texts: data }));
+    }
+
     newText() {
         const ts = date.timestamp();
         const path = date.makePath(ts);
@@ -40,17 +52,20 @@ export default class App extends React.Component<Props, State> {
     handleSave(id: string, body: string) {
         let locals = saveBody(this.state.Locals.slice(), id, body)
         this.setState({
-            Locals: locals
+            Locals: locals,
         });
-        localStorage.setItem(localStorageKey, JSON.stringify(locals));
+        saveLocals(locals);
     }
 
     handleSaveCurrent(id: string, body: string) {
-        const t: Text = { id: id, path: date.makePath(id), body: body }
+        const t: Text = { id: id, path: date.makePath(id), body: body };
+        const locals = [t].concat(this.state.Locals.slice());
         this.setState({
-            Locals:  this.state.Locals.slice().concat(t),
+            Locals: locals,
+            Texts:  [t].concat(this.state.Texts.slice()),
             Current: this.newText()
         });
+        saveLocals(locals);
     }
 
     handleDelete(t: Text) {
@@ -92,8 +107,11 @@ export default class App extends React.Component<Props, State> {
             <Route path="/texts/" exact={true} render={() => (
                 <div>
                     <Top />
+                    {/*
                     <br />
                     Text Listings here.
+                    */}
+                    <Texts texts={this.state.Texts} saveFn={this.handleSave} delFn={this.handleDelete} />
                 </div>
             )}/>
             <Route exact={true} path="/" render={() => (
@@ -147,3 +165,6 @@ function Top() {
     );
 }
 
+function onStorageChange(evt: StorageEvent) {
+    console.log(evt);
+}

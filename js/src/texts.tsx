@@ -14,6 +14,9 @@ interface State {
 
 export default class Texts extends React.Component<Props, State> {
     renderTexts(texts: Text[]) {
+        if (!texts) {
+            return
+        }
         let els = [];
         let i = 0;
         for (let t of texts) {
