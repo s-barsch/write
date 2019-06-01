@@ -28,9 +28,6 @@ export default class App extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        if (typeof window !== 'undefined') {
-            window.addEventListener("storage", () => { console.log("hello") });
-        }
         if (this.state.Texts) {
             return
         }
