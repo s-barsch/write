@@ -21,7 +21,7 @@ export default class App extends React.Component<Props, State> {
         this.handleSaveCurrent = this.handleSaveCurrent.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         // current: this.newText(),
-        console.log(getLocals());
+        //console.log(getLocals());
         let t: Text;
         let ts: Text[];
         this.state = { Current: this.newText(), Locals: getLocals(), Texts: ts};
@@ -47,6 +47,7 @@ export default class App extends React.Component<Props, State> {
     }
 
     handleSave(id: string, body: string) {
+        saveText(id, body);
         let locals = saveBody(this.state.Locals.slice(), id, body)
         this.setState({
             Locals: locals,
@@ -140,6 +141,14 @@ function getLocals(): Text[] {
         return [] as Text[];
     }
     return JSON.parse(locals);
+}
+
+function saveText(id: string, body: string) {
+    fetch("/api/text/" + id + ".txt", {
+        method: "PUT",
+        body: body
+    }).then( response => console.log(response))
+    .catch( error => console.log(error));
 }
 
 function saveBody(locals: Text[], id: string, body: string): Text[] {

@@ -19,7 +19,7 @@ func textApi(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), 500)
 			return
 		}
-		err = ioutil.WriteFile(data + path, body, 0755)
+		err = ioutil.WriteFile(data + path, body, 0644)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return

@@ -9,7 +9,7 @@ import (
 func main() {
 	http.HandleFunc("/", serveStatic)
 	http.HandleFunc("/js/", serveJs)
-	http.HandleFunc("/api/", serveApi)
+	//http.HandleFunc("/api/", serveApi)
 	http.HandleFunc("/api/texts/", serveTexts)
 	http.HandleFunc("/api/text/", textApi)
 	http.ListenAndServe(":8231", nil)
