@@ -46,7 +46,37 @@ export default class App extends React.Component<Props, State> {
         }
     }
 
-    handleSave(text: Text) {
+    saveToLocals(t: Text) {
+         return new Promise(function(resolve, reject) {
+             resolve();
+         });
+    }
+
+    removeFromLocals(t: Text) {
+         return new Promise(function(resolve, reject) {
+             resolve();
+         });
+    }
+
+    saveToRemote(t: Text) {
+        return new Promise(function(resolve, reject) {
+            fetch("/api/text/" + t.id + ".txt", {
+                method: "PUT",
+                body: t.body
+            }).then(
+                response => resolve(response)
+            )
+            .catch(
+                error => reject(error)
+            );
+        });
+    }
+
+    handleSave(t: Text) {
+        this.saveToLocals(t)
+        .then( () => this.saveToRemote(t) )
+        .then( response => this.removeFromLocals(t));
+   
         //saveText(id, body);
         /*
         let locals = saveBody(this.state.Locals.slice(), id, body)
@@ -57,10 +87,12 @@ export default class App extends React.Component<Props, State> {
         */
     }
 
-    handleSaveNew(id: string, body: string) {
-        if (body == "") {
+    //handleSaveNew(id: string, body: string) {
+    handleSaveNew(t: Text) {
+        if (t.body == "") {
             return
         }
+        /*
         const t: Text = { id: id, path: date.makePath(id), mod: new Date().getTime(), body: body };
         const locals = [t].concat(this.state.Locals.slice());
         this.setState({
@@ -69,6 +101,7 @@ export default class App extends React.Component<Props, State> {
             New: this.newText()
         });
         saveLocals(locals);
+        */
     }
 
     handleDelete(t: Text) {

@@ -5,7 +5,7 @@ import { makeNumber } from "./date";
 interface Props {
     texts: Text[];
     //saveFn(e: React.FormEvent<HTMLTextAreaElement>): void;
-    saveFn(id: string, body: string): void; 
+    saveFn(text: Text): void; 
     delFn(t: Text): void; 
 }
 

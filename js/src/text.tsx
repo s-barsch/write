@@ -49,7 +49,8 @@ export function TextView(props: TextProps) {
         }
         props.text.mod =  new Date().getTime();
         props.text.body = body;
-        props.saveFn(props.text)
+        console.log(props.text);
+        props.saveFn(props.text);
     }
     return (
         <div>
