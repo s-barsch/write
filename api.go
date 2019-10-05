@@ -10,7 +10,10 @@ func textApi(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "PUT":
 		err := writeFile(w, r)
-		http.Error(w, err.Error(), 500)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
 		return
 	default:
 		fmt.Fprint(w, "GET request")

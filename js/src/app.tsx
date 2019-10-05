@@ -8,7 +8,7 @@ interface Props {
 }
 
 interface State {
-    Current: Text;
+    New: Text;
     Locals:  Text[];
     Texts:   Text[];
 }
@@ -16,15 +16,13 @@ interface State {
 export default class App extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.refreshCurrent = this.refreshCurrent.bind(this);
+        this.refreshNew = this.refreshNew.bind(this);
         this.handleSave = this.handleSave.bind(this);
-        this.handleSaveCurrent = this.handleSaveCurrent.bind(this);
+        this.handleSaveNew = this.handleSaveNew.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        // current: this.newText(),
-        //console.log(getLocals());
         let t: Text;
         let ts: Text[];
-        this.state = { Current: this.newText(), Locals: getLocals(), Texts: ts};
+        this.state = { New: this.newText(), Locals: getLocals(), Texts: ts};
     }
 
     componentDidMount() {
@@ -39,29 +37,36 @@ export default class App extends React.Component<Props, State> {
     newText() {
         const ts = date.timestamp();
         const path = date.makePath(ts);
+        //let d = new Date
         return {
             id:   ts,
             path: path,
             body: "",
+            mod:  new Date().getTime()
         }
     }
 
-    handleSave(id: string, body: string) {
-        saveText(id, body);
+    handleSave(text: Text) {
+        //saveText(id, body);
+        /*
         let locals = saveBody(this.state.Locals.slice(), id, body)
         this.setState({
             Locals: locals,
         });
         saveLocals(locals);
+        */
     }
 
-    handleSaveCurrent(id: string, body: string) {
-        const t: Text = { id: id, path: date.makePath(id), body: body };
+    handleSaveNew(id: string, body: string) {
+        if (body == "") {
+            return
+        }
+        const t: Text = { id: id, path: date.makePath(id), mod: new Date().getTime(), body: body };
         const locals = [t].concat(this.state.Locals.slice());
         this.setState({
             Locals: locals,
-            Texts:  [t].concat(this.state.Texts.slice()),
-            Current: this.newText()
+            //[t].concat(this.state.Texts.slice()),
+            New: this.newText()
         });
         saveLocals(locals);
     }
@@ -80,9 +85,9 @@ export default class App extends React.Component<Props, State> {
         localStorage.setItem(localStorageKey, JSON.stringify(locals));
     }
 
-    refreshCurrent() {
+    refreshNew() {
         this.setState({
-            Current: this.newText()
+            New: this.newText()
         });
     }
 
@@ -115,7 +120,7 @@ export default class App extends React.Component<Props, State> {
             <Route exact={true} path="/" render={() => (
                 <div>
                     <Top />
-                    <TextView key={date.makeNumber(this.state.Current.id)} text={this.state.Current} saveFn={this.handleSaveCurrent} delFn={this.handleDelete} />
+                    <TextView key={date.makeNumber(this.state.New.id)} text={this.state.New} saveFn={this.handleSaveNew} delFn={this.handleDelete} />
                 </div>
             )}/>
             </Switch>
@@ -144,11 +149,14 @@ function getLocals(): Text[] {
 }
 
 function saveText(id: string, body: string) {
+
+    /*
     fetch("/api/text/" + id + ".txt", {
         method: "PUT",
         body: body
     }).then( response => console.log(response))
     .catch( error => console.log(error));
+    */
 }
 
 function saveBody(locals: Text[], id: string, body: string): Text[] {

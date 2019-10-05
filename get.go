@@ -2,15 +2,17 @@ package main
 
 import (
 	"strings"
-	//"time"
 	"path/filepath"
 	"io/ioutil"
+	"time"
+	"os"
 )
 
 type Text struct {
 	Id   string		`json:"id"`
 	Path string		`json:"path"`
 	Body string		`json:"body"`
+	Mod  int64		`json:"mod"`
 	//Mod  time.Time	`json:"mod"`
 }
 
@@ -35,10 +37,14 @@ func getTexts() (Texts, error) {
 			Id:   makeId(fi.Name()),
 			Path: path,
 			Body: string(b),
-			//Mod:  fi.ModTime(),
+			Mod:  modTime(fi),
 		})
 	}
 	return texts, nil
+}
+
+func modTime(fi os.FileInfo) int64 {
+	return fi.ModTime().UnixNano() / int64(time.Millisecond)
 }
 
 func makeId(name string) string {

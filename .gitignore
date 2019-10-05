@@ -1,4 +1,6 @@
 js/node_modules
 js/thoughts.txt
+js/dist/bundle.js
+js/dist/bundle.js.map
 texts
 write
