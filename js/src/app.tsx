@@ -46,36 +46,47 @@ export default class App extends React.Component<Props, State> {
         }
     }
 
-    saveToLocals(t: Text) {
-         return new Promise(function(resolve, reject) {
-             resolve();
-         });
+    saveToLocals(t: Text, callback: () => void) {
+        let locals = this.state.Locals.slice();
+        let replaced = false
+        locals.forEach(function(e, i) {
+            if (e.id == t.id) {
+                locals[i] = t
+                replaced = true
+            }
+        })
+        if (!replaced) {
+            locals = [t].concat(locals)
+        }
+        try {
+            saveLocals(locals);
+            console.log("saved locally");
+        } catch(e) {
+            alert(e);
+            return;
+        }
+        callback();
     }
 
     removeFromLocals(t: Text) {
-         return new Promise(function(resolve, reject) {
-             resolve();
-         });
-    }
-
-    saveToRemote(t: Text) {
-        return new Promise(function(resolve, reject) {
-            fetch("/api/text/" + t.id + ".txt", {
-                method: "PUT",
-                body: t.body
-            }).then(
-                response => resolve(response)
-            )
-            .catch(
-                error => reject(error)
-            );
+        this.state.Locals.filter(function(el) {
+            console.log("removed from locals");
+            return t.id != el.id
         });
     }
 
+    saveText(t: Text) {
+        let x = this;
+        this.saveToLocals(t, function() {
+            saveToRemote(t, function() {
+                x.removeFromLocals(t);
+            });
+        });
+    }
+
+
     handleSave(t: Text) {
-        this.saveToLocals(t)
-        .then( () => this.saveToRemote(t) )
-        .then( response => this.removeFromLocals(t));
+        this.saveText(t);
    
         //saveText(id, body);
         /*
@@ -172,6 +183,22 @@ function saveLocals(texts: Text[]) {
 function addText(locals: Text[], id: number, body: string): Text[] {
 }
 */
+function saveToRemote(t: Text, callback: () => void) {
+        fetch("/api/text/" + t.id + ".txt", {
+            method: "PUT",
+            body: t.body
+        }).then(
+            response => {
+                console.log(response);
+                callback();
+            }
+        )
+        .catch(
+            error => alert(error)
+        );
+    }
+
+
 
 function getLocals(): Text[] {
     let locals = localStorage.getItem(localStorageKey);
