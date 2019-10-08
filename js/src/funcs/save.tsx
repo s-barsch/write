@@ -1,3 +1,11 @@
+import State from "../components/state";
+import { Text } from "../components/text";
+
+export default function saveText(state: State, t: Text): State {
+    console.log(state);
+    return state
+}
+
 /*
 export default function saveToRemote(state: State, t: Text): State {
 }

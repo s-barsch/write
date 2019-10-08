@@ -4,6 +4,7 @@ import { Text, TextView } from "./text";
 import Texts from "./texts";
 import * as date from "../funcs/date";
 import newText from "./new";
+import saveText from "../funcs/save";
 
 interface Props {
 }
@@ -20,7 +21,6 @@ export default class App extends React.Component<Props, State> {
         this.handleSave = this.handleSave.bind(this);
         this.handleSaveNew = this.handleSaveNew.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        let t: Text;
         let ts: Text[];
         this.state = { New: newText(), Locals: ts, Texts: ts};
     }
@@ -44,6 +44,10 @@ export default class App extends React.Component<Props, State> {
     }
 
     handleSaveNew(t: Text) {
+        if (t.body == "") {
+            return
+        }
+        this.setState(saveText(this.state, t));
     }
 
 
@@ -66,10 +70,6 @@ export default class App extends React.Component<Props, State> {
             <Route path="/texts/" exact={true} render={() => (
                 <div>
                     <Top />
-                    {/*
-                    <br />
-                    Text Listings here.
-                    */}
                     <Texts texts={this.state.Texts} saveFn={this.handleSave} delFn={this.handleDelete} />
                 </div>
             )}/>
