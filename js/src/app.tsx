@@ -87,6 +87,15 @@ export default class App extends React.Component<Props, State> {
         callback();
     }
 
+    removeFromTexts(t: Text) {
+        const texts = this.state.Texts.filter(function(el) {
+            console.log("removed from texts");
+            return t.id != el.id
+        });
+        //saveLocals(locals);
+        this.setState({ Texts: texts });
+    }
+
     removeFromLocals(t: Text) {
         const locals = this.state.Locals.filter(function(el) {
             console.log("removed from locals");
@@ -124,6 +133,7 @@ export default class App extends React.Component<Props, State> {
             return
         }
         this.saveText(t)
+        this.setState({ New: this.newText() });
         /*
         const t: Text = { id: id, path: date.makePath(id), mod: new Date().getTime(), body: body };
         const locals = [t].concat(this.state.Locals.slice());
@@ -142,7 +152,7 @@ export default class App extends React.Component<Props, State> {
             return;
         }
         */
-        deleteRemote(t, () => {})
+        deleteRemote(t, () => {this.removeFromTexts(t)})
         //this.removeFromLocals(t)
         /*
         let locals = this.state.Locals.slice()
@@ -213,7 +223,7 @@ function deleteRemote(t: Text, callback: () => void) {
         method: "DELETE"
     }).then(
         response => {
-            console.log(response);
+            console.log("deleted remotely");
             callback();
         }
     )
