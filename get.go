@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"time"
 	"os"
+	"sort"
 )
 
 type Text struct {
@@ -40,6 +41,7 @@ func getTexts() (Texts, error) {
 			Mod:  modTime(fi),
 		})
 	}
+	sort.Sort(Desc(texts))
 	return texts, nil
 }
 
@@ -53,4 +55,18 @@ func makeId(name string) string {
 		return name
 	}
 	return name[:i]
+}
+
+type Desc Texts
+
+func (a Desc) Len() int {
+	return len(a)
+}
+
+func (a Desc) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a Desc) Less(i, j int) bool {
+	return a[i].Id > a[j].Id
 }
