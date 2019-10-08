@@ -30,7 +30,10 @@ export default class App extends React.Component<Props, State> {
             return
         }
         fetch("/api/texts/")
-            .then(response => response.json())
+            .then(response => {
+                console.log("refreshed texts");
+                return response.json();
+            })
             .then(data => this.setState({ Texts: data }));
     }
 
@@ -46,6 +49,22 @@ export default class App extends React.Component<Props, State> {
         }
     }
 
+    saveToRemote(t: Text, callback: () => void) {
+        fetch("/api/text/" + t.id + ".txt", {
+            method: "PUT",
+            body: t.body
+        }).then(
+            response => {
+                const texts = [t].concat(this.state.Texts.slice());
+                this.setState({ Texts: texts });
+                console.log(response);
+                callback();
+            }
+        )
+            .catch(
+                error => alert(error)
+            );
+    }
     saveToLocals(t: Text, callback: () => void) {
         let locals = this.state.Locals.slice();
         let replaced = false
@@ -69,16 +88,17 @@ export default class App extends React.Component<Props, State> {
     }
 
     removeFromLocals(t: Text) {
-        this.state.Locals.filter(function(el) {
+        const locals = this.state.Locals.filter(function(el) {
             console.log("removed from locals");
             return t.id != el.id
         });
+        saveLocals(locals);
     }
 
     saveText(t: Text) {
         let x = this;
         this.saveToLocals(t, function() {
-            saveToRemote(t, function() {
+            x.saveToRemote(t, function() {
                 x.removeFromLocals(t);
             });
         });
@@ -103,6 +123,7 @@ export default class App extends React.Component<Props, State> {
         if (t.body == "") {
             return
         }
+        this.saveText(t)
         /*
         const t: Text = { id: id, path: date.makePath(id), mod: new Date().getTime(), body: body };
         const locals = [t].concat(this.state.Locals.slice());
@@ -121,12 +142,16 @@ export default class App extends React.Component<Props, State> {
             return;
         }
         */
+        deleteRemote(t, () => {})
+        //this.removeFromLocals(t)
+        /*
         let locals = this.state.Locals.slice()
         locals = locals.filter(file => file.path !== t.path);
         this.setState({
             Locals: locals,
         });
         localStorage.setItem(localStorageKey, JSON.stringify(locals));
+        */
     }
 
     refreshNew() {
@@ -183,20 +208,20 @@ function saveLocals(texts: Text[]) {
 function addText(locals: Text[], id: number, body: string): Text[] {
 }
 */
-function saveToRemote(t: Text, callback: () => void) {
-        fetch("/api/text/" + t.id + ".txt", {
-            method: "PUT",
-            body: t.body
-        }).then(
-            response => {
-                console.log(response);
-                callback();
-            }
-        )
+function deleteRemote(t: Text, callback: () => void) {
+    fetch("/api/text/" + t.id + ".txt", {
+        method: "DELETE"
+    }).then(
+        response => {
+            console.log(response);
+            callback();
+        }
+    )
         .catch(
             error => alert(error)
         );
-    }
+}
+
 
 
 
@@ -208,7 +233,7 @@ function getLocals(): Text[] {
     return JSON.parse(locals);
 }
 
-function saveText(id: string, body: string) {
+//function saveText(id: string, body: string) {
 
     /*
     fetch("/api/text/" + id + ".txt", {
@@ -217,7 +242,7 @@ function saveText(id: string, body: string) {
     }).then( response => console.log(response))
     .catch( error => console.log(error));
     */
-}
+//}
 
 function saveBody(locals: Text[], id: string, body: string): Text[] {
     for (let i = 0; i < locals.length; i++) {
