@@ -2,7 +2,8 @@ import React from "react";
 import { NavLink, BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import { Text, TextView } from "./text";
 import Texts from "./texts";
-import * as date from "./date";
+import * as date from "../funcs/date";
+import newText from "./new";
 
 interface Props {
 }
@@ -21,7 +22,7 @@ export default class App extends React.Component<Props, State> {
         this.handleDelete = this.handleDelete.bind(this);
         let t: Text;
         let ts: Text[];
-        this.state = { New: t, Locals: ts, Texts: ts};
+        this.state = { New: newText(), Locals: ts, Texts: ts};
     }
 
     componentDidMount() {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TextView } from "./text";
-import { makeNumber } from "./date";
+import { makeNumber } from "../funcs/date";
 
 interface Props {
     texts: Text[];
