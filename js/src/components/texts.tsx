@@ -13,26 +13,16 @@ interface State {
 }
 
 export default class Texts extends React.Component<Props, State> {
-    renderTexts(texts: Text[]) {
-        if (!texts) {
-            return
-        }
-        let els = [];
-        let i = 0;
-        for (let t of texts) {
-            els.push(<TextView key={makeNumber(t.id)} text={t}
-                delFn={this.props.delFn}
-                saveFn={this.props.saveFn}/>);
-            i++;
-        }
-        return els;
-    }
-
     render() {
+        if (!this.props.texts) {
+            return null
+        }
         return(
-            <div>
-            {this.renderTexts(this.props.texts)}
-            </div>
+            this.props.texts.map(text => (
+                <TextView key={makeNumber(text.id)} text={text}
+                delFn={this.props.delFn}
+                saveFn={this.props.delFn} />
+            ))
         );
     }
 }

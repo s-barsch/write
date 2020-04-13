@@ -24,18 +24,28 @@ interface TextState {
 
 function displayDate(date: number): string {
     let d = new Date(date);
-    return d.getFullYear() +
-           "-" +
-           (d.getMonth() + 1) +
-           "-" +
-           d.getDate() +
-           "  " +
-           d.getHours() +
-           ":" +
-           d.getMinutes() +
-           ":" +
+    return d.getFullYear() + "-" +
+           (d.getMonth() + 1) + "-" +
+           d.getDate() + "  " +
+           d.getHours() + ":" +
+           d.getMinutes() + ":" +
            d.getSeconds();
 }
+
+const Mod: React.FC<number> = (date: number): React.ReactElement => {
+  return <div>Hello, I am a function component</div>
+}
+
+/*
+function Mod(date: number): ReactElement {
+    return (
+        <div>
+            {date}
+        </div>
+        mod: {displayDate(props.text.mod)}
+    )
+}
+*/
 
 //export class TextView extends React.Component<TextProps, TextState> {
 export function TextView(props: TextProps) {
@@ -54,15 +64,16 @@ export function TextView(props: TextProps) {
     }
     return (
         <div>
-        <Link to={props.text.path}>{props.text.id}</Link>
-        &nbsp;mod: {displayDate(props.text.mod)}
-        <br />
-        <TextareaAutosize className="textarea"
-        defaultValue={props.text.body}
-        rows={3}
-        onBlur={submit} 
-        />
-        <span className="del" onClick={() => props.delFn(props.text)}>DEL</span>
+            <Link to={props.text.path}>{props.text.id}</Link>
+            {/*
+            <Mod />
+            */}
+            <TextareaAutosize className="textarea"
+            defaultValue={props.text.body}
+            rows={3}
+            onBlur={submit} 
+            />
+            <span className="del" onClick={() => props.delFn(props.text)}>DEL</span>
         </div>
     );
 /*
@@ -83,3 +94,5 @@ export function TextView(props: TextProps) {
 
 */
 }
+
+
