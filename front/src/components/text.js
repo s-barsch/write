@@ -1,15 +1,33 @@
-import React from "react"; 
+import React from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 
-const Text = ({ text, saveFn }) => {
+
+export const Texts = ({ texts, saveFn }) => {
+  return (
+    texts.map((text, i) => (
+      <Text key={i} text={text} saveFn={saveFn} />
+    ))
+  )
+}
+
+export const Text = ({ text, saveFn, delFn }) => {
   const submit = e => {
     if (e.target.value === text.body) {
       return;
     }
-    saveFn(e.target.value)
+    text.body = e.target.value;
+    saveFn(text);
   }
   return (
-    <textarea defaultValue={text.body} onBlur={submit}></textarea>
+    <article className="text">
+      <TextareaAutosize defaultValue={text.body} onBlur={submit} />
+      <Del delFn={delFn} />
+    </article>
   )
 }
 
-export default Text
+const Del = ({ delFn }) => {
+  return <span className="del">✕</span>
+}
+
+

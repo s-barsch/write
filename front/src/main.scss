@@ -1,0 +1,27 @@
+textarea,
+body {
+    font-size:2rem;
+}
+
+.text {
+    margin:.5rem 0;
+    background:#ccc;
+    line-height:.5;
+}
+
+.text textarea {
+    background:transparent;
+    overflow:hidden;
+    border:none;
+    outline:none;
+    resize:none;
+    width:100%;
+    max-width:40rem;
+}
+
+.del {
+    float:right;
+    line-height:1;
+    padding:.25rem;
+    font-size:1rem;
+}

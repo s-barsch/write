@@ -1,12 +1,13 @@
 import React from "react";
-import Text from "./components/text"; 
+import { Texts, Text} from "./components/text"; 
 import newText from "./components/new";
+import "./main.scss";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.save = this.save.bind(this);
-    this.state = { locals: [] };
+    this.state = { locals: getLocals() };
   }
   save(t) {
     this.setState({
@@ -14,10 +15,15 @@ class App extends React.Component {
     });
     console.log(this.state.locals);
   }
+  del(t) {
+  }
 
   render () {
     return (
-        <Text saveFn={this.save} text={newText()} />
+      <div>
+        <Text text={newText()} saveFn={this.save} />
+        <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
+      </div>
     );
   }
 }
@@ -37,3 +43,10 @@ const saveLocals = texts => {
 }
 
 
+const getLocals = () => {
+    let locals = localStorage.getItem(localStorageKey);
+    if (locals == null) {
+        return [];
+    }
+    return JSON.parse(locals);
+}
