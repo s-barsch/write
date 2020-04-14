@@ -43,7 +43,7 @@ export const Text = ({ text, saveFn, delFn }) => {
         <Del text={text} delFn={delFn} />
       ):(null)}
       <Info text={text} />
-      <TextareaAutosize defaultValue={text.body} onBlur={submit} />
+      <TextareaAutosize minRows={1} defaultValue={text.body} onBlur={submit} />
     </article>
   )
 }

@@ -45,7 +45,7 @@ class App extends React.Component {
             <Top />
           </div>
         )} />
-        <Route path="/local/" exact={true} render={() => (
+        <Route path="/queue/" exact={true} render={() => (
           <div>
             <Top />
           </div>

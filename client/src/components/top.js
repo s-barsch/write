@@ -8,7 +8,7 @@ export default class Top extends React.Component {
             <nav id="nav">
               <NavLink exact={true} to="/">Write</NavLink>
               <NavLink to="/texts/">Texts</NavLink>
-              <NavLink to="/local/">Local</NavLink>
+              <NavLink to="/queue/">Queue</NavLink>
             </nav>
           </div>
         );
