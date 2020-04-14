@@ -6,7 +6,6 @@ body {
 .text {
     margin:.5rem 0;
     background:#ccc;
-    line-height:.5;
 }
 
 .text textarea {
@@ -20,8 +19,14 @@ body {
 }
 
 .del {
+    color:red;
+    cursor:pointer;
     float:right;
     line-height:1;
     padding:.25rem;
     font-size:1rem;
+}
+
+.id {
+    margin-right:.5rem;
 }

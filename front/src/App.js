@@ -1,27 +1,42 @@
 import React from "react";
 import { Texts, Text} from "./components/text"; 
+import { appendLocal, deleteLocal, saveLocal, getLocals } from "./components/storage.js";
 import newText from "./components/new";
+import { makeNumber } from "./components/date";
 import "./main.scss";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.save = this.save.bind(this);
-    this.state = { locals: getLocals() };
+    this.saveNew = this.saveNew.bind(this);
+    this.del = this.del.bind(this);
+    this.state = {
+      newText: newText(),
+      locals: getLocals()
+    };
+  };
+
+  async save(t) {
+    const locals = await saveLocal(this.state.locals.slice(), t);
+    this.setState({ locals: locals });
   }
-  save(t) {
+  async saveNew(t) {
+    const locals = await appendLocal(this.state.locals.slice(), t);
     this.setState({
-      locals: appendLocal(this.state.locals.slice(), t)
+      newText: newText(),
+      locals: locals
     });
-    console.log(this.state.locals);
   }
-  del(t) {
+  async del(t) {
+    const locals = await deleteLocal(this.state.locals.slice(), t);
+    this.setState({ locals: locals });
   }
 
   render () {
     return (
       <div>
-        <Text text={newText()} saveFn={this.save} />
+        <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
         <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
       </div>
     );
@@ -29,24 +44,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-const appendLocal = (texts, t) => {
-  texts.push(t);
-  saveLocals(texts);
-  return texts
-}
-
-const localStorageKey = "texts";
-
-const saveLocals = texts => {
-    localStorage.setItem(localStorageKey, JSON.stringify(texts));
-}
-
-
-const getLocals = () => {
-    let locals = localStorage.getItem(localStorageKey);
-    if (locals == null) {
-        return [];
-    }
-    return JSON.parse(locals);
-}

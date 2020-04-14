@@ -13,6 +13,11 @@ export const timestamp = () => {
     fill(d.getSeconds().toString());
 }
 
+export const makeNumber = timestamp => {
+    return parseInt(timestamp.substr(0, 6) + timestamp.substr(7), 10)
+}
+
+
 /*
 export function makeMonth(timestamp: string): string {
     return timestamp.substr(0, 2) + "-" + timestamp.substr(2, 4)
