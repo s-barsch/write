@@ -17,7 +17,7 @@ export const saveLocal = (texts, t) => {
 }
 
 export const appendLocal = (texts, t) => {
-  texts.push(t);
+  texts = [t].concat(texts);
   saveLocals(texts);
   return texts
 }

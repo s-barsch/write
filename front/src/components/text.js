@@ -33,6 +33,7 @@ export const Text = ({ text, saveFn, delFn }) => {
     if (e.target.value === text.body) {
       return;
     }
+    text.mod  = Date.now();
     text.body = e.target.value;
     saveFn(text);
   }

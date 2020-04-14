@@ -13,6 +13,7 @@ class App extends React.Component {
     this.del = this.del.bind(this);
     this.state = {
       newText: newText(),
+      texts: [],
       locals: getLocals()
     };
   };
