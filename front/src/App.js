@@ -1,9 +1,11 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import { Texts, Text} from "./components/text"; 
 import { appendLocal, deleteLocal, saveLocal, getLocals } from "./components/storage.js";
 import newText from "./components/new";
 import { makeNumber } from "./components/date";
 import "./main.scss";
+import Top from "./components/top";
 
 class App extends React.Component {
   constructor(props) {
@@ -36,10 +38,27 @@ class App extends React.Component {
 
   render () {
     return (
-      <div>
-        <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
-        <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
-      </div>
+      <Router>
+      <Switch>
+        <Route path="/texts/" exact={true} render={() => (
+          <div>
+            <Top />
+          </div>
+        )} />
+        <Route path="/local/" exact={true} render={() => (
+          <div>
+            <Top />
+          </div>
+        )} />
+        <Route path="/" exact={true} render={() => (
+          <div>
+            <Top />
+            <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
+            <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
+          </div>
+        )} />
+      </Switch>
+      </Router>
     );
   }
 }
