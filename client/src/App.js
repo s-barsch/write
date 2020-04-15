@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import { Texts, Text} from "./components/text"; 
-import { appendLocal, deleteLocal, saveLocal, getLocals } from "./components/storage.js";
+import * as st from "./components/storage.js";
 import newText from "./components/new";
 import { makeNumber } from "./components/date";
 import "./main.scss";
@@ -12,11 +12,12 @@ class App extends React.Component {
     super(props);
     this.save = this.save.bind(this);
     this.saveNew = this.saveNew.bind(this);
-    this.del = this.del.bind(this);
+    this.delQueue = this.delQueue.bind(this);
+    this.delTexts = this.delTexts.bind(this);
     this.state = {
       newText: newText(),
       texts: [],
-      locals: getLocals()
+      queue: st.readQueue()
     };
   };
 
@@ -29,22 +30,40 @@ class App extends React.Component {
     const texts = await response.json();
     console.log(texts);
     this.setState({ texts: texts });
+    console.log(this.state);
   };
 
   async save(t) {
-    const locals = await saveLocal(this.state.locals.slice(), t);
-    this.setState({ locals: locals });
-  }
-  async saveNew(t) {
-    const locals = await appendLocal(this.state.locals.slice(), t);
+    const texts = st.saveEntry(this.state.texts.slice(), t);
     this.setState({
       newText: newText(),
-      locals: locals
+      texts: texts,
+    });
+    let queue = st.saveEntry(this.state.queue.slice(), t)
+    st.writeQueue(queue);
+    this.setState({
+      queue: queue,
+    });
+    queue = await st.saveRemote(queue, t);
+    this.setState({
+      queue: queue,
     });
   }
-  async del(t) {
-    const locals = await deleteLocal(this.state.locals.slice(), t);
-    this.setState({ locals: locals });
+
+  async saveNew(t) {
+    this.setState({ newText: newText() });
+    this.save(t);
+  }
+
+  async delTexts(t) {
+    const texts = await st.deleteEntry(this.state.texts.slice(), t);
+    this.setState({ texts: texts });
+  }
+
+  async delQueue(t) {
+    const queue = st.deleteEntry(this.state.queue.slice(), t);
+    st.writeQueue(queue);
+    this.setState({ queue: queue });
   }
 
   render () {
@@ -55,13 +74,13 @@ class App extends React.Component {
           <div>
             <Top />
             <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
-            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.del} />
+            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.delTexts} />
           </div>
         )} />
         <Route path="/texts/" exact={true} render={() => (
           <div>
             <Top />
-            <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
+            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.delTexts} />
           </div>
         )} />
         <Route path="/texts/:file" exact={true} render={routeProps => (
@@ -73,6 +92,7 @@ class App extends React.Component {
         <Route path="/queue/" exact={true} render={() => (
           <div>
             <Top />
+            <Texts texts={this.state.queue} saveFn={this.save} delFn={this.delQueue} />
           </div>
         )} />
       </Switch>
@@ -80,5 +100,6 @@ class App extends React.Component {
     );
   }
 }
+
 
 export default App;

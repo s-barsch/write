@@ -16,9 +16,7 @@ const Info = ({ text }) => {
   return (
     <header>
       <Link className="id" to={"/texts/" + text.id + ".txt"}>{text.id}</Link>
-      {/*
       <Mod mod={text.mod} />
-      */}
     </header>
   )
 }

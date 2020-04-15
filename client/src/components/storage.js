@@ -1,34 +1,54 @@
-const localStorageKey = "texts";
+const textsKey = "write_texts";
+const queueKey = "write_queue";
 
-export const deleteLocal = (texts, t) => {
-  texts = texts.filter(el => { return el.id !== t.id });
-  saveLocals(texts);
-  return texts;
+export const deleteRemote = (queue, t) => {
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
+      method: "DELETE",
+    })
+    queue = deleteEntry(queue, t);
+    writeQueue(queue);
+    resolve(queue);
+  })
 }
 
-export const saveLocal = (texts, t) => {
-  texts.forEach(el => {
+export const saveRemote = (queue, t) => {
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
+      method: "PUT",
+      body: t.body
+    })
+    queue = deleteEntry(queue, t);
+    writeQueue(queue);
+    resolve(queue);
+  })
+}
+
+export const saveEntry = (list, t) => {
+  let is = false;
+  list.forEach(el => {
     if (el.id === t.id) {
       el = t
+      is = true;
     }
   });
-  saveLocals(texts);
-  return texts;
+  if (!is) {
+    list= [t].concat(list);
+  }
+  return list;
 }
 
-export const appendLocal = (texts, t) => {
-  texts = [t].concat(texts);
-  saveLocals(texts);
-  return texts
+export const deleteEntry = (list, t) => {
+  return list.filter(el => { return el.id !== t.id });
 }
 
-export const saveLocals = texts => {
-  localStorage.setItem(localStorageKey, JSON.stringify(texts));
+export const writeQueue = queue => {
+  localStorage.setItem(queueKey, JSON.stringify(queue));
 }
 
 
-export const getLocals = () => {
-  const locals = localStorage.getItem(localStorageKey);
+export const readQueue = () => {
+  const locals = localStorage.getItem(queueKey);
   if (locals == null) {
     return [];
   }
