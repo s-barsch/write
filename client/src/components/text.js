@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeNumber } from "./date";
 
@@ -14,14 +15,12 @@ export const Texts = ({ texts, saveFn, delFn }) => {
 const Info = ({ text }) => {
   return (
     <header>
-      <Name id={text.id} />
+      <Link className="id" to={"/texts/" + text.id + ".txt"}>{text.id}</Link>
+      {/*
       <Mod mod={text.mod} />
+      */}
     </header>
   )
-}
-
-const Name = ({ id }) => {
-  return <span className="id">{id}</span>
 }
 
 const Mod = ({ mod }) => {

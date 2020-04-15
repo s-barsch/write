@@ -20,6 +20,17 @@ class App extends React.Component {
     };
   };
 
+  async componentDidMount() {
+    if (this.state.texts.length !== 0) {
+      console.log("no fetch");
+      return
+    }
+    const response = await fetch("http://localhost:8231/api/texts/");
+    const texts = await response.json();
+    console.log(texts);
+    this.setState({ texts: texts });
+  };
+
   async save(t) {
     const locals = await saveLocal(this.state.locals.slice(), t);
     this.setState({ locals: locals });
@@ -40,21 +51,28 @@ class App extends React.Component {
     return (
       <Router>
       <Switch>
+        <Route path="/" exact={true} render={() => (
+          <div>
+            <Top />
+            <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
+            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.del} />
+          </div>
+        )} />
         <Route path="/texts/" exact={true} render={() => (
           <div>
             <Top />
+            <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
+          </div>
+        )} />
+        <Route path="/texts/:file" exact={true} render={routeProps => (
+          <div>
+            <Top />
+            File view
           </div>
         )} />
         <Route path="/queue/" exact={true} render={() => (
           <div>
             <Top />
-          </div>
-        )} />
-        <Route path="/" exact={true} render={() => (
-          <div>
-            <Top />
-            <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
-            <Texts texts={this.state.locals} saveFn={this.save} delFn={this.del} />
           </div>
         )} />
       </Switch>
