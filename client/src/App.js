@@ -8,20 +8,14 @@ import "./main.scss";
 import Top from "./components/top";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.save = this.save.bind(this);
-    this.saveNew = this.saveNew.bind(this);
-    this.delQueue = this.delQueue.bind(this);
-    this.delTexts = this.delTexts.bind(this);
-    this.state = {
-      newText: newText(),
-      texts: [],
-      queue: st.readQueue()
-    };
+  state = {
+    newText: newText(),
+    texts: [],
+    writes: st.readWrites(),
+    deletes: st.readDeletes()
   };
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     if (this.state.texts.length !== 0) {
       console.log("no fetch");
       return
@@ -33,37 +27,55 @@ class App extends React.Component {
     console.log(this.state);
   };
 
-  async save(t) {
+  save = async t => {
     const texts = st.saveEntry(this.state.texts.slice(), t);
     this.setState({
       newText: newText(),
       texts: texts,
     });
-    let queue = st.saveEntry(this.state.queue.slice(), t)
-    st.writeQueue(queue);
+
+    let writes = st.saveEntry(this.state.writes.slice(), t)
+    st.saveWrites(writes);
     this.setState({
-      queue: queue,
+      writes: writes,
     });
-    queue = await st.saveRemote(queue, t);
+
+    writes = await st.saveRemote(writes, t);
     this.setState({
-      queue: queue,
+      writes: writes,
     });
   }
 
-  async saveNew(t) {
+  saveNew = t => {
     this.setState({ newText: newText() });
     this.save(t);
   }
 
-  async delTexts(t) {
-    const texts = await st.deleteEntry(this.state.texts.slice(), t);
+  delText = async t => {
+    const texts = st.deleteEntry(this.state.texts.slice(), t);
     this.setState({ texts: texts });
+
+    if (st.hasEntry(this.state.writes, t)) {
+      this.delWrite(t);
+      return;
+    }
+
+    let deletes = st.saveEntry(this.state.deletes.slice(), t)
+    st.saveDeletes(deletes);
+    this.setState({
+      deletes: deletes,
+    });
+
+    deletes = await st.deleteRemote(deletes, t);
+    this.setState({
+      deletes: deletes,
+    });
   }
 
-  async delQueue(t) {
-    const queue = st.deleteEntry(this.state.queue.slice(), t);
-    st.writeQueue(queue);
-    this.setState({ queue: queue });
+  delWrite = text => {
+    const writes = st.deleteEntry(this.state.writes.slice(), text);
+    st.saveWrites(writes);
+    this.setState({ writes: writes });
   }
 
   render () {
@@ -74,13 +86,13 @@ class App extends React.Component {
           <div>
             <Top />
             <Text key={makeNumber(this.state.newText.id)} text={this.state.newText} saveFn={this.saveNew} />
-            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.delTexts} />
+            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.delText} />
           </div>
         )} />
         <Route path="/texts/" exact={true} render={() => (
           <div>
             <Top />
-            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.delTexts} />
+            <Texts texts={this.state.texts} saveFn={this.save} delFn={this.delText} />
           </div>
         )} />
         <Route path="/texts/:file" exact={true} render={routeProps => (
@@ -89,10 +101,17 @@ class App extends React.Component {
             File view
           </div>
         )} />
-        <Route path="/queue/" exact={true} render={() => (
+        <Route path="/queues/" exact={true} render={() => (
           <div>
             <Top />
-            <Texts texts={this.state.queue} saveFn={this.save} delFn={this.delQueue} />
+            <div>
+              {this.state.delet > 0 ? (<h2>Delete</h2>) : (null) }
+              <Texts texts={this.state.deletes} saveFn={this.save} delFn={this.delDelete} />
+            </div>
+            <div>
+              {this.state.delet > 0 ? (<h2>Write</h2>) : (null) }
+              <Texts texts={this.state.writes} saveFn={this.save} delFn={this.delWrite} />
+            </div>
           </div>
         )} />
       </Switch>
