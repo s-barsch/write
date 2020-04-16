@@ -17,33 +17,73 @@ class App extends React.Component {
   };
 
   componentDidMount = async () => {
-    if (!this.state.offline) {
+    if (!this.state.offline && this.queuesEmpty()) {
       const response = await fetch("http://localhost:8231/api/texts/");
       const texts = await response.json();
       this.setState({ texts: texts });
     }
   };
 
-  save = async t => {
-    const texts = st.saveEntry(this.state.texts.slice(), t);
-    st.saveTexts(texts);
-    this.setState({
-      newText: newText(),
-      texts: texts,
-    });
+  queuesEmpty = () => {
+    if (this.state.writes.length === 0 && this.state.deletes.length === 0) {
+      return true
+    }
+    return false
+  }
 
-    let writes = st.saveEntry(this.state.writes.slice(), t)
-    st.saveWrites(writes);
-    this.setState({
-      writes: writes,
-    });
+  emptyQueues = async () => {
+    let writes = this.state.writes.slice();
+    for (const text of writes) {
+      writes = await st.saveRemote(writes, text);
+      this.setWrites(writes);
+    }
+
+    let deletes = this.state.deletes.slice();
+    for (const text of deletes) {
+      deletes = await st.deleteRemote(deletes, text);
+      this.setDeletes(deletes);
+    }
+  }
+
+  save = async t => {
+    this.putTexts(t)
+
+    let writes = this.putWrites(t);
 
     if (!this.state.offline) {
       writes = await st.saveRemote(writes, t);
-      this.setState({
-        writes: writes,
-      });
+      this.setWrites(writes);
     }
+  }
+
+  putTexts = text => {
+    const texts = st.putEntry(this.state.texts.slice(), text);
+    this.setTexts(texts);
+    return texts
+  }
+
+  putDeletes = text => {
+  }
+
+  putWrites = text => {
+    const writes = st.putEntry(this.state.writes.slice(), text)
+    this.setWrites(writes);
+    return writes
+  }
+
+  setTexts = texts => {
+    this.setState({ texts: texts, });
+    st.saveTexts(texts);
+  }
+
+  setWrites = writes => {
+    this.setState({ writes: writes, });
+    st.saveWrites(writes);
+  }
+
+  setDeletes = deletes => {
+    this.setState({ deletes: deletes, });
+    st.saveDeletes(deletes);
   }
 
   saveNew = t => {
@@ -61,24 +101,18 @@ class App extends React.Component {
       return;
     }
 
-    let deletes = st.saveEntry(this.state.deletes.slice(), t)
-    st.saveDeletes(deletes);
-    this.setState({
-      deletes: deletes,
-    });
+    let deletes = st.putEntry(this.state.deletes.slice(), t)
+    this.setDeletes(deletes);
 
     if (!this.state.offline) {
       deletes = await st.deleteRemote(deletes, t);
-      this.setState({
-        deletes: deletes,
-      });
+      this.saveDeletes(deletes);
     }
   }
 
   delWrite = text => {
     const writes = st.deleteEntry(this.state.writes.slice(), text);
-    st.saveWrites(writes);
-    this.setState({ writes: writes });
+    this.setWrites(writes);
   }
 
   delDelete = text => {
@@ -91,6 +125,7 @@ class App extends React.Component {
     if (this.state.offline) {
       this.setState({ offline: false });
       st.saveOffline("false");
+      this.emptyQueues();
       return
     }
     this.setState({ offline: true });
@@ -147,7 +182,7 @@ class App extends React.Component {
         )} />
         <Route path="/texts/:file" exact={true} render={routeProps => (
           <div>
-            <Top />
+            {this.navComp()}
             File view
           </div>
         )} />

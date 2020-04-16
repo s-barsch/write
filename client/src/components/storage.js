@@ -3,26 +3,22 @@ const writesKey = "write_writes";
 const deletesKey = "write_deletes";
 const offlineKey = "write_isOffline";
 
-export const deleteRemote = (writes, t) => {
+export const deleteRemote = (deletes, t) => {
   return new Promise(async (resolve, reject) => {
-    const response = await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
+    await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
       method: "DELETE",
     })
-    writes = deleteEntry(writes, t);
-    saveWrites(writes);
-    resolve(writes);
+    resolve(deleteEntry(deletes, t));
   })
 }
 
 export const saveRemote = (writes, t) => {
   return new Promise(async (resolve, reject) => {
-    const response = await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
+    await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
       method: "PUT",
       body: t.body
     })
-    writes = deleteEntry(writes, t);
-    saveWrites(writes);
-    resolve(writes);
+    resolve(deleteEntry(writes, t));
   })
 }
 
@@ -35,7 +31,7 @@ export const hasEntry = (list, t) => {
   return false;
 }
 
-export const saveEntry = (list, t) => {
+export const putEntry = (list, t) => {
   let is = false;
   list.forEach(el => {
     if (el.id === t.id) {

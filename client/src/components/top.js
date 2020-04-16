@@ -2,9 +2,6 @@ import { NavLink }  from "react-router-dom";
 import React from "react";
 
 const Top = ({ offlineStatus, offlineToggle }) => {
-  const test = () => {
-    console.log("x");
-  }
     return (
       <div>
       <nav id="nav">
@@ -15,7 +12,7 @@ const Top = ({ offlineStatus, offlineToggle }) => {
           className="offline"
           name="isGoing"
           type="checkbox"
-          onChange={() => offlineToggle()}
+          onChange={offlineToggle}
           checked={offlineStatus}
            />
         {/*
