@@ -63,6 +63,9 @@ class App extends React.Component {
   }
 
   putDeletes = text => {
+    const deletes = st.putEntry(this.state.deletes.slice(), text)
+    this.setDeletes(deletes);
+    return deletes
   }
 
   putWrites = text => {
@@ -93,8 +96,7 @@ class App extends React.Component {
 
   delText = async t => {
     const texts = st.deleteEntry(this.state.texts.slice(), t);
-    this.setState({ texts: texts });
-    st.saveTexts(texts);
+    this.setTexts(texts);
 
     if (st.hasEntry(this.state.writes, t)) {
       this.delWrite(t);
@@ -106,7 +108,7 @@ class App extends React.Component {
 
     if (!this.state.offline) {
       deletes = await st.deleteRemote(deletes, t);
-      this.saveDeletes(deletes);
+      this.setDeletes(deletes);
     }
   }
 
@@ -117,8 +119,7 @@ class App extends React.Component {
 
   delDelete = text => {
     const deletes = st.deleteEntry(this.state.deletes.slice(), text);
-    st.saveDeletes(deletes);
-    this.setState({ deletes: deletes });
+    this.setDeletes(deletes);
   }
 
   toggleOffline = () => {
