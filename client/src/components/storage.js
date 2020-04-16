@@ -1,6 +1,7 @@
 const textsKey = "write_texts";
 const writesKey = "write_writes";
 const deletesKey = "write_deletes";
+const offlineKey = "write_isOffline";
 
 export const deleteRemote = (writes, t) => {
   return new Promise(async (resolve, reject) => {
@@ -52,12 +53,20 @@ export const deleteEntry = (list, t) => {
   return list.filter(el => { return el.id !== t.id });
 }
 
+export const saveTexts = texts => {
+  return saveLocalStorage(textsKey, texts)
+}
+
 export const saveWrites = writes => {
   return saveLocalStorage(writesKey, writes)
 }
 
 export const saveDeletes = deletes => {
   return saveLocalStorage(deletesKey, deletes)
+}
+
+export const readTexts = () => {
+  return readLocalStorage(textsKey)
 }
 
 export const readWrites = () => {
@@ -79,3 +88,16 @@ export const readLocalStorage = key => {
   }
   return JSON.parse(list);
 }
+
+export const saveOffline = str => {
+  localStorage.setItem(offlineKey, str);
+}
+
+export const readOffline = () => {
+  const str = localStorage.getItem(offlineKey);
+  if (str == null) {
+    return false;
+  }
+  return str === "true";
+}
+

@@ -1,8 +1,10 @@
 import { NavLink }  from "react-router-dom";
 import React from "react";
 
-export default class Top extends React.Component {
-  render() {
+const Top = ({ offlineStatus, offlineToggle }) => {
+  const test = () => {
+    console.log("x");
+  }
     return (
       <div>
       <nav id="nav">
@@ -13,6 +15,8 @@ export default class Top extends React.Component {
           className="offline"
           name="isGoing"
           type="checkbox"
+          onChange={() => offlineToggle()}
+          checked={offlineStatus}
            />
         {/*
         <NavLink to="/queue/">Queues</NavLink>
@@ -21,6 +25,7 @@ export default class Top extends React.Component {
       </nav>
       </div>
     );
-  }
 }
 
+
+export default Top
