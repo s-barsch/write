@@ -78,6 +78,12 @@ class App extends React.Component {
     this.setState({ writes: writes });
   }
 
+  delDelete= text => {
+    const deletes = st.deleteEntry(this.state.deletes.slice(), text);
+    st.saveDeletes(deletes);
+    this.setState({ deletes: deletes });
+  }
+
   render () {
     return (
       <Router>
