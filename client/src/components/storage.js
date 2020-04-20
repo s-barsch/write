@@ -5,7 +5,7 @@ const offlineKey = "write_isOffline";
 
 export const deleteRemote = (deletes, t) => {
   return new Promise(async (resolve, reject) => {
-    await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
+    await fetch("/api/text/" + t.id + ".txt", {
       method: "DELETE",
     })
     resolve(deleteEntry(deletes, t));
@@ -14,7 +14,7 @@ export const deleteRemote = (deletes, t) => {
 
 export const saveRemote = (writes, t) => {
   return new Promise(async (resolve, reject) => {
-    await fetch("http://localhost:8231/api/text/" + t.id + ".txt", {
+    await fetch("/api/text/" + t.id + ".txt", {
       method: "PUT",
       body: t.body
     })

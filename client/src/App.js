@@ -18,7 +18,7 @@ class App extends React.Component {
 
   componentDidMount = async () => {
     if (!this.state.offline && this.queuesEmpty()) {
-      const response = await fetch("http://localhost:8231/api/texts/");
+      const response = await fetch("/api/texts/");
       const texts = await response.json();
       this.setTexts(texts);
     }
