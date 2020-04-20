@@ -15,14 +15,10 @@ export const Texts = ({ texts, saveFn, delFn }) => {
 const Info = ({ text }) => {
   return (
     <header>
-      <Link className="id" to={"/texts/" + text.id + ".txt"}>{text.id}</Link>
-      <Mod mod={text.mod} />
+      <Link className="name" to={"/texts/" + text.id + ".txt"}>{text.id + ".txt"}</Link>
+      <span className="mod">{text.mod.toString().substr(-3)}</span>
     </header>
   )
-}
-
-const Mod = ({ mod }) => {
-  return <span className="mod">{mod}</span>
 }
 
 export const Text = ({ text, saveFn, delFn }) => {
@@ -40,7 +36,7 @@ export const Text = ({ text, saveFn, delFn }) => {
         <Del text={text} delFn={delFn} />
       ):(null)}
       <Info text={text} />
-      <TextareaAutosize minRows={1} defaultValue={text.body} onBlur={submit} />
+      <TextareaAutosize minRows={5} defaultValue={text.body} onBlur={submit} />
     </article>
   )
 }
