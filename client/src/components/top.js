@@ -7,7 +7,6 @@ const Top = ({ offlineStatus, offlineToggle }) => {
       <nav id="nav">
         <NavLink exact={true} to="/">Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
-        <NavLink to="/queues/">Queues</NavLink>
         <input
           className="offline"
           name="isGoing"
@@ -15,6 +14,9 @@ const Top = ({ offlineStatus, offlineToggle }) => {
           onChange={offlineToggle}
           checked={offlineStatus}
            />
+      { offlineStatus ? (
+        <NavLink to="/queues/">Queues</NavLink>
+      ) : (null)}
         {/*
         <NavLink to="/queue/">Queues</NavLink>
         <NavLink to="/deleted/">Deleted</NavLink>

@@ -1,3 +1,7 @@
+* {
+    box-sizing:border-box
+}
+
 h2,
 textarea,
 #nav {
@@ -13,6 +17,7 @@ h2 {
 .text {
     margin:.5rem 0;
     background:#ccc;
+    max-width:44rem;
 }
 
 textarea {
@@ -20,6 +25,7 @@ textarea {
 }
 
 .text textarea {
+    padding:.5rem;
     background:transparent;
     background:#111;
     overflow:hidden;
@@ -27,7 +33,26 @@ textarea {
     outline:none;
     resize:none;
     width:100%;
-    max-width:40rem;
+    max-width:44rem;
+}
+
+.text header {
+    padding:.5rem .55rem;
+}
+
+.mod,
+.name {
+    font-family:Georgia, serif;
+    font-size:1.125rem;
+}
+
+.mod {
+    font-family:Arial, sans-serif;
+    font-size:.875rem;
+}
+
+.name {
+    margin-right:.375rem;
 }
 
 .del {
@@ -39,17 +64,12 @@ textarea {
     font-size:1rem;
 }
 
-.mod,
-.name {
-    font-size:1.25rem;
-    margin-right:.5rem;
-}
-
 a {
     color:black;
     text-decoration:none;
 }
 
+#nav input, 
 #nav a {
     margin-right:1rem;
 }

@@ -16,7 +16,7 @@ const Info = ({ text }) => {
   return (
     <header>
       <Link className="name" to={"/texts/" + text.id + ".txt"}>{text.id + ".txt"}</Link>
-      <span className="mod">{text.mod.toString().substr(-3)}</span>
+      <span className="mod">({text.mod.toString().substr(-3)})</span>
     </header>
   )
 }
