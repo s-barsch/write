@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"fmt"
 	"encoding/json"
 )
 
@@ -17,19 +16,13 @@ func serveBuild(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../client/build" + r.URL.Path)
 }
 
-func serveApi(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "hello world for sure.")
-}
-
 func serveTexts(w http.ResponseWriter, r *http.Request) {
 	texts, err := getTexts()
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	/*
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	*/
 	err = json.NewEncoder(w).Encode(texts)
 	if err != nil {
 		http.Error(w, err.Error(), 500)

@@ -18,9 +18,13 @@ class App extends React.Component {
 
   componentDidMount = async () => {
     if (!this.state.offline && this.queuesEmpty()) {
-      const response = await fetch("/api/texts/");
-      const texts = await response.json();
-      this.setTexts(texts);
+      const resp = await fetch(st.server + "/api/texts/");
+      if (resp.ok) {
+        const texts = await resp.json();
+        this.setTexts(texts);
+      } else {
+        this.setOffline(true)
+      }
     }
   };
 
@@ -34,25 +38,42 @@ class App extends React.Component {
   emptyQueues = async () => {
     let writes = this.state.writes.slice();
     for (const text of writes) {
-      writes = await st.saveRemote(writes, text);
-      this.setWrites(writes);
+      try {
+        writes = await st.saveRemote(writes, text)
+        this.setWrites(writes);
+      } catch(err) {
+          console.log(err);
+          this.setOffline(true);
+          return
+      }
     }
 
     let deletes = this.state.deletes.slice();
     for (const text of deletes) {
-      deletes = await st.deleteRemote(deletes, text);
-      this.setDeletes(deletes);
+      try {
+        deletes = await st.deleteRemote(deletes, text)
+        this.setDeletes(deletes);
+      } catch(err) {
+          console.log(err);
+          this.setOffline(true);
+          return
+      }
     }
   }
 
-  save = async t => {
-    this.putTexts(t)
+  save = async text => {
+    this.putTexts(text)
 
-    let writes = this.putWrites(t);
+    let writes = this.putWrites(text);
 
     if (!this.state.offline) {
-      writes = await st.saveRemote(writes, t);
-      this.setWrites(writes);
+      st.saveRemote(writes, text).then(
+        writes => this.setWrites(writes),
+        err => {
+          console.log(err);
+          this.setOffline(true)
+        }
+      )
     }
   }
 
@@ -89,48 +110,62 @@ class App extends React.Component {
     st.saveDeletes(deletes);
   }
 
-  saveNew = t => {
+  saveNew = text => {
     this.setState({ newText: newText() });
-    this.save(t);
+    this.save(text);
   }
 
-  delText = async t => {
-    const texts = st.deleteEntry(this.state.texts.slice(), t);
+  delText = async text => {
+    const texts = st.deleteEntry(this.state.texts.slice(), text);
     this.setTexts(texts);
 
-    if (st.hasEntry(this.state.writes, t)) {
-      this.delWrite(t);
+    if (st.hasEntry(this.state.writes, text)) {
+      this.delWrite(text);
       return;
     }
 
-    let deletes = st.putEntry(this.state.deletes.slice(), t)
+    let deletes = st.putEntry(this.state.deletes.slice(), text)
     this.setDeletes(deletes);
 
     if (!this.state.offline) {
-      deletes = await st.deleteRemote(deletes, t);
-      this.setDeletes(deletes);
+      st.deleteRemote(deletes, text).then(
+        deletes => this.setDeletes(deletes),
+        err => {
+          console.log("was here");
+          this.setOffline(true);
+        }
+      );
     }
   }
 
   delWrite = text => {
+    const texts = st.deleteEntry(this.state.texts.slice(), text);
+    this.setTexts(texts);
+
     const writes = st.deleteEntry(this.state.writes.slice(), text);
     this.setWrites(writes);
   }
 
   delDelete = text => {
+    const texts = st.deleteEntry(this.state.texts.slice(), text);
+    this.setTexts(texts);
+
     const deletes = st.deleteEntry(this.state.deletes.slice(), text);
     this.setDeletes(deletes);
   }
 
+  setOffline = state => {
+    this.setState({ offline: state });
+    st.saveOffline(state.toString());
+  }
+
   toggleOffline = () => {
     if (this.state.offline) {
-      this.setState({ offline: false });
-      st.saveOffline("false");
+      this.setOffline(false);
       this.emptyQueues();
       return
     }
-    this.setState({ offline: true });
-    st.saveOffline("true");
+    this.setOffline(true)
   }
 
   navComp = () => {

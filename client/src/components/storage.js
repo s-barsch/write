@@ -3,23 +3,56 @@ const writesKey = "write_writes";
 const deletesKey = "write_deletes";
 const offlineKey = "write_isOffline";
 
-export const deleteRemote = (deletes, t) => {
-  return new Promise(async (resolve, reject) => {
-    await fetch("/api/text/" + t.id + ".txt", {
-      method: "DELETE",
-    })
-    resolve(deleteEntry(deletes, t));
-  })
+export const server = "http://localhost:8231"
+
+const makeFetch = (fetchPromise, returnList, controller) => {
+  const ms = 1500;
+  return new Promise((resolve, reject) => {
+    let run = setTimeout(function() {
+      controller.abort();
+      reject("Request terminated after " + ms + "ms.");
+    }, ms)
+
+    fetchPromise.then(
+      resp => {
+        clearTimeout(run);
+        if (resp.ok) {
+          resolve(returnList);
+        } else {
+          resp.text().then(text => reject(text));
+        }
+      }
+    )
+    .catch(err => {
+      console.log(err);
+      //reject(err)
+    });
+  });
 }
 
 export const saveRemote = (writes, t) => {
-  return new Promise(async (resolve, reject) => {
-    await fetch("/api/text/" + t.id + ".txt", {
+  let controller = new AbortController();
+  return makeFetch(
+    fetch(server + "/api/text/" + t.id + ".txt", {
       method: "PUT",
+      signal: controller.signal,
       body: t.body
-    })
-    resolve(deleteEntry(writes, t));
-  })
+    }),
+    deleteEntry(writes, t),
+    controller,
+  );
+}
+
+export const deleteRemote = (deletes, t) => {
+  let controller = new AbortController();
+  return makeFetch(
+    fetch(server + "/api/text/" + t.id + ".txt", {
+      method: "DELETE",
+      signal: controller.signal
+    }),
+    deleteEntry(deletes, t),
+    controller,
+  );
 }
 
 export const hasEntry = (list, t) => {
