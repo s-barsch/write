@@ -3,7 +3,7 @@ const writesKey = "write_writes";
 const deletesKey = "write_deletes";
 const offlineKey = "write_isOffline";
 
-export const server = "http://localhost:8231"
+export const server = ""//"http://localhost:8231"
 
 const makeFetch = (fetchPromise, returnList, controller) => {
   const ms = 1500;

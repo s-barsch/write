@@ -13,17 +13,27 @@ class App extends React.Component {
     texts: st.readTexts(),
     writes: st.readWrites(),
     deletes: st.readDeletes(),
-    offline: st.readOffline()
+    offline: st.readOffline(),
+    error: "",
   };
+
+  log = msg => {
+    console.log(msg);
+    this.setState({ error: msg })
+  }
 
   componentDidMount = async () => {
     if (!this.state.offline && this.queuesEmpty()) {
-      const resp = await fetch(st.server + "/api/texts/");
-      if (resp.ok) {
-        const texts = await resp.json();
-        this.setTexts(texts);
-      } else {
-        this.setOffline(true)
+      try {
+        const resp = await fetch(st.server + "/api/texts/");
+        if (resp.ok) {
+          const texts = await resp.json();
+          this.setTexts(texts);
+        } else {
+          this.setOffline(true)
+        }
+      } catch(err) {
+        this.log(err);
       }
     }
   };
@@ -42,7 +52,7 @@ class App extends React.Component {
         writes = await st.saveRemote(writes, text)
         this.setWrites(writes);
       } catch(err) {
-          console.log(err);
+          this.log(err);
           this.setOffline(true);
           return
       }
@@ -54,7 +64,7 @@ class App extends React.Component {
         deletes = await st.deleteRemote(deletes, text)
         this.setDeletes(deletes);
       } catch(err) {
-          console.log(err);
+          this.log(err);
           this.setOffline(true);
           return
       }
@@ -70,7 +80,7 @@ class App extends React.Component {
       st.saveRemote(writes, text).then(
         writes => this.setWrites(writes),
         err => {
-          console.log(err);
+          this.log(err);
           this.setOffline(true)
         }
       )
@@ -131,7 +141,7 @@ class App extends React.Component {
       st.deleteRemote(deletes, text).then(
         deletes => this.setDeletes(deletes),
         err => {
-          console.log("was here");
+          this.log("was here");
           this.setOffline(true);
         }
       );
@@ -170,7 +180,10 @@ class App extends React.Component {
 
   navComp = () => {
     return (
-      <Top offlineStatus={this.state.offline} offlineToggle={this.toggleOffline} />
+      <div>
+        <Top offlineStatus={this.state.offline} offlineToggle={this.toggleOffline} />
+        <span>{this.state.error}</span>
+      </div>
     )
   }
 
