@@ -7,20 +7,14 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", serveStatic)
-	http.HandleFunc("/js/", serveJs)
-	//http.HandleFunc("/api/", serveApi)
+	http.HandleFunc("/", serveBuild)
 	http.HandleFunc("/api/texts/", serveTexts)
 	http.HandleFunc("/api/text/", textApi)
 	http.ListenAndServe(":8231", nil)
 }
 
-func serveJs(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./js/dist/" + r.URL.Path[4:])
-}
-
-func serveStatic(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./index.html")
+func serveBuild(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../client/build" + r.URL.Path)
 }
 
 func serveApi(w http.ResponseWriter, r *http.Request) {

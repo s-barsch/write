@@ -20,7 +20,7 @@ class App extends React.Component {
     if (!this.state.offline && this.queuesEmpty()) {
       const response = await fetch("http://localhost:8231/api/texts/");
       const texts = await response.json();
-      this.setState({ texts: texts });
+      this.setTexts(texts);
     }
   };
 
