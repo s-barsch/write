@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import { Texts, Text} from "./components/text"; 
-import * as st from "./components/storage.js";
+import * as st from "./components/store.js";
 import newText from "./components/new";
 import { makeNumber } from "./components/date";
 import "./main.scss";
@@ -235,7 +235,7 @@ class App extends React.Component {
             File view
           </div>
         )} />
-        <Route path="/queues/" exact={true} render={() => (
+        <Route path="/queue/" exact={true} render={() => (
           <div>
             {this.navComp()}
             <div>

@@ -15,7 +15,7 @@ const Top = ({ offlineStatus, offlineToggle }) => {
           checked={offlineStatus}
            />
       { offlineStatus ? (
-        <NavLink to="/queues/">Queues</NavLink>
+        <NavLink to="/queue/">Queue</NavLink>
       ) : (null)}
         {/*
         <NavLink to="/queue/">Queues</NavLink>
