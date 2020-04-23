@@ -2,47 +2,63 @@ import React, { createContext, useState, useEffect } from "react";
 import emptyText from "../funcs/new";
 import { getRemoteTexts, saveRemote, deleteRemote } from "../funcs/remote";
 import { updateList, deleteEntry } from "../funcs/list";
-import { readTextsState, saveTextsState } from "../funcs/storage";
-import { readWritesState, saveWritesState } from "../funcs/storage";
-import { readDeletesState, saveDeletesState } from "../funcs/storage";
+import { readState, saveState } from "../funcs/storage";
 import { readOfflineState, saveOfflineState } from "../funcs/storage";
 
 export const WriteContext = createContext();
 
 const WriteProvider = ({ children }) => {
-  const [newText, setNewTextState] = useState(emptyText());
-  const [texts, setTextsState] = useState(readTextsState());
-  const [writes, setWritesState] = useState(readWritesState());
-  const [deletes, setDeletesState] = useState(readDeletesState());
+  const [newText, setNewText] = useState(emptyText());
+  const [texts, setTexts] = useState(readState("texts"));
+  const [writes, setWrites] = useState(readState("writes"));
+  const [deletes, setDeletes] = useState(readState("deletes"));
   const [offline, setOfflineState] = useState(readOfflineState());
 
+  const hub = {
+    "texts": {
+      "state":    texts,
+      "setState": setTexts,
+    },
+    "writes": {
+      "state":    writes,
+      "setState": setWrites,
+    },
+    "deletes": {
+      "state":    deletes,
+      "setState": setDeletes,
+    },
+  }
+  
   const isEmpty = list => {
     if (!list) return false
     return list.length === 0
   }
 
-  useEffect((offline, writes, deletes) => {
-    if (!offline && isEmpty(writes) && isEmpty(deletes)) {
+  useEffect((offline, writes, deletes, setList) => {
       getRemoteTexts().then(
-        texts => setTexts(texts),
+        texts => {
+          setTexts(texts);
+          saveState("texts", texts);
+        },
         err => console.log(err)
       );
-    }
   }, []);
 
+  // actions
+
   const saveNewText = t => {
-    setNewTextState(emptyText());
+    setNewText(emptyText());
     saveText(t);
   }
 
   const saveText = t => {
-    setText(t);
-    setWrite(t);
+    setEntry("texts", t)
+    setEntry("writes", t)
 
     if (offline) return;
 
     saveRemote(t).then(
-      () => setWriteRemove(t),
+      () => removeEntry("writes", t),
       err => {
         console.log(err);
         setOffline(true)
@@ -51,14 +67,14 @@ const WriteProvider = ({ children }) => {
   }
 
   const deleteText = t => {
-    setTextRemove(t);
-    setWriteRemove(t);
-    setDelete(t);
+    removeEntry("texts", t);
+    removeEntry("writes", t);
+    setEntry("deletes", t);
 
     if (offline) return;
     
     deleteRemote(t).then(
-      () => setDeleteRemove(t),
+      () => removeEntry("deletes", t),
       err => {
         console.log(err);
         setOffline(true);
@@ -67,54 +83,25 @@ const WriteProvider = ({ children }) => {
   }
 
   const revertDelete = t => {
-    setText(t);
-    setWrite(t);
-    setDeleteRemove(t);
-  }
-  
-  // remove from list
-
-  const setTextRemove = t => {
-    setTexts(deleteEntry(texts, t))
+    setEntry("texts", t)
+    setEntry("writes", t)
+    removeEntry("deletes", t)
   }
 
-  const setWriteRemove = t => {
-    setWrites(deleteEntry(writes, t))
+
+  // saving functions
+
+  const removeEntry = (key, t) => {
+    setList(key, deleteEntry(hub[key].state, t))
   }
 
-  const setDeleteRemove = t => {
-    setDeletes(deleteEntry(deletes, t))
+  const setEntry = (key, t) => {
+    setList(key, updateList(hub[key].state, t))
   }
 
-  // set element
-
-  const setText = t => {
-    setTexts(updateList(texts, t))
-  }
-
-  const setWrite = t => {
-    setWrites(updateList(writes, t))
-  }
-
-  const setDelete = t => {
-    setDeletes(updateList(deletes, t))
-  }
-
-  // set state and save list
-
-  const setDeletes = deletes => {
-    setDeletesState(deletes);
-    saveDeletesState(deletes);
-  }
-
-  const setWrites = writes => {
-    setWritesState(writes);
-    saveWritesState(writes);
-  }
-
-  const setTexts = texts => {
-    setTextsState(texts);
-    saveTextsState(texts);
+  const setList = (key, list) => {
+    hub[key].setState(list);
+    saveState(key, list);
   }
 
   // offline state
@@ -141,7 +128,7 @@ const WriteProvider = ({ children }) => {
       try {
         await saveRemote(t);
         writesCopy = deleteEntry(writesCopy, t)
-        setWrites(writesCopy)
+        setList("writes", writesCopy)
       } catch(err) {
         setOffline(true);
         console.log(err);
@@ -153,7 +140,7 @@ const WriteProvider = ({ children }) => {
       try {
         await deleteRemote(t);
         deletesCopy = deleteEntry(deletesCopy, t)
-        setDeletes(deletesCopy)
+        setList("deletes", deletesCopy)
       } catch(err) {
         setOffline(true);
         console.log(err);
