@@ -38,7 +38,6 @@ const WriteProvider = ({ children }) => {
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
       getRemoteTexts().then(
         texts => {
-          console.log(texts);
           setTexts(texts);
           saveState("texts", texts);
         },
@@ -126,24 +125,26 @@ const WriteProvider = ({ children }) => {
   // going online
 
   const emptyQueue = async () => {
-    let writesCopy = writes.slice();
-    for (const t of writesCopy) {
+
+    let writesArr = writes.slice();
+    for (const t of writesArr) {
       try {
         await saveRemote(t);
-        writesCopy = deleteEntry(writesCopy, t)
-        setList("writes", writesCopy)
+        writesArr = deleteEntry(writesArr, t)
+        setList("writes", writesArr)
       } catch(err) {
         setOffline(true);
         console.log(err);
         return;
       }
     }
-    let deletesCopy = deletes.slice();
-    for (const t of deletesCopy) {
+
+    let deletesArr = deletes.slice();
+    for (const t of deletesArr) {
       try {
         await deleteRemote(t);
-        deletesCopy = deleteEntry(deletesCopy, t)
-        setList("deletes", deletesCopy)
+        deletesArr = deleteEntry(deletesArr, t)
+        setList("deletes", deletesArr)
       } catch(err) {
         setOffline(true);
         console.log(err);
