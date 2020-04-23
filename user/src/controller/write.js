@@ -30,18 +30,21 @@ const WriteProvider = ({ children }) => {
   }
   
   const isEmpty = list => {
-    if (!list) return false
+    if (!list) return true
     return list.length === 0
   }
 
-  useEffect((offline, writes, deletes, setList) => {
+  useEffect((offline, writes, deletes) => {
+    if (!offline && isEmpty(writes) && isEmpty(deletes)) {
       getRemoteTexts().then(
         texts => {
+          console.log(texts);
           setTexts(texts);
           saveState("texts", texts);
         },
         err => console.log(err)
       );
+    }
   }, []);
 
   // actions
