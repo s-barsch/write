@@ -1,6 +1,6 @@
 import React, { useContext} from "react";
 import { NavLink }  from "react-router-dom";
-import { WriteContext } from "../context/texts";
+import { WriteContext } from "../controller/write";
 
 const OfflineCheckbox = () => {
   const { offline, toggleOffline } = useContext(WriteContext);

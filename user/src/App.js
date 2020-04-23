@@ -4,7 +4,7 @@ import "./main.scss";
 import Top from "./sections/top";
 import Texts from "./sections/texts";
 import NewText from "./sections/new";
-import WriteProvider from "./context/texts";
+import WriteProvider from "./controller/write";
 
 const App = () => {
   return (

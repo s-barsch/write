@@ -1,6 +1,6 @@
 import React, { useContext} from 'react';
 
-import { WriteContext } from "../context/texts";
+import { WriteContext } from "../controller/write";
 import { TextList } from "../components/text";
 
 const Texts = () => {
