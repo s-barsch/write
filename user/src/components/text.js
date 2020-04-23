@@ -3,11 +3,10 @@ import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeNumber } from "./date";
 
-
-export const Texts = ({ texts, saveFn, delFn }) => {
+export const TextList = ({ texts }) => {
   return (
     texts.map((text, i) => (
-      <Text key={makeNumber(text.id)} text={text} saveFn={saveFn} delFn={delFn} />
+      <Text key={makeNumber(text.id)} text={text} />
     ))
   )
 }
