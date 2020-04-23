@@ -29,11 +29,6 @@ const WriteProvider = ({ children }) => {
     },
   }
   
-  const isEmpty = list => {
-    if (!list) return true
-    return list.length === 0
-  }
-
   useEffect((offline, writes, deletes) => {
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
       getRemoteTexts().then(
@@ -124,14 +119,19 @@ const WriteProvider = ({ children }) => {
 
   // going online
 
+  const isEmpty = list => {
+    if (!list) return true
+    return list.length === 0
+  }
+
   const emptyQueue = async () => {
 
-    let writesArr = writes.slice();
-    for (const t of writesArr) {
+    let wrs = writes.slice();
+    for (const t of wrs) {
       try {
         await saveRemote(t);
-        writesArr = deleteEntry(writesArr, t)
-        setList("writes", writesArr)
+        wrs = deleteEntry(wrs, t)
+        setList("writes", wrs)
       } catch(err) {
         setOffline(true);
         console.log(err);
@@ -139,12 +139,12 @@ const WriteProvider = ({ children }) => {
       }
     }
 
-    let deletesArr = deletes.slice();
-    for (const t of deletesArr) {
+    let dels = deletes.slice();
+    for (const t of dels) {
       try {
         await deleteRemote(t);
-        deletesArr = deleteEntry(deletesArr, t)
-        setList("deletes", deletesArr)
+        dels = deleteEntry(dels, t)
+        setList("deletes", dels)
       } catch(err) {
         setOffline(true);
         console.log(err);

@@ -14,7 +14,6 @@ const App = () => {
 
         <Top />
         <Switch>
-
           <Route exact={true} path="/">
             <NewText />
             <Texts />
@@ -27,7 +26,6 @@ const App = () => {
           <Route path="/queue/">
             <Queue />
           </Route>
-
         </Switch>
 
       </Router>
