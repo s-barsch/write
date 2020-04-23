@@ -118,7 +118,7 @@ export const readLocalStorage = key => {
   return JSON.parse(list);
 }
 
-export const storeOfflineState = str => {
+export const saveOfflineState = str => {
   localStorage.setItem(offlineKey, str);
 }
 
