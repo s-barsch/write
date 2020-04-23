@@ -118,11 +118,11 @@ export const readLocalStorage = key => {
   return JSON.parse(list);
 }
 
-export const saveOffline = str => {
+export const storeOfflineState = str => {
   localStorage.setItem(offlineKey, str);
 }
 
-export const readOffline = () => {
+export const readOfflineState = () => {
   const str = localStorage.getItem(offlineKey);
   if (str == null) {
     return false;

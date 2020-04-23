@@ -1,20 +1,19 @@
-import React, { createContext, useEffect, useState, useReducer } from "react";
+import React, { createContext, useState, useReducer } from "react";
 import { reducer } from "./reducer";
 import * as st from "../funcs/store";
-import emptyText from "../funcs/new";
 
 export const WriteContext = createContext();
 
 const WriteProvider = ({ children }) => {
   const [texts, dispatch] = useReducer(reducer, st.readTexts());
-  const [newText, setNewText] = useState(emptyText());
+  const [offline, setOfflineState] = useState(false);
 
-  useEffect(() => {
-    setNewText(emptyText())
-  }, [])
+  const toggleOffline = () => {
+    setOfflineState(!offline);
+  }
 
   return (
-    <WriteContext.Provider value={{ texts, dispatch, newText }}>
+    <WriteContext.Provider value={{ offline, toggleOffline, texts, dispatch }}>
       {children}
     </WriteContext.Provider>
   );
