@@ -1,18 +1,24 @@
 export const server = "http://192.168.1.7:8231"
 
-const makeFetch = (fetchPromise, returnList, controller) => {
+export const getRemoteTexts = () => {
   const ms = 1500;
+  const abortController = new AbortController();
   return new Promise((resolve, reject) => {
     let run = setTimeout(function() {
-      controller.abort();
+      abortController.abort();
       reject("Request terminated after " + ms + "ms.");
     }, ms)
 
-    fetchPromise.then(
+    fetch(server + "/api/texts/", {
+      signal: abortController.signal,
+    }).then(
       resp => {
         clearTimeout(run);
         if (resp.ok) {
-          resolve(returnList);
+          resp.json().then(
+            texts => resolve(texts),
+            err => reject(err)
+          )
         } else {
           resp.text().then(text => reject(text));
         }
@@ -25,7 +31,32 @@ const makeFetch = (fetchPromise, returnList, controller) => {
   });
 }
 
-export const saveRemote = (writes, t) => {
+const makeFetch = (fetchPromise, abortController) => {
+  const ms = 1500;
+  return new Promise((resolve, reject) => {
+    let run = setTimeout(function() {
+      abortController.abort();
+      reject("Request terminated after " + ms + "ms.");
+    }, ms)
+
+    fetchPromise.then(
+      resp => {
+        clearTimeout(run);
+        if (resp.ok) {
+          resolve();
+        } else {
+          resp.text().then(text => reject(text));
+        }
+      }
+    )
+    .catch(err => {
+      console.log(err);
+      //reject(err)
+    });
+  });
+}
+
+export const saveRemote = t => {
   let controller = new AbortController();
   return makeFetch(
     fetch(server + "/api/text/" + t.id + ".txt", {
@@ -33,19 +64,17 @@ export const saveRemote = (writes, t) => {
       signal: controller.signal,
       body: t.body
     }),
-    deleteEntry(writes, t),
     controller,
   );
 }
 
-export const deleteRemote = (deletes, t) => {
+export const deleteRemote = t => {
   let controller = new AbortController();
   return makeFetch(
     fetch(server + "/api/text/" + t.id + ".txt", {
       method: "DELETE",
       signal: controller.signal
     }),
-    deleteEntry(deletes, t),
     controller,
   );
 }

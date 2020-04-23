@@ -1,14 +1,12 @@
-import React from 'react';
-
-import emptyText from "../funcs/new";
+import React, { useContext } from 'react';
+import { WriteContext } from "../controller/write";
+import { Text } from "../components/text";
 import { makeKey } from "../funcs/date";
 
-import { Text } from "../components/text";
-
 const NewText = () => {
-  const newText = emptyText();
+  const { newText, saveNewText } = useContext(WriteContext);
   return (
-    <Text id={makeKey(newText.id)} text={newText} />
+    <Text key={makeKey(newText.id)} text={newText} saveFn={saveNewText} />
   )
 }
 

@@ -3,10 +3,10 @@ import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
 
-export const TextList = ({ texts }) => {
+export const TextList = ({ texts, saveFn, delFn }) => {
   return (
     texts.map((text, i) => (
-      <Text key={makeKey(text.id)} text={text} />
+      <Text key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn} />
     ))
   )
 }
@@ -31,9 +31,7 @@ export const Text = ({ text, saveFn, delFn }) => {
   }
   return (
     <article className="text">
-      {delFn ? (
-        <Del text={text} delFn={delFn} />
-      ):(null)}
+    { delFn && <Del text={text} delFn={delFn} /> }
       <Info text={text} />
       <TextareaAutosize minRows={5} defaultValue={text.body} onBlur={submit} />
     </article>

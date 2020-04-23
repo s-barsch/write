@@ -4,9 +4,9 @@ import { WriteContext } from "../controller/write";
 import { TextList } from "../components/text";
 
 const Texts = () => {
-  const { texts } = useContext(WriteContext);
+  const { texts, saveText, deleteText } = useContext(WriteContext);
   return (
-    <TextList texts={texts} />
+    <TextList texts={texts} saveFn={saveText} delFn={deleteText} />
   )
 }
 
