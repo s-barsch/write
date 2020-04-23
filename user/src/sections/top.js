@@ -5,7 +5,7 @@ const Top = ({ offlineStatus, offlineToggle }) => {
     return (
       <div>
       <nav id="nav">
-        <NavLink exact={true} to="/">Write</NavLink>
+        <NavLink to="/" exact={true}>Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
         <input
           className="offline"

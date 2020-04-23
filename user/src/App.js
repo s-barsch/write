@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import "./main.scss";
-import Top from "./components/top";
+import Top from "./sections/top";
 import Texts from "./sections/texts";
+import NewText from "./sections/new";
 import WriteProvider from "./context/texts";
 
 const App = () => {
@@ -14,7 +15,8 @@ const App = () => {
         <Switch>
 
           <Route exact={true} path="/">
-            Root
+            <NewText />
+            <Texts />
           </Route>
 
           <Route path="/texts/">

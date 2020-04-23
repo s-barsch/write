@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
-import { makeNumber } from "./date";
+import { makeKey } from "../funcs/date";
 
 export const TextList = ({ texts }) => {
   return (
     texts.map((text, i) => (
-      <Text key={makeNumber(text.id)} text={text} />
+      <Text key={makeKey(text.id)} text={text} />
     ))
   )
 }

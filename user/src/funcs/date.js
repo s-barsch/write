@@ -13,7 +13,7 @@ export const timestamp = () => {
     fill(d.getSeconds().toString());
 }
 
-export const makeNumber = timestamp => {
+export const makeKey = timestamp => {
     return parseInt(timestamp.substr(0, 6) + timestamp.substr(7), 10)
 }
 

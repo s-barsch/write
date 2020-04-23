@@ -1,6 +1,6 @@
 import { timestamp } from "./date";
 
-const newText = () => {
+const emptyText = () => {
   const ts = timestamp();
   return {
     id:   ts,
@@ -10,4 +10,4 @@ const newText = () => {
   }
 }
 
-export default newText;
+export default emptyText;
