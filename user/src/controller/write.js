@@ -72,6 +72,8 @@ const WriteProvider = ({ children }) => {
     setDeleteRemove(t);
   }
   
+  // remove from list
+
   const setTextRemove = t => {
     setTexts(deleteEntry(texts, t))
   }
@@ -84,17 +86,25 @@ const WriteProvider = ({ children }) => {
     setDeletes(deleteEntry(deletes, t))
   }
 
-  const setDelete = t => {
-    setDeletes(updateList(deletes, t))
-  }
+  // set element
 
-  const setDeletes = deletes => {
-    setDeletesState(deletes);
-    saveDeletesState(deletes);
+  const setText = t => {
+    setTexts(updateList(texts, t))
   }
 
   const setWrite = t => {
     setWrites(updateList(writes, t))
+  }
+
+  const setDelete = t => {
+    setDeletes(updateList(deletes, t))
+  }
+
+  // set state and save list
+
+  const setDeletes = deletes => {
+    setDeletesState(deletes);
+    saveDeletesState(deletes);
   }
 
   const setWrites = writes => {
@@ -102,14 +112,12 @@ const WriteProvider = ({ children }) => {
     saveWritesState(writes);
   }
 
-  const setText = t => {
-    setTexts(updateList(texts, t))
-  }
-
   const setTexts = texts => {
     setTextsState(texts);
     saveTextsState(texts);
   }
+
+  // offline state
 
   const setOffline = state => {
     setOfflineState(state);
@@ -124,6 +132,8 @@ const WriteProvider = ({ children }) => {
     }
     setOffline(true);
   }
+
+  // going online
 
   const emptyQueue = async () => {
     let writesCopy = writes.slice();
