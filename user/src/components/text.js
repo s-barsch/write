@@ -31,7 +31,7 @@ export const Text = ({ text, saveFn, delFn }) => {
   }
   return (
     <article className="text">
-    { delFn && <Del text={text} delFn={delFn} /> }
+      { delFn && <Del text={text} delFn={delFn} /> }
       <Info text={text} />
       <TextareaAutosize minRows={5} defaultValue={text.body} onBlur={submit} />
     </article>

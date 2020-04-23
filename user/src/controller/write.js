@@ -16,18 +16,18 @@ const WriteProvider = ({ children }) => {
   const [deletes, setDeletesState] = useState(readDeletesState());
   const [offline, setOfflineState] = useState(readOfflineState());
 
-  const queuesEmpty = () => {
-    if (writes.length === 0 && deletes.length === 0) {
-      return true
-    }
-    return false
+  const isEmpty = list => {
+    if (!list) return false
+    return list.length === 0
   }
 
-  useEffect(() => {
-    getRemoteTexts().then(
-      texts => setTexts(texts),
-      err => console.log(err)
-    );
+  useEffect((offline, writes, deletes) => {
+    if (!offline && isEmpty(writes) && isEmpty(deletes)) {
+      getRemoteTexts().then(
+        texts => setTexts(texts),
+        err => console.log(err)
+      );
+    }
   }, []);
 
   const saveNewText = t => {
@@ -64,6 +64,12 @@ const WriteProvider = ({ children }) => {
         setOffline(true);
       }
     )
+  }
+
+  const revertDelete = t => {
+    setText(t);
+    setWrite(t);
+    setDeleteRemove(t);
   }
   
   const setTextRemove = t => {
@@ -111,12 +117,45 @@ const WriteProvider = ({ children }) => {
   }
 
   const toggleOffline = () => {
-    setOffline(!offline);
+    if (offline) {
+      emptyQueue();
+      setOffline(false);
+      return
+    }
+    setOffline(true);
+  }
+
+  const emptyQueue = async () => {
+    let writesCopy = writes.slice();
+    for (const t of writesCopy) {
+      try {
+        await saveRemote(t);
+        writesCopy = deleteEntry(writesCopy, t)
+        setWrites(writesCopy)
+      } catch(err) {
+        setOffline(true);
+        console.log(err);
+        return;
+      }
+    }
+    let deletesCopy = deletes.slice();
+    for (const t of deletesCopy) {
+      try {
+        await deleteRemote(t);
+        deletesCopy = deleteEntry(deletesCopy, t)
+        setDeletes(deletesCopy)
+      } catch(err) {
+        setOffline(true);
+        console.log(err);
+        return;
+      }
+    }
   }
 
   return (
     <WriteContext.Provider value={{ 
-      texts,
+      texts, writes, deletes,
+      revertDelete,
       newText, saveNewText,
       offline, toggleOffline,
       deleteText, saveText

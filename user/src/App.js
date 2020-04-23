@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import "./main.scss";
 import Top from "./sections/top";
 import Texts from "./sections/texts";
+import Queue from "./sections/queue";
 import NewText from "./sections/new";
 import WriteProvider from "./controller/write";
 
@@ -24,7 +25,7 @@ const App = () => {
           </Route>
 
           <Route path="/queue/">
-            {/*<Queue />*/}
+            <Queue />
           </Route>
 
         </Switch>

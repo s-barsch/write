@@ -22,7 +22,7 @@ const Top = () => {
       <NavLink to="/" exact={true}>Write</NavLink>
       <NavLink to="/texts/">Texts</NavLink>
       <OfflineCheckbox />
-    { <NavLink to="/queue/">Queue</NavLink> && offline }
+      { offline && <NavLink to="/queue/">Queue</NavLink> }
     </nav>
   );
 }
