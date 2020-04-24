@@ -100,6 +100,10 @@ const WriteProvider = ({ children }) => {
     removeEntry("deletes", t)
   }
 
+  const delWrite = t => {
+    removeEntry("writes", t)
+  }
+
 
   // saving functions
 
@@ -179,7 +183,7 @@ const WriteProvider = ({ children }) => {
   return (
     <WriteContext.Provider value={{ 
       texts, writes, deletes,
-      revertDelete,
+      delWrite, revertDelete,
       newText, saveNewText,
       offline, toggleOffline,
       darkTheme, toggleDarkTheme,

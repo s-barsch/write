@@ -1,4 +1,11 @@
-export const server = "http://192.168.1.7:8231"
+
+let server = "";
+
+if (process.env.NODE_ENV === "development") {
+  server = "http://localhost:8231";
+}
+
+console.log(server);
 
 export const getRemoteTexts = () => {
   const ms = 1500;

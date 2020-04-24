@@ -26,7 +26,7 @@ func routes() *mux.Router {
 	s.Use(authHandler)
 
 	s.HandleFunc("/api/texts/", serveTexts)
-	s.HandleFunc("/api/text/", textApi)
+	s.HandleFunc("/api/text/{name}", textApi)
 	s.PathPrefix("/").HandlerFunc(serveBuild)
 
 	return r

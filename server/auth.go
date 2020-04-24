@@ -18,11 +18,16 @@ const COOKIE_NAME = "session"
 
 func authHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		err := checkAuth(w, r)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "Not authorized", 403)
-			return
+		if srv.flags.testing {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
+		if !srv.flags.testing {
+			err := checkAuth(w, r)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "Not authorized", 403)
+				return
+			}
 		}
 		next.ServeHTTP(w, r)
 	})
@@ -73,7 +78,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginVerify(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("was here")
 	err := initializeSession(w, r.FormValue("pass"))
 	if err != nil {
 		log.Println(err)

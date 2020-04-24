@@ -4,11 +4,11 @@ import { WriteContext } from "../controller/write";
 import { TextList } from "../components/text";
 
 const Queue = () => {
-  const { writes, deletes, saveText, revertDelete } = useContext(WriteContext);
+  const { writes, deletes, saveText, delWrite, revertDelete } = useContext(WriteContext);
   return (
     <section>
       { writes.length > 0 && "Writes:"}
-      <TextList texts={writes} saveFn={saveText}  />
+      <TextList texts={writes} saveFn={saveText} delFn={delWrite} />
       { deletes.length > 0 && "Deletes:"}
       <TextList texts={deletes} saveFn={saveText} delFn={revertDelete} />
     </section>
