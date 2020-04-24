@@ -14,6 +14,18 @@ const OfflineCheckbox = () => {
   )
 }
 
+const DarkThemeCheckbox = () => {
+  const { darkTheme, toggleDarkTheme } = useContext(WriteContext);
+  return (
+    <input
+      className="offline"
+      type="checkbox"
+      onChange={toggleDarkTheme}
+      checked={darkTheme}
+      />
+  )
+}
+
 const Top = () => {
   const { offline } = useContext(WriteContext);
   return (
@@ -22,6 +34,7 @@ const Top = () => {
       <NavLink to="/texts/">Texts</NavLink>
       <OfflineCheckbox />
       { offline && <NavLink to="/queue/">Queue</NavLink> }
+      <DarkThemeCheckbox />
     </nav>
   );
 }

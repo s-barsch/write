@@ -2,6 +2,15 @@
     box-sizing:border-box
 }
 
+body.dark {
+    background:#000;
+    color:#fff;
+}
+
+.dark #nav a {
+    color:#fff;
+}
+
 h2,
 textarea,
 #nav {
@@ -49,6 +58,7 @@ textarea {
 .mod {
     font-family:Arial, sans-serif;
     font-size:.875rem;
+    color:#000;
 }
 
 .name {
@@ -79,6 +89,7 @@ a {
     margin-right:1rem;
 }
 
+.dark #nav .active,
 .active {
     color:red;
 }

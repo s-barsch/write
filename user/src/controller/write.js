@@ -13,6 +13,16 @@ const WriteProvider = ({ children }) => {
   const [writes, setWrites] = useState(readState("writes"));
   const [deletes, setDeletes] = useState(readState("deletes"));
   const [offline, setOfflineState] = useState(readBoolState("offline"));
+  const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
+
+  // set theme
+
+  useEffect(() => {
+    darkTheme
+      ? document.body.classList.add("dark")
+      : document.body.classList.remove("dark")
+  })
+
 
   // map for easy access
 
@@ -106,6 +116,14 @@ const WriteProvider = ({ children }) => {
     saveState(key, list);
   }
   
+  // dark theme
+
+  const toggleDarkTheme = () => {
+    setDarkTheme(!darkTheme);
+    saveBoolState("dark-theme", !darkTheme);
+  }
+
+
   // offline state
 
   const setOffline = state => {
@@ -164,6 +182,7 @@ const WriteProvider = ({ children }) => {
       revertDelete,
       newText, saveNewText,
       offline, toggleOffline,
+      darkTheme, toggleDarkTheme,
       deleteText, saveText
     }}>
       {children}
