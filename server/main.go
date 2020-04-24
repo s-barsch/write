@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"log"
 )
 
 func main() {
@@ -16,7 +15,7 @@ func routes() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 
 
-	r.HandleFunc("/login/", login)
+	r.HandleFunc("/login", login)
 
 	r.Use(AuthHandler)
 
@@ -35,7 +34,7 @@ func AuthHandler(next http.Handler) http.Handler {
 }
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../user/build" + r.URL.Path)
+	http.ServeFile(w, r, "../app/build" + r.URL.Path)
 }
 
 func serveTexts(w http.ResponseWriter, r *http.Request) {
