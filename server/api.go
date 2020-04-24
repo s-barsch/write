@@ -9,8 +9,10 @@ import (
 )
 
 func textApi(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "PUT, DELETE")
+	if srv.flags.testing {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "PUT, DELETE")
+	}
 	switch r.Method {
 	case "PUT":
 		err := writeFile(w, r)

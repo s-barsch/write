@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
-	"log"
 )
 
 var srv *server
@@ -33,49 +32,8 @@ func routes() *mux.Router {
 	return r
 }
 
-func authHandler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		err := checkAuth(w, r)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "Not authorized", 403)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
-}
-
-func checkAuth(w http.ResponseWriter, r *http.Request) error {
-	token, err := getToken(r)
-	if err != nil {
-		return err
-	}
-	_, err = srv.memdb.Get(token)
-	if err != nil {
-		deleteAuthCookie(w)
-	}
-	return err
-}
-
-func getToken(r *http.Request) (string, error) {
-	c, err := r.Cookie("session")
-	if err != nil {
-		return "", err
-	}
-	return c.Value, nil
-}
-
-func deleteAuthCookie(w http.ResponseWriter) {
-	http.SetCookie(w, &http.Cookie{
-		Name:  "session",
-		Path:  "/",
-		MaxAge: -1,
-		//Secure: !*local,
-	})
-}
-
 func serveBuild(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../app/build"+r.URL.Path)
+	http.ServeFile(w, r, srv.paths.app+"/build"+r.URL.Path)
 }
 
 func serveTexts(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +42,9 @@ func serveTexts(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	if srv.flags.testing {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}
 	err = json.NewEncoder(w).Encode(texts)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
