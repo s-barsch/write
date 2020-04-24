@@ -23,18 +23,25 @@ h2 {
     font-weight:normal;
 }
 
-.text {
-    margin:.5rem 0;
-    background:#ccc;
-    max-width:44rem;
-}
-
-textarea {
+.dark .text a {
     color:#fff;
 }
 
+.text header {
+    padding:.5rem 1rem .75rem;
+}
+
+.text {
+    margin:.5rem 0 2rem;
+}
+
+.text,
 .text textarea {
-    padding:.5rem;
+    max-width:60rem;
+}
+
+.text textarea {
+    color:#fff;
     background:transparent;
     background:#111;
     overflow:hidden;
@@ -42,11 +49,10 @@ textarea {
     outline:none;
     resize:none;
     width:100%;
-    max-width:44rem;
-}
-
-.text header {
-    padding:.5rem .55rem;
+    
+    padding:.5rem 1rem;
+    font-size:2.25rem;
+    line-height:1.5;
 }
 
 .mod,
@@ -58,11 +64,10 @@ textarea {
 .mod {
     font-family:Arial, sans-serif;
     font-size:.875rem;
-    color:#000;
 }
 
 .name {
-    margin-right:.375rem;
+    margin-right:.75rem;
 }
 
 .del {
