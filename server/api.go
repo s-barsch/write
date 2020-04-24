@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
-	"net/http"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"os"
 )
 
 func textApi(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +58,7 @@ func writeFile(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(data + path, body, 0644)
+	err = ioutil.WriteFile(data+path, body, 0644)
 	if err == nil {
 		fmt.Printf("written: %v\n{%s}\n", path, body)
 	}

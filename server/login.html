@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<title>Login</title>
+<meta name="viewport" content="width=device-width">
+<style>
+* {
+	background:#000;
+	color:#fff;
+	font-size:1.375rem;
+    font-family:monospace;
+}
+.pass {
+	max-width:100%;
+    background:#333;
+    border:none;
+    outline:none;
+    color:#fff;
+    padding:4px;
+}
+</style>
+<form id="form" action="/login/verify/" method="post">
+    <input class="pass" name="pass" type="password">
+</form>

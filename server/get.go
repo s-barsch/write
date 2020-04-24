@@ -1,19 +1,19 @@
 package main
 
 import (
-	"strings"
-	"path/filepath"
 	"io/ioutil"
-	"time"
 	"os"
+	"path/filepath"
 	"sort"
+	"strings"
+	"time"
 )
 
 type Text struct {
-	Id   string		`json:"id"`
-	Path string		`json:"path"`
-	Body string		`json:"body"`
-	Mod  int64		`json:"mod"`
+	Id   string `json:"id"`
+	Path string `json:"path"`
+	Body string `json:"body"`
+	Mod  int64  `json:"mod"`
 }
 
 type Texts []*Text
@@ -33,7 +33,7 @@ func getTexts() (Texts, error) {
 		if err != nil {
 			return nil, err
 		}
-		texts = append(texts, &Text {
+		texts = append(texts, &Text{
 			Id:   makeId(fi.Name()),
 			Path: path,
 			Body: string(b),
