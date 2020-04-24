@@ -13,7 +13,7 @@ func main() {
 }
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../client/build" + r.URL.Path)
+	http.ServeFile(w, r, "../user/build" + r.URL.Path)
 }
 
 func serveTexts(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@ import emptyText from "../funcs/new";
 import { getRemoteTexts, saveRemote, deleteRemote } from "../funcs/remote";
 import { updateList, deleteEntry } from "../funcs/list";
 import { readState, saveState } from "../funcs/storage";
-import { readOfflineState, saveOfflineState } from "../funcs/storage";
+import { readBoolState, saveBoolState } from "../funcs/storage";
 
 export const WriteContext = createContext();
 
@@ -12,9 +12,11 @@ const WriteProvider = ({ children }) => {
   const [texts, setTexts] = useState(readState("texts"));
   const [writes, setWrites] = useState(readState("writes"));
   const [deletes, setDeletes] = useState(readState("deletes"));
-  const [offline, setOfflineState] = useState(readOfflineState());
+  const [offline, setOfflineState] = useState(readBoolState("offline"));
 
-  const hub = {
+  // map for easy access
+
+  const states = {
     "texts": {
       "state":    texts,
       "setState": setTexts,
@@ -28,6 +30,9 @@ const WriteProvider = ({ children }) => {
       "setState": setDeletes,
     },
   }
+
+
+  // initial fetch
   
   useEffect((offline, writes, deletes) => {
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
@@ -89,23 +94,23 @@ const WriteProvider = ({ children }) => {
   // saving functions
 
   const removeEntry = (key, t) => {
-    setList(key, deleteEntry(hub[key].state, t))
+    setList(key, deleteEntry(states[key].state, t))
   }
 
   const setEntry = (key, t) => {
-    setList(key, updateList(hub[key].state, t))
+    setList(key, updateList(states[key].state, t))
   }
 
   const setList = (key, list) => {
-    hub[key].setState(list);
+    states[key].setState(list);
     saveState(key, list);
   }
-
+  
   // offline state
 
   const setOffline = state => {
     setOfflineState(state);
-    saveOfflineState(state);
+    saveBoolState("offline", state);
   }
 
   const toggleOffline = () => {
@@ -130,8 +135,8 @@ const WriteProvider = ({ children }) => {
     for (const t of wrs) {
       try {
         await saveRemote(t);
-        wrs = deleteEntry(wrs, t)
-        setList("writes", wrs)
+        wrs = deleteEntry(wrs, t);
+        setList("writes", wrs);
       } catch(err) {
         setOffline(true);
         console.log(err);

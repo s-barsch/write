@@ -7,7 +7,6 @@ const OfflineCheckbox = () => {
   return (
     <input
       className="offline"
-      name="isGoing"
       type="checkbox"
       onChange={toggleOffline}
       checked={offline}
