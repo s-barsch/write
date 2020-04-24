@@ -15,6 +15,9 @@ func main() {
 func routes() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 
+
+	r.HandleFunc("/login/", login)
+
 	r.Use(AuthHandler)
 
 	r.HandleFunc("/api/texts/", serveTexts)
