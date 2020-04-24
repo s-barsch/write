@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
+	"log"
 )
 
+var srv *server
+
 func main() {
+	srv = newServer()
+
 	http.Handle("/", routes())
 	http.ListenAndServe(":8231", nil)
 }
@@ -17,19 +22,55 @@ func routes() *mux.Router {
 	r.HandleFunc("/login/verify", loginVerify)
 	r.HandleFunc("/login", login)
 
-	r.Use(AuthHandler)
+	s := r.PathPrefix("/").Subrouter()
 
-	r.HandleFunc("/api/texts/", serveTexts)
-	r.HandleFunc("/api/text/", textApi)
+	s.Use(authHandler)
 
-	r.PathPrefix("/").HandlerFunc(serveBuild)
+	s.HandleFunc("/api/texts/", serveTexts)
+	s.HandleFunc("/api/text/", textApi)
+	s.PathPrefix("/").HandlerFunc(serveBuild)
 
 	return r
 }
 
-func AuthHandler(next http.Handler) http.Handler {
+func authHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		err := checkAuth(w, r)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Not authorized", 403)
+			return
+		}
 		next.ServeHTTP(w, r)
+	})
+}
+
+func checkAuth(w http.ResponseWriter, r *http.Request) error {
+	token, err := getToken(r)
+	if err != nil {
+		return err
+	}
+	_, err = srv.memdb.Get(token)
+	if err != nil {
+		deleteAuthCookie(w)
+	}
+	return err
+}
+
+func getToken(r *http.Request) (string, error) {
+	c, err := r.Cookie("session")
+	if err != nil {
+		return "", err
+	}
+	return c.Value, nil
+}
+
+func deleteAuthCookie(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:  "session",
+		Path:  "/",
+		MaxAge: -1,
+		//Secure: !*local,
 	})
 }
 

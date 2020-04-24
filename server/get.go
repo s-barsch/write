@@ -18,17 +18,14 @@ type Text struct {
 
 type Texts []*Text
 
-var app = ".."
-var data = app + "/texts"
-
 func getTexts() (Texts, error) {
-	l, err := ioutil.ReadDir(data)
+	l, err := ioutil.ReadDir(srv.paths.texts)
 	if err != nil {
 		return nil, err
 	}
 	texts := Texts{}
 	for _, fi := range l {
-		path := filepath.Join(data, fi.Name())
+		path := filepath.Join(srv.paths.texts, fi.Name())
 		b, err := ioutil.ReadFile(path)
 		if err != nil {
 			return nil, err

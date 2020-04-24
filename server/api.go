@@ -37,12 +37,12 @@ func deleteFile(w http.ResponseWriter, r *http.Request) error {
 	if path == "/" {
 		return fmt.Errorf("must provied filepath")
 	}
-	_, err := os.Stat(data + path)
+	_, err := os.Stat(srv.paths.texts + path)
 	if err != nil {
 		fmt.Println("file not found, so see it as removed")
 		return nil
 	}
-	err = os.Remove(data + path)
+	err = os.Remove(srv.paths.texts + path)
 	if err == nil {
 		fmt.Printf("removed: %v\n", path)
 	}
@@ -58,7 +58,7 @@ func writeFile(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(data+path, body, 0644)
+	err = ioutil.WriteFile(srv.paths.texts+path, body, 0644)
 	if err == nil {
 		fmt.Printf("written: %v\n{%s}\n", path, body)
 	}
