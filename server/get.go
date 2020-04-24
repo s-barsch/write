@@ -14,12 +14,11 @@ type Text struct {
 	Path string		`json:"path"`
 	Body string		`json:"body"`
 	Mod  int64		`json:"mod"`
-	//Mod  time.Time	`json:"mod"`
 }
 
 type Texts []*Text
 
-var app = "/home/stef/go/src/write"
+var app = ".."
 var data = app + "/texts"
 
 func getTexts() (Texts, error) {

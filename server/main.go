@@ -3,13 +3,32 @@ package main
 import (
 	"net/http"
 	"encoding/json"
+	"github.com/gorilla/mux"
+	"log"
 )
 
 func main() {
-	http.HandleFunc("/", serveBuild)
-	http.HandleFunc("/api/texts/", serveTexts)
-	http.HandleFunc("/api/text/", textApi)
+	http.Handle("/", routes())
 	http.ListenAndServe(":8231", nil)
+}
+
+func routes() *mux.Router {
+	r := mux.NewRouter().StrictSlash(true)
+
+	r.Use(AuthHandler)
+
+	r.HandleFunc("/api/texts/", serveTexts)
+	r.HandleFunc("/api/text/", textApi)
+
+	r.PathPrefix("/").HandlerFunc(serveBuild)
+
+	return r
+}
+
+func AuthHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		next.ServeHTTP(w, r)
+	})
 }
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {
