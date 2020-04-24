@@ -21,7 +21,7 @@ export const updateList = (list, t) => {
   return list;
 }
 
-export const deleteEntry = (list, t) => {
+export const trimList = (list, t) => {
   return list.filter(el => { return el.id !== t.id });
 }
 

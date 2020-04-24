@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import emptyText from "../funcs/new";
 import { getRemoteTexts, saveRemote, deleteRemote } from "../funcs/remote";
-import { updateList, deleteEntry } from "../funcs/list";
+import { updateList, trimList } from "../funcs/list";
 import { readState, saveState } from "../funcs/storage";
 import { readBoolState, saveBoolState } from "../funcs/storage";
 
@@ -104,7 +104,7 @@ const WriteProvider = ({ children }) => {
   // saving functions
 
   const removeEntry = (key, t) => {
-    setList(key, deleteEntry(states[key].state, t))
+    setList(key, trimList(states[key].state, t))
   }
 
   const setEntry = (key, t) => {
@@ -153,7 +153,7 @@ const WriteProvider = ({ children }) => {
     for (const t of wrs) {
       try {
         await saveRemote(t);
-        wrs = deleteEntry(wrs, t);
+        wrs = trimList(wrs, t);
         setList("writes", wrs);
       } catch(err) {
         setOffline(true);
@@ -166,7 +166,7 @@ const WriteProvider = ({ children }) => {
     for (const t of dels) {
       try {
         await deleteRemote(t);
-        dels = deleteEntry(dels, t)
+        dels = trimList(dels, t)
         setList("deletes", dels)
       } catch(err) {
         setOffline(true);
