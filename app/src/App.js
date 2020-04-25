@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
-import "./main.css";
+import "./main.scss";
 import Top from "./sections/top";
 import Texts from "./sections/texts";
 import Single from "./sections/single";
