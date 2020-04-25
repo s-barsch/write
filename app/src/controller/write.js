@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import emptyText from "../funcs/new";
 import { getRemoteTexts, saveRemote, deleteRemote } from "../funcs/remote";
 import { updateList, trimList } from "../funcs/list";
@@ -57,9 +58,12 @@ const WriteProvider = ({ children }) => {
 
   // actions
 
+  let history = useHistory();
+
   const saveNewText = t => {
     setNewText(emptyText());
     saveText(t);
+    history.push("/texts/" + t.id + ".txt");
   }
 
   const saveText = t => {
