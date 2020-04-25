@@ -12,8 +12,15 @@ const Single = () => {
   const id = name.substr(0, name.lastIndexOf("."))
   const text = texts.find((t) => t.id === id);
 
+  if (!text) {
+    return (
+      <div>Text <code>{name}</code> not found!</div>
+    )
+  }
+
   return (
-    <Text key={makeKey(text.id)} text={text} saveFn={saveText} delFn={deleteText} />
+    <Text key={makeKey(text.id)} text={text} saveFn={saveText} delFn={deleteText}
+    minRows={20} focus={true} />
   )
 }
 
