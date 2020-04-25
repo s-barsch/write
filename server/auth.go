@@ -23,7 +23,10 @@ func authHandler(next http.Handler) http.Handler {
 		} else {
 			err := checkAuth(w, r)
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"path": r.URL.Path,
+					"func": "checkAuth",
+				}).Info(err)
 				http.Error(w, "Not authorized", 403)
 				return
 			}
