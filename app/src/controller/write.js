@@ -19,10 +19,9 @@ const WriteProvider = ({ children }) => {
 
   useEffect(() => {
     darkTheme
-      ? document.body.classList.add("dark")
-      : document.body.classList.remove("dark")
+      ? document.body.classList.add("dark-theme")
+      : document.body.classList.remove("dark-theme")
   })
-
 
   // map for easy access
 
