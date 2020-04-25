@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/gorilla/securecookie"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"text/template"
 )
@@ -20,8 +20,7 @@ func authHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if srv.flags.testing {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
-		}
-		if !srv.flags.testing {
+		} else {
 			err := checkAuth(w, r)
 			if err != nil {
 				log.Error(err)

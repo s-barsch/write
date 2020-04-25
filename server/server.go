@@ -34,10 +34,7 @@ func newServer() *server {
 	testing := flag.Bool("testing", false, "set true for corss origin requests")
 	flag.Parse()
 
-	setLogLevel(*testing)
-	log.SetFormatter(&log.TextFormatter{
-		FullTimestamp: true,
-	})
+	setLogger(*testing)
 
 	memdb := memcache.New("127.0.0.1:11211")
 	err := testMemcache(memdb)
@@ -52,6 +49,13 @@ func newServer() *server {
 			testing: *testing,
 		},
 	}
+}
+
+func setLogger(testing bool) {
+	setLogLevel(testing)
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+	})
 }
 
 func setLogLevel(testing bool) {

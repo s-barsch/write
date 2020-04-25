@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -18,14 +18,14 @@ func textApi(w http.ResponseWriter, r *http.Request) {
 	var fn string
 	switch r.Method {
 	case "PUT":
-		fn  = "writeFile"
+		fn = "writeFile"
 		err = writeFile(w, r)
 		return
 	case "DELETE":
-		fn  = "deleteFile"
+		fn = "deleteFile"
 		err = deleteFile(w, r)
 	default:
-		fn  = "textApi"
+		fn = "textApi"
 		err = fmt.Errorf("GET request not suported.")
 	}
 
