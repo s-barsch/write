@@ -20,6 +20,7 @@ type paths struct {
 	root  string
 	texts string
 	app   string
+	build string
 }
 
 func newPaths(root string) *paths {
@@ -27,6 +28,7 @@ func newPaths(root string) *paths {
 		root:  root,
 		texts: root + "/texts",
 		app:   root + "/app",
+		build: root + "/app/build",
 	}
 }
 

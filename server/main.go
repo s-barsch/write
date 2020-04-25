@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
+	"os"
 )
 
 var srv *server
@@ -33,7 +34,15 @@ func routes() *mux.Router {
 }
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, srv.paths.app+"/build"+r.URL.Path)
+	if r.URL.Path != "/" {
+		file := srv.paths.build+r.URL.Path
+		_, err := os.Stat(file)
+		if err == nil {
+			http.ServeFile(w, r, file)
+			return
+		}
+	}
+	http.ServeFile(w, r, srv.paths.build+"/index.html")
 }
 
 func serveTexts(w http.ResponseWriter, r *http.Request) {

@@ -20,7 +20,6 @@ func textApi(w http.ResponseWriter, r *http.Request) {
 	case "PUT":
 		fn = "writeFile"
 		err = writeFile(w, r)
-		return
 	case "DELETE":
 		fn = "deleteFile"
 		err = deleteFile(w, r)
@@ -64,7 +63,7 @@ func writeFile(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(srv.paths.texts+path, body, 0644)
+	err = ioutil.WriteFile(srv.paths.texts+path, body, 0664)
 	if err == nil {
 		log.Infof("written.\n{%s}\n", body)
 	}
