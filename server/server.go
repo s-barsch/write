@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/bradfitz/gomemcache/memcache"
-	"log"
+	log "github.com/sirupsen/logrus"
 )
 
 type server struct {
@@ -34,11 +34,16 @@ func newServer() *server {
 	testing := flag.Bool("testing", false, "set true for corss origin requests")
 	flag.Parse()
 
+	setLogLevel(*testing)
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+	})
+
 	memdb := memcache.New("127.0.0.1:11211")
 	err := testMemcache(memdb)
 	if err != nil {
-		log.Println(err)
-		log.Fatal("error: memcache is down.")
+		log.Error(err)
+		log.Fatalln("error: memcache is down.")
 	}
 	return &server{
 		memdb: memdb,
@@ -47,6 +52,14 @@ func newServer() *server {
 			testing: *testing,
 		},
 	}
+}
+
+func setLogLevel(testing bool) {
+	if testing {
+		log.SetLevel(log.InfoLevel)
+		return
+	}
+	log.SetLevel(log.WarnLevel)
 }
 
 func testMemcache(memdb *memcache.Client) error {

@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/securecookie"
 	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"text/template"
 )
@@ -24,7 +24,7 @@ func authHandler(next http.Handler) http.Handler {
 		if !srv.flags.testing {
 			err := checkAuth(w, r)
 			if err != nil {
-				log.Println(err)
+				log.Error(err)
 				http.Error(w, "Not authorized", 403)
 				return
 			}
@@ -67,20 +67,20 @@ func deleteAuthCookie(w http.ResponseWriter) {
 func login(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./login.html")
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
 	err = t.Execute(w, "")
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 }
 
 func loginVerify(w http.ResponseWriter, r *http.Request) {
 	err := initializeSession(w, r.FormValue("pass"))
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		http.Error(w, "Failed login", 401)
 		return
 	}
