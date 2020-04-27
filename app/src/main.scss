@@ -17,8 +17,9 @@ $breakWide:   90rem;
     --color-text-bg-focus: hsl(56 100% 95%);
     --color-gray-link: hsl(0 0% 60%);
 
-    --fontsize-textarea: 1.75rem;
-    --side-margin: 1rem;
+    --fontsize-textarea: 1.5625rem;
+    --fontsize-lineheight: 1.35;
+    --side-margin: .5rem;
 }
 
 .dark-theme {
@@ -33,7 +34,8 @@ $breakWide:   90rem;
 @media (min-width: $breakSingle) {
     :root {
         --side-margin: 1rem;
-        --fontsize-textarea: 2.25rem;
+        --fontsize-lineheight: 1.4;
+        --fontsize-textarea: 2.4rem;
     }
 }
 
@@ -68,17 +70,20 @@ body {
 
 .name,
 .mod {
-    color: var(--color-fg);
+    font-size:1rem;
+    font-family:mono;
 }
 
 .name {
-    font-family:Georgia, serif;
-    font-size:1.125rem;
+    color: var(--color-fg);
 }
 
 .mod {
-    font-family:Arial, sans-serif;
-    font-size:.875rem;
+    user-select:none;
+    cursor: pointer;
+}
+
+.mod:active {
 }
 
 .name {
@@ -96,6 +101,7 @@ body {
     color:var(--color-fg);
     background:var(--color-text-bg);
 
+    margin-top:.5rem;
     overflow:hidden;
     border:none;
     outline:none;
@@ -103,11 +109,11 @@ body {
     width:100%;
     
     font-size:var(--fontsize-textarea);
-    line-height:1.5;
+    line-height:var(--fontsize-lineheight);
 }
 
 .text textarea:focus {
-    background:var(--color-text-bg-focus);
+    // background:var(--color-text-bg-focus);
 }
 
 .del {
@@ -115,7 +121,7 @@ body {
     cursor:pointer;
     float:right;
     line-height:1;
-    padding:.25rem;
+    ////padding:.25rem;
     font-size:1rem;
 }
 

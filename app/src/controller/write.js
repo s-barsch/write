@@ -70,8 +70,6 @@ const WriteProvider = ({ children }) => {
     setEntry("texts", t)
     setEntry("writes", t)
 
-    console.log("did here");
-
     if (offline) return;
 
     saveRemote(t).then(
