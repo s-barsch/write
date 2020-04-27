@@ -1,10 +1,4 @@
 
-let server = "";
-
-if (process.env.NODE_ENV === "development") {
-  server = "http://192.168.1.7:8231";
-}
-
 export const getRemoteTexts = () => {
   const ms = 1500;
   const abortController = new AbortController();
@@ -14,7 +8,7 @@ export const getRemoteTexts = () => {
       reject("Request terminated after " + ms + "ms.");
     }, ms)
 
-    fetch(server + "/api/texts/", {
+    fetch("/api/texts/", {
       signal: abortController.signal,
     }).then(
       resp => {
@@ -64,7 +58,7 @@ const makeFetch = (fetchPromise, abortController) => {
 export const saveRemote = t => {
   let controller = new AbortController();
   return makeFetch(
-    fetch(server + "/api/text/" + t.id + ".txt", {
+    fetch("/api/text/" + t.id + ".txt", {
       method: "PUT",
       signal: controller.signal,
       body: t.body
@@ -76,7 +70,7 @@ export const saveRemote = t => {
 export const deleteRemote = t => {
   let controller = new AbortController();
   return makeFetch(
-    fetch(server + "/api/text/" + t.id + ".txt", {
+    fetch("/api/text/" + t.id + ".txt", {
       method: "DELETE",
       signal: controller.signal
     }),

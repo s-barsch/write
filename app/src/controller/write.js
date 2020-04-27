@@ -70,6 +70,8 @@ const WriteProvider = ({ children }) => {
     setEntry("texts", t)
     setEntry("writes", t)
 
+    console.log("did here");
+
     if (offline) return;
 
     saveRemote(t).then(
@@ -111,11 +113,11 @@ const WriteProvider = ({ children }) => {
   // saving functions
 
   const removeEntry = (key, t) => {
-    setList(key, trimList(states[key].state, t))
+    setList(key, trimList(states[key].state.slice(), t))
   }
 
   const setEntry = (key, t) => {
-    setList(key, updateList(states[key].state, t))
+    setList(key, updateList(states[key].state.slice(), t))
   }
 
   const setList = (key, list) => {
