@@ -38,7 +38,7 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
   }
 
   if (minRows > 5) {
-    minRows = Math.round(window.screen.height/(2.25*16)) - 8;
+    minRows = Math.round(window.screen.height/(2.25*16)) - 6;
   }
 
   return (
