@@ -1,7 +1,6 @@
 import React, { useContext} from "react";
 import { NavLink }  from "react-router-dom";
 import { WriteContext } from "../controller/write";
-//import Clear from '@material-ui/icons/ClearSharp';
 import OnlineIcon from '@material-ui/icons/WifiSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
 import ColorModeIcon from '@material-ui/icons/WbSunnySharp';
@@ -13,16 +12,6 @@ const OfflineCheckbox = () => {
       ? (<OfflineIcon />)
       : (<OnlineIcon />)}</button>
   )
-  /*
-    <>
-      <input
-        className="offline"
-        type="checkbox"
-        onChange={toggleOffline}
-        checked={offline}
-        />
-    </>
-    */
 }
 
 const DarkThemeCheckbox = () => {
@@ -30,16 +19,6 @@ const DarkThemeCheckbox = () => {
   return (
     <button onClick={toggleDarkTheme}><ColorModeIcon /></button>
   )
-  /*
-    <>
-      <input
-        className="offline"
-        type="checkbox"
-        onChange={toggleDarkTheme}
-        checked={darkTheme}
-        />
-    </>
-    */
 }
 
 const Top = () => {

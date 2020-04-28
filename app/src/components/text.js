@@ -2,8 +2,14 @@ import React from 'react';
 import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
+import DeleteIcon from '@material-ui/icons/ClearSharp';
 
 export const TextList = ({ texts, saveFn, delFn }) => {
+  if (!texts || texts.length === 0) {
+    return (
+      <div>No texts found!</div>
+    )
+  }
   return (
     texts.map((text, i) => (
       <Text key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn} />
@@ -51,13 +57,11 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
 
 const Del = ({ text, delFn }) => {
   const del = () => {
-    delFn(text);
-    /*
-    if (window.confirm("Delte this text?")) {
+    if (window.confirm("Delete this text?")) {
+      delFn(text);
     }
-    */
   }
-  return <span className="del" onClick={del}>✕</span>
+  return <button className="del" onClick={del}><DeleteIcon /></button>
 }
 
 
