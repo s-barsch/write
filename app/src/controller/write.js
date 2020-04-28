@@ -168,14 +168,18 @@ const WriteProvider = ({ children }) => {
   // going online
   
   const loadTexts = () => {
-      getRemoteTexts().then(
-        texts => {
-          // Rules of Hooks don’t allow the setList function
-          setTexts(texts);
-          saveState("texts", texts);
-        },
-        err => console.log(err)
-      );
+    // Rules of Hooks don’t allow functions "setList" and "setOffline".
+    getRemoteTexts().then(
+      texts => {
+        setTexts(texts);
+        saveState("texts", texts);
+      },
+      err => {
+        console.log(err);
+        setOfflineState(true);
+        saveBoolState("offline", true);
+      }
+    );
   }
 
   const isEmpty = list => {
