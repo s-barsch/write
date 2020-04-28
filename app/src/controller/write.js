@@ -47,14 +47,20 @@ const WriteProvider = ({ children }) => {
   useEffect(() => {
 
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
-      loadTexts();
+      (async () => {
+        setConnecting(true);
+        await loadTexts();
+        setConnecting(false);
+      })()
     }
 
     let wasFocus = true;
 
-    const onPageFocusChange = event => {
+    const onPageFocusChange = async event => {
       if (!offline && !document.hidden && !wasFocus) {
-        loadTexts();
+        setConnecting(true);
+        await loadTexts();
+        setConnecting(false);
         return;
       }
       wasFocus = !document.hidden;
@@ -93,7 +99,7 @@ const WriteProvider = ({ children }) => {
     )
   }
 
-  const deleteText = t => {
+  const deleteText =t => {
     removeEntry("texts", t);
     removeEntry("writes", t);
     setEntry("deletes", t);

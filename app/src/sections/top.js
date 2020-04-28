@@ -33,12 +33,12 @@ const DarkThemeCheckbox = () => {
 }
 
 const Top = () => {
-  const { offline } = useContext(WriteContext);
+  //const { offline } = useContext(WriteContext);
   return (
     <nav id="nav">
       <NavLink to="/" exact={true}>Write</NavLink>
       <NavLink to="/texts/">Texts</NavLink>
-      { offline && <NavLink to="/queue/">Local</NavLink> }
+      { /* offline && <NavLink to="/queue/">Local</NavLink> */ }
       <nav className="options">
         <OfflineCheckbox />
         <DarkThemeCheckbox />
