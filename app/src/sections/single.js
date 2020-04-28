@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { WriteContext } from "../controller/write";
 import { Text } from "../components/text";
+import Error from '../components/error';
 
 const Single = () => {
   const { texts, saveText, deleteText } = useContext(WriteContext);
@@ -14,7 +15,11 @@ const Single = () => {
 
   if (!text) {
     return (
-      <div>Text <code>{name}</code> not found!</div>
+      <Error message={
+        <>
+          Text <samp>{name}</samp> not found.
+        </>
+      } />
     )
   }
 

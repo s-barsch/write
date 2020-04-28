@@ -3,11 +3,12 @@ import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
 import DeleteIcon from '@material-ui/icons/ClearSharp';
+import Error from './error';
 
 export const TextList = ({ texts, saveFn, delFn }) => {
   if (!texts || texts.length === 0) {
     return (
-      <div>No texts found!</div>
+      <Error message={<>No <samp>Texts</samp> found.</>} />
     )
   }
   return (

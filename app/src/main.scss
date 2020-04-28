@@ -18,6 +18,7 @@ $breakWide:   90rem;
     --color-text-bg-focus: hsl(56 100% 95%);
     --color-gray-link: hsl(0 0% 60%);
 
+    --fontsize-body:1.125rem;
     --fontsize-nav: 1.3rem;
     --fontsize-textarea: 1.5625rem;
     --fontsize-lineheight: 1.35;
@@ -35,6 +36,7 @@ $breakWide:   90rem;
 
 @media (min-width: $breakSingle) {
     :root {
+        --fontsize-body:1.25rem;
         --fontsize-nav: 2rem;
         --side-margin: 1rem;
         --fontsize-lineheight: 1.4;
@@ -43,6 +45,7 @@ $breakWide:   90rem;
 }
 
 body {
+    font-size:var(--fontsize-body);
     margin:0;
     background:var(--color-bg);
     color:var(--color-fg);
@@ -64,7 +67,16 @@ button:hover {
     color:var(--color-highlight);
 }
 
+.error {
+    margin:.5rem 0;
+}
+
+.error samp {
+    margin:0 .25rem;
+}
+
 #nav,
+.error,
 .text textarea,
 .text header {
     padding:0 var(--side-margin);
@@ -141,11 +153,13 @@ button:hover {
 
 .del {
     color:red;
-    cursor:pointer;
     float:right;
-    line-height:1;
     ////padding:.25rem;
-    font-size:1rem;
+}
+
+.del svg {
+    vertical-align:middle;
+    font-size:var(--fontsize-body);
 }
 
 #nav input, 
