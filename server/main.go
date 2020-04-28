@@ -35,7 +35,7 @@ func routes() *mux.Router {
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		file := srv.paths.build+r.URL.Path
+		file := srv.paths.build + r.URL.Path
 		_, err := os.Stat(file)
 		if err == nil {
 			http.ServeFile(w, r, file)
@@ -50,9 +50,6 @@ func serveTexts(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
-	}
-	if srv.flags.testing {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
 	}
 	err = json.NewEncoder(w).Encode(texts)
 	if err != nil {

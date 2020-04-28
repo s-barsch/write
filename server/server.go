@@ -13,7 +13,7 @@ type server struct {
 }
 
 type flags struct {
-	testing bool
+	debug bool
 }
 
 type paths struct {
@@ -23,20 +23,24 @@ type paths struct {
 	build string
 }
 
-func newPaths(root string) *paths {
+func newPaths(root string, debug bool) *paths {
+	textsDir := "/texts"
+	if debug {
+		textsDir = "/debug/texts"
+	}
 	return &paths{
 		root:  root,
-		texts: root + "/texts",
+		texts: root + textsDir,
 		app:   root + "/app",
 		build: root + "/app/build",
 	}
 }
 
 func newServer() *server {
-	testing := flag.Bool("testing", false, "set true for corss origin requests")
+	debug := flag.Bool("debug", false, "set true for cross origin requests")
 	flag.Parse()
 
-	setLogger(*testing)
+	setLogger(*debug)
 
 	memdb := memcache.New("127.0.0.1:11211")
 	err := testMemcache(memdb)
@@ -46,22 +50,22 @@ func newServer() *server {
 	}
 	return &server{
 		memdb: memdb,
-		paths: newPaths(".."),
+		paths: newPaths("..", *debug),
 		flags: &flags{
-			testing: *testing,
+			debug: *debug,
 		},
 	}
 }
 
-func setLogger(testing bool) {
-	setLogLevel(testing)
+func setLogger(debug bool) {
+	setLogLevel(debug)
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp: true,
 	})
 }
 
-func setLogLevel(testing bool) {
-	if testing {
+func setLogLevel(debug bool) {
+	if debug {
 		log.SetLevel(log.InfoLevel)
 		return
 	}
