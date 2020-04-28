@@ -14,6 +14,7 @@ const WriteProvider = ({ children }) => {
   const [writes, setWrites] = useState(readState("writes"));
   const [deletes, setDeletes] = useState(readState("deletes"));
   const [offline, setOfflineState] = useState(readBoolState("offline"));
+  const [connecting, setConnecting] = useState(false);
   const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
 
   // set theme
@@ -149,11 +150,17 @@ const WriteProvider = ({ children }) => {
     saveBoolState("offline", state);
   }
 
-  const toggleOffline = () => {
+  const toggleOffline = async () => {
     if (offline) {
-      emptyQueue();
-      setOffline(false);
-      return
+      setConnecting(true);
+      try {
+        await emptyQueue()
+        setOffline(false);
+      } catch(err) {
+        console.log(err);
+      }
+      setConnecting(false);
+      return;
     }
     setOffline(true);
   }
@@ -163,7 +170,7 @@ const WriteProvider = ({ children }) => {
   const loadTexts = () => {
       getRemoteTexts().then(
         texts => {
-          // react hook rules dont allow setList function
+          // Rules of Hooks don’t allow the setList function
           setTexts(texts);
           saveState("texts", texts);
         },
@@ -176,33 +183,31 @@ const WriteProvider = ({ children }) => {
     return list.length === 0
   }
 
-  const emptyQueue = async () => {
-
-    let wrs = writes.slice();
-    for (const t of wrs) {
-      try {
-        await saveRemote(t);
-        wrs = trimList(wrs, t);
-        setList("writes", wrs);
-      } catch(err) {
-        setOffline(true);
-        console.log(err);
-        return;
+  const emptyQueue = () => {
+    return new Promise(async (resolve, reject) => {
+      let wrs = writes.slice();
+      for (const t of wrs) {
+        try {
+          await saveRemote(t);
+          wrs = trimList(wrs, t);
+          setList("writes", wrs);
+        } catch(err) {
+          reject(err);
+        }
       }
-    }
 
-    let dels = deletes.slice();
-    for (const t of dels) {
-      try {
-        await deleteRemote(t);
-        dels = trimList(dels, t)
-        setList("deletes", dels)
-      } catch(err) {
-        setOffline(true);
-        console.log(err);
-        return;
+      let dels = deletes.slice();
+      for (const t of dels) {
+        try {
+          await deleteRemote(t);
+          dels = trimList(dels, t)
+          setList("deletes", dels)
+        } catch(err) {
+          reject(err);
+        }
       }
-    }
+      resolve();
+    })
   }
 
   return (
@@ -210,7 +215,7 @@ const WriteProvider = ({ children }) => {
       texts, writes, deletes,
       delWrite, revertDelete,
       newText, saveNewText,
-      offline, toggleOffline,
+      connecting, offline, toggleOffline,
       darkTheme, toggleDarkTheme,
       deleteText, saveText
     }}>
