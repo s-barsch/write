@@ -12,11 +12,13 @@ $breakWide:   90rem;
 :root {
     --color-bg: hsl(0 0% 100%);
     --color-fg: black;
+    --color-highlight: red;
     --color-text-fg: white;
     --color-text-bg: hsl(0 0% 100%);
     --color-text-bg-focus: hsl(56 100% 95%);
     --color-gray-link: hsl(0 0% 60%);
 
+    --fontsize-nav: 1.3rem;
     --fontsize-textarea: 1.5625rem;
     --fontsize-lineheight: 1.35;
     --side-margin: .5rem;
@@ -33,6 +35,7 @@ $breakWide:   90rem;
 
 @media (min-width: $breakSingle) {
     :root {
+        --fontsize-nav: 2rem;
         --side-margin: 1rem;
         --fontsize-lineheight: 1.4;
         --fontsize-textarea: 2.4rem;
@@ -45,6 +48,22 @@ body {
     color:var(--color-fg);
 }
 
+button {
+    background:transparent;
+    border:0;
+    outline:none;
+    color:var(--color-fg);
+    cursor:pointer;
+}
+
+button .MuiSvgIcon-root {
+    font-size:var(--fontsize-nav);
+}
+
+button:hover {
+    color:var(--color-highlight);
+}
+
 #nav,
 .text textarea,
 .text header {
@@ -53,7 +72,7 @@ body {
 
 #nav {
     margin:.5rem 0 0;
-    font-size:2rem;
+    font-size:var(--fontsize-nav);
 }
 
 #nav a {
@@ -62,6 +81,10 @@ body {
 }
 #nav .active {
     color:red;
+}
+
+.options {
+    float:right;
 }
 
 .text {
