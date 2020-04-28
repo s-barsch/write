@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
@@ -29,18 +29,30 @@ const Info = ({ text, submit, delFn }) => {
 }
 
 export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
+  const [body, setBody] = useState(text.body);
+
+  useEffect(() => {
+    if (body !== text.body) {
+      setBody(text.body)
+    }
+  }, [body, text]);
+
+  const handleTyping = event => {
+    setBody(event.target.value);
+  }
+
   const submit = e => {
-    if (e.target.value === "") {
+    if (body === "") {
       return
     }
     /*
     const target = e.target;
-    if (target.value === text.body && target.classList.value !== "mod") {
+    if (target.classList.value !== "mod") {
       return;
     }
     */
     text.mod  = Date.now();
-    text.body = e.target.value;
+    text.body = body;
     saveFn(text);
   }
 
@@ -51,7 +63,13 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
   return (
     <article className="text">
       <Info text={text} submit={submit} delFn={delFn} />
-    <TextareaAutosize autoFocus={focus ? true : false} minRows={minRows} defaultValue={text.body} onBlur={submit} />
+      <TextareaAutosize
+        autoFocus={focus ? true : false}
+        minRows={minRows}
+        value={body}
+        onChange={handleTyping}
+        onBlur={submit}
+        />
     </article>
   )
 }

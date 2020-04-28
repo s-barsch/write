@@ -99,7 +99,7 @@ const WriteProvider = ({ children }) => {
     )
   }
 
-  const deleteText =t => {
+  const deleteText = t => {
     removeEntry("texts", t);
     removeEntry("writes", t);
     setEntry("deletes", t);
