@@ -41,20 +41,31 @@ const WriteProvider = ({ children }) => {
     },
   }
 
-
-  // initial fetch
+  // loading texts
   
-  useEffect((offline, writes, deletes) => {
+  useEffect(() => {
+
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
-      getRemoteTexts().then(
-        texts => {
-          setTexts(texts);
-          saveState("texts", texts);
-        },
-        err => console.log(err)
-      );
+      loadTexts();
     }
-  }, []);
+
+    let wasFocus = true;
+
+    const onPageFocusChange = event => {
+      if (!offline && !document.hidden && !wasFocus) {
+        loadTexts();
+        return;
+      }
+      wasFocus = !document.hidden;
+    };
+
+    document.addEventListener("visibilitychange", onPageFocusChange);
+    
+    return () => {
+      document.removeEventListener("visibilitychange", onPageFocusChange);
+    }
+  }, [offline, writes, deletes]);
+
 
   // actions
 
@@ -148,6 +159,17 @@ const WriteProvider = ({ children }) => {
   }
 
   // going online
+  
+  const loadTexts = () => {
+      getRemoteTexts().then(
+        texts => {
+          // react hook rules dont allow setList function
+          setTexts(texts);
+          saveState("texts", texts);
+        },
+        err => console.log(err)
+      );
+  }
 
   const isEmpty = list => {
     if (!list) return true
