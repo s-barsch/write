@@ -32,10 +32,8 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
   const [body, setBody] = useState(text.body);
 
   useEffect(() => {
-    if (body !== text.body) {
       setBody(text.body)
-    }
-  }, [body, text]);
+  }, [text.body]);
 
   const handleTyping = event => {
     setBody(event.target.value);
