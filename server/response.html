@@ -1,12 +1,16 @@
+{{define "head" -}}
 <!DOCTYPE html>
-<title>Login</title>
 <meta name="viewport" content="width=device-width">
 <style>
-* {
+.pass,
+body {
 	background:#000;
 	color:#fff;
 	font-size:1.375rem;
     font-family:monospace;
+}
+a, a:visited {
+    color:lightblue;
 }
 .pass {
 	max-width:100%;
@@ -17,7 +21,21 @@
     padding:4px;
 }
 </style>
+{{end}}
+
+{{define "login" -}}
+{{template "head"}}
+<title>Login</title>
 <form id="form" action="/login/verify" method="post">
     <input class="pass" name="pass" type="password">
-</form:q
->
+</form>
+{{end}}
+
+{{define "access-denied" -}}
+{{template "head"}}
+<title>Write</title>
+<code>access denied</code>
+<br>
+<br>
+<a href="/login">login</a>
+{{end}}

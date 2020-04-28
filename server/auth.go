@@ -9,7 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
 	"net/http"
-	"text/template"
 )
 
 const COOKIE_NAME = "session"
@@ -24,7 +23,7 @@ func authHandler(next http.Handler) http.Handler {
 				"path": r.URL.Path,
 				"func": "checkAuth",
 			}).Info(err)
-			http.Error(w, "Not authorized", 403)
+			serveTemplate(w, "access-denied")
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -63,16 +62,7 @@ func deleteAuthCookie(w http.ResponseWriter) {
 // login
 
 func login(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("./login.html")
-	if err != nil {
-		log.Error(err)
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	err = t.Execute(w, "")
-	if err != nil {
-		log.Error(err)
-	}
+	serveTemplate(w, "login")
 }
 
 func loginVerify(w http.ResponseWriter, r *http.Request) {

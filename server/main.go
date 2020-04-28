@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os"
+	"text/template"
 )
 
 var srv *server
@@ -31,6 +33,19 @@ func routes() *mux.Router {
 	s.PathPrefix("/").HandlerFunc(serveBuild)
 
 	return r
+}
+
+func serveTemplate(w http.ResponseWriter, tmpl string) {
+	t, err := template.ParseFiles("./response.html")
+	if err != nil {
+		log.Error(err)
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	err = t.ExecuteTemplate(w, tmpl, "")
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {
