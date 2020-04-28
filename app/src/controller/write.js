@@ -154,7 +154,8 @@ const WriteProvider = ({ children }) => {
     if (offline) {
       setConnecting(true);
       try {
-        await emptyQueue()
+        await emptyQueue();
+        await loadTexts();
         setOffline(false);
       } catch(err) {
         console.log(err);
@@ -168,18 +169,21 @@ const WriteProvider = ({ children }) => {
   // going online
   
   const loadTexts = () => {
-    // Rules of Hooks don’t allow functions "setList" and "setOffline".
-    getRemoteTexts().then(
-      texts => {
-        setTexts(texts);
-        saveState("texts", texts);
-      },
-      err => {
-        console.log(err);
-        setOfflineState(true);
-        saveBoolState("offline", true);
-      }
-    );
+    return new Promise(async (resolve, reject) => {
+      // Rules of Hooks don’t allow functions "setList" and "setOffline".
+      await getRemoteTexts().then(
+        texts => {
+          setTexts(texts);
+          saveState("texts", texts);
+        },
+        err => {
+          reject(err);
+          setOfflineState(true);
+          saveBoolState("offline", true);
+        }
+      );
+      resolve();
+    });
   }
 
   const isEmpty = list => {
