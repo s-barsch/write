@@ -25,7 +25,7 @@ export const getRemoteTexts = () => {
     )
     .catch(err => {
       console.log(err);
-      //reject(err)
+      reject(err)
     });
   });
 }

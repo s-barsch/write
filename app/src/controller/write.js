@@ -173,17 +173,18 @@ const WriteProvider = ({ children }) => {
       setConnecting(true);
       await getRemoteTexts().then(
         texts => {
+          setConnecting(false);
           setTexts(texts);
           saveState("texts", texts);
+          resolve()
         },
         err => {
-          reject(err);
+          setConnecting(false);
           setOfflineState(true);
           saveBoolState("offline", true);
+          reject(err);
         }
       );
-      setConnecting(false);
-      resolve();
     });
   }
 
