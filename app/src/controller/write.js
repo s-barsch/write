@@ -47,21 +47,14 @@ const WriteProvider = ({ children }) => {
   useEffect(() => {
 
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
-      (async () => {
-        setConnecting(true);
-        await loadTexts();
-        setConnecting(false);
-      })()
+      loadTexts();
     }
 
     let wasFocus = true;
 
-    const onPageFocusChange = async event => {
+    const onPageFocusChange = event => {
       if (!offline && !document.hidden && !wasFocus) {
-        setConnecting(true);
-        await loadTexts();
-        setConnecting(false);
-        return;
+        loadTexts();
       }
       wasFocus = !document.hidden;
     };
@@ -177,6 +170,7 @@ const WriteProvider = ({ children }) => {
   const loadTexts = () => {
     return new Promise(async (resolve, reject) => {
       // Rules of Hooks don’t allow functions "setList" and "setOffline".
+      setConnecting(true);
       await getRemoteTexts().then(
         texts => {
           setTexts(texts);
@@ -188,6 +182,7 @@ const WriteProvider = ({ children }) => {
           saveBoolState("offline", true);
         }
       );
+      setConnecting(false);
       resolve();
     });
   }
