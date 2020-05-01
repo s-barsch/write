@@ -3,7 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
+	//log "github.com/sirupsen/logrus"
+	"io"
 	"net/http"
 	"os"
 	"text/template"
@@ -35,17 +36,12 @@ func routes() *mux.Router {
 	return r
 }
 
-func serveTemplate(w http.ResponseWriter, tmpl string) {
+func serveTemplate(w io.Writer, tmpl string) error {
 	t, err := template.ParseFiles("./response.html")
 	if err != nil {
-		log.Error(err)
-		http.Error(w, err.Error(), 500)
-		return
+		return err
 	}
-	err = t.ExecuteTemplate(w, tmpl, "")
-	if err != nil {
-		log.Error(err)
-	}
+	return t.ExecuteTemplate(w, tmpl, "")
 }
 
 func serveBuild(w http.ResponseWriter, r *http.Request) {

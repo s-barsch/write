@@ -23,7 +23,16 @@ func authHandler(next http.Handler) http.Handler {
 				"path": r.URL.Path,
 				"func": "checkAuth",
 			}).Info(err)
-			serveTemplate(w, "access-denied")
+
+			buf := bytes.Buffer{}
+			err := serveTemplate(&buf, "access-denied")
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "internal error", 500)
+				return
+			}
+			w.WriteHeader(403)
+			w.Write(buf.Bytes())
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -62,7 +71,11 @@ func deleteAuthCookie(w http.ResponseWriter) {
 // login
 
 func login(w http.ResponseWriter, r *http.Request) {
-	serveTemplate(w, "login")
+	err := serveTemplate(w, "login")
+	if err != nil {
+		http.Error(w, "internal error", 500)
+		log.Println(err)
+	}
 }
 
 func loginVerify(w http.ResponseWriter, r *http.Request) {
