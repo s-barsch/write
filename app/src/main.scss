@@ -36,11 +36,11 @@ $breakWide:   90rem;
 
 @media (min-width: $breakSingle) {
     :root {
-        --fontsize-body:1.25rem;
+        --fontsize-body:1.375rem;
         --fontsize-nav: 2rem;
         --side-margin: 1rem;
         --fontsize-lineheight: 1.4;
-        --fontsize-textarea: 2.4rem;
+        --fontsize-textarea: 2.64rem;
     }
 }
 
@@ -100,7 +100,7 @@ button:hover {
 }
 
 .text {
-    margin:.5rem 0 2rem;
+    margin:.5rem 0 6rem;
 }
 
 .name,
@@ -129,7 +129,7 @@ button:hover {
 
 .text,
 .text textarea {
-    max-width:60rem;
+    max-width:66rem;
 }
 
 .text textarea {

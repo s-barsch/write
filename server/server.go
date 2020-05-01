@@ -37,7 +37,7 @@ func newPaths(root string, debug bool) *paths {
 }
 
 func newServer() *server {
-	debug := flag.Bool("debug", false, "set true for cross origin requests")
+	debug := flag.Bool("debug", false, "set true for extended logging and sandbox text dir")
 	flag.Parse()
 
 	setLogger(*debug)
