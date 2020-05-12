@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
@@ -35,6 +35,14 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
       setBody(text.body)
   }, [text.body]);
 
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (focus) {
+      textRef.current.focus({preventScroll:true});
+    }
+  }, [focus]);
+
   const handleTyping = event => {
     setBody(event.target.value);
   }
@@ -62,11 +70,13 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
     minRows = Math.round(window.screen.height/(2.25*16)) - 6;
   }
 
+  // autoFocus={focus ? true : false}
+
   return (
     <article className="text">
       <Info text={text} submit={submit} delFn={delFn} />
       <TextareaAutosize
-        autoFocus={focus ? true : false}
+        inputRef={textRef}
         minRows={minRows}
         value={body}
         onChange={handleTyping}

@@ -17,9 +17,6 @@ const App = () => {
         <Switch>
           <Route exact={true} path="/">
             <NewText />
-            {/*
-            <Texts />
-            */}
           </Route>
 
           <Route path="/texts/:name">
