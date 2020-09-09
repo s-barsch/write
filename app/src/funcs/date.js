@@ -2,7 +2,7 @@ const fill = str => {
   return str.length < 2 ? "0" + str : str
 };
 
-export const timestamp = () => {
+export const newTimestamp = () => {
   let d = new Date();
   return d.getFullYear().toString().substr(2) +
     fill((d.getMonth() + 1).toString()) +

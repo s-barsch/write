@@ -1,7 +1,7 @@
-import { timestamp } from "./date";
+import { newTimestamp } from "./date";
 
 const emptyText = () => {
-  const ts = timestamp();
+  const ts = newTimestamp();
   return {
     id:   ts,
     path: ts + ".txt",

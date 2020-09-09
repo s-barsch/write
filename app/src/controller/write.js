@@ -1,6 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import emptyText from "../funcs/new";
 import { getRemoteTexts, saveRemote, deleteRemote } from "../funcs/remote";
 import { updateList, trimList } from "../funcs/list";
 import { readState, saveState } from "../funcs/storage";
@@ -9,7 +7,6 @@ import { readBoolState, saveBoolState } from "../funcs/storage";
 export const WriteContext = createContext();
 
 const WriteProvider = ({ children }) => {
-  const [newText, setNewText] = useState(emptyText());
   const [texts, setTexts] = useState(readState("texts"));
   const [writes, setWrites] = useState(readState("writes"));
   const [deletes, setDeletes] = useState(readState("deletes"));
@@ -68,14 +65,6 @@ const WriteProvider = ({ children }) => {
 
 
   // actions
-
-  let history = useHistory();
-
-  const saveNewText = t => {
-    setNewText(emptyText());
-    saveText(t);
-    history.push("/texts/" + t.id + ".txt");
-  }
 
   const saveText = t => {
     setEntry("texts", t)
@@ -224,7 +213,6 @@ const WriteProvider = ({ children }) => {
     <WriteContext.Provider value={{ 
       texts, writes, deletes,
       delWrite, revertDelete,
-      newText, saveNewText,
       connecting, offline, toggleOffline,
       darkTheme, toggleDarkTheme,
       deleteText, saveText
