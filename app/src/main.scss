@@ -90,14 +90,19 @@ button:hover {
 
 #nav a {
     color:var(--color-fg);
-
+    font-family:'Noto Serif', serif;
 }
+
 #nav .active {
     color:red;
 }
 
 .options {
     float:right;
+}
+
+.options button {
+    margin:0 .5rem;
 }
 
 .text {
@@ -115,7 +120,6 @@ button:hover {
 .mod {
     user-select:none;
     cursor: pointer;
-    font-family:'Georgia', serif;
     font-size:1em;
     font-family:monospace;
 }
