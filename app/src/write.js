@@ -7,14 +7,23 @@ import { readBoolState, saveBoolState } from "./funcs/storage";
 export const WriteContext = createContext();
 
 const WriteProvider = ({ children }) => {
+
+  const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
+
+  // texts are the displayed texts within the app
+  // writes are queued texts that wait to be saved remotely
+  // delete is the equivalent delete queue
+
   const [texts, setTexts] = useState(readState("texts"));
   const [writes, setWrites] = useState(readState("writes"));
   const [deletes, setDeletes] = useState(readState("deletes"));
+
+  // connection states
+
   const [offline, setOfflineState] = useState(readBoolState("offline"));
   const [connecting, setConnecting] = useState(false);
-  const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
 
-  // set theme
+  // set theme based on setting
 
   useEffect(() => {
     darkTheme
@@ -22,7 +31,7 @@ const WriteProvider = ({ children }) => {
       : document.body.classList.remove("dark-theme")
   })
 
-  // map for easy access
+  // map states for easy access
 
   const states = {
     "texts": {
@@ -39,7 +48,7 @@ const WriteProvider = ({ children }) => {
     },
   }
 
-  // loading texts
+  // loade texts conditionally
   
   useEffect(() => {
 
@@ -64,7 +73,7 @@ const WriteProvider = ({ children }) => {
   }, [offline, writes, deletes]);
 
 
-  // actions
+  // write and delete actions
 
   const saveText = t => {
     setEntry("texts", t)
@@ -108,7 +117,7 @@ const WriteProvider = ({ children }) => {
   }
 
 
-  // saving functions
+  // underlying saving functions
 
   const removeEntry = (key, t) => {
     setList(key, trimList(states[key].state.slice(), t))
@@ -181,6 +190,8 @@ const WriteProvider = ({ children }) => {
     if (!list) return true
     return list.length === 0
   }
+
+  // delete and write queues have to be empty before load
 
   const emptyQueue = () => {
     return new Promise(async (resolve, reject) => {
