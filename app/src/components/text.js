@@ -20,7 +20,7 @@ export const TextList = ({ texts, saveFn, delFn }) => {
 
 const Info = ({ text, submit, delFn }) => {
   return (
-    <header>
+    <header className="info">
       <Link className="name" to={"/texts/" + text.id + ".txt"}>{text.id + ".txt"}</Link>
       <button className="mod">{text.mod.toString(16).substr(-6)}</button>
       { delFn && <Del text={text} delFn={delFn} /> }

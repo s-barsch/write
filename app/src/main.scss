@@ -54,6 +54,7 @@ body {
 button {
     background:transparent;
     border:0;
+    padding:0;
     outline:none;
     color:var(--color-fg);
     cursor:pointer;
@@ -100,13 +101,11 @@ button:hover {
 }
 
 .text {
-    margin:.5rem 0 6rem;
+    margin:.5rem 0 4rem;
 }
 
-.name,
-.mod {
-    font-size:1rem;
-    font-family:mono;
+.info {
+    font-family:monospace;
 }
 
 .name {
@@ -116,13 +115,16 @@ button:hover {
 .mod {
     user-select:none;
     cursor: pointer;
+    font-family:'Georgia', serif;
+    font-size:1em;
+    font-family:monospace;
 }
 
 .mod:active {
 }
 
 .name {
-    margin-right:.75rem;
+    margin-right:1.25rem;
 }
 
 
@@ -177,5 +179,8 @@ button:hover {
     height:1rem;
 }
 
-
-
+@media (min-width: $breakSingle) {
+    .text {
+        margin-bottom:6rem;
+    }
+}
