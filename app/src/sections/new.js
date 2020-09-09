@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { WriteContext } from "../controller/write";
+import { WriteContext } from "../write";
 import { Text } from "../components/text";
 import { makeKey } from "../funcs/date";
 import emptyText from "../funcs/new";

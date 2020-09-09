@@ -2,7 +2,7 @@ import React, { useContext} from 'react';
 import { makeKey } from "../funcs/date";
 import { useParams } from "react-router-dom";
 
-import { WriteContext } from "../controller/write";
+import { WriteContext } from "../write";
 import { Text } from "../components/text";
 import Error from '../components/error';
 

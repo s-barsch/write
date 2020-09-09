@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
-import { getRemoteTexts, saveRemote, deleteRemote } from "../funcs/remote";
-import { updateList, trimList } from "../funcs/list";
-import { readState, saveState } from "../funcs/storage";
-import { readBoolState, saveBoolState } from "../funcs/storage";
+import { getRemoteTexts, saveRemote, deleteRemote } from "./funcs/remote";
+import { updateList, trimList } from "./funcs/list";
+import { readState, saveState } from "./funcs/storage";
+import { readBoolState, saveBoolState } from "./funcs/storage";
 
 export const WriteContext = createContext();
 

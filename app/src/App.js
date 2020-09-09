@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import "./main.scss";
-import Top from "./sections/top";
+import Top from "./top";
 import Texts from "./sections/texts";
 import Single from "./sections/single";
 import Queue from "./sections/queue";
 import NewText from "./sections/new";
-import WriteProvider from "./controller/write";
+import WriteProvider from "./write";
 
 const App = () => {
   return (

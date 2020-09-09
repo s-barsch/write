@@ -1,6 +1,6 @@
 import React, { useContext} from "react";
 import { NavLink }  from "react-router-dom";
-import { WriteContext } from "../controller/write";
+import { WriteContext } from "./write";
 import OnlineIcon from '@material-ui/icons/WifiSharp';
 import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
