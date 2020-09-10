@@ -48,7 +48,7 @@ const WriteProvider = ({ children }) => {
     },
   }
 
-  // loade texts conditionally
+  // load texts conditionally
   
   useEffect(() => {
 
