@@ -1,11 +1,10 @@
 import React from "react";
 import { NavLink }  from "react-router-dom";
-/*
-import { WriteContext } from "./write";
+//import { WriteContext } from "./write";
 import OnlineIcon from '@material-ui/icons/WifiSharp';
 import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
-import ColorModeIcon from '@material-ui/icons/WbSunnySharp';
+import ThemeIcon from '@material-ui/icons/WbSunnySharp';
 
 const ConnectionIcon = (connecting, offline) => {
   if (connecting) {
@@ -16,37 +15,30 @@ const ConnectionIcon = (connecting, offline) => {
   return OnlineIcon;
 }
 
-const OfflineCheckbox = () => {
-  const { connecting, offline, toggleOffline } = useContext(WriteContext);
-
-  const Icon = ConnectionIcon(connecting, offline)
+const ConnectionToggle = ({conStates, switchFuncs}) => {
+  const Icon = ConnectionIcon(conStates.connecting, conStates.offline)
 
   return (
-    <button onClick={toggleOffline}><Icon /></button>
+    <button onClick={switchFuncs.connection}><Icon /></button>
   )
 }
 
-const DarkThemeCheckbox = () => {
-  const { toggleDarkTheme } = useContext(WriteContext);
+const ThemeToggle = ({switchTheme}) => {
   return (
-    <button onClick={toggleDarkTheme}><ColorModeIcon /></button>
+    <button onClick={switchTheme}><ThemeIcon /></button>
   )
 }
-*/
 
-const Top = () => {
-  //const { offline } = useContext(WriteContext);
+const Top = ({conStates, switchFuncs}) => {
   return (
     <nav id="nav">
       <NavLink to="/" exact={true}>Write</NavLink>
       <NavLink to="/texts/">Texts</NavLink>
-      { /* offline && <NavLink to="/queue/">Local</NavLink> */ }
-      { /*
+      { /* conStates.offline && <NavLink to="/queue/">Local</NavLink> */ }
       <nav className="options">
-        <OfflineCheckbox />
-        <DarkThemeCheckbox />
+        <ConnectionToggle conStates={conStates} switchFuncs={switchFuncs} />
+        <ThemeToggle switchTheme={switchFuncs.theme} />
       </nav>
-      */ }
     </nav>
   );
 }

@@ -6,7 +6,6 @@ import DeleteIcon from '@material-ui/icons/ClearSharp';
 import Error from './error';
 
 export const TextList = ({ texts, saveFn, delFn }) => {
-  console.log(texts);
   if (!texts || texts.length === 0) {
     return (
       <Error message={<>No <samp>Texts</samp> found.</>} />
@@ -19,7 +18,7 @@ export const TextList = ({ texts, saveFn, delFn }) => {
   )
 }
 
-const Info = ({ text, submit, delFn }) => {
+const Info = ({ text, delFn }) => {
   return (
     <header className="info">
       <Link className="name" to={"/texts/" + text.id + ".txt"}>{text.id + ".txt"}</Link>
@@ -75,7 +74,7 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
 
   return (
     <article className="text">
-      <Info text={text} submit={submit} delFn={delFn} />
+      <Info text={text} delFn={delFn} />
       <TextareaAutosize
         inputRef={textRef}
         minRows={minRows}

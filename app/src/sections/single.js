@@ -2,12 +2,10 @@ import React from 'react';
 import { makeKey } from "../funcs/date";
 import { useParams } from "react-router-dom";
 
-//import { WriteContext } from "../write";
 import { Text } from "../components/text";
 import Error from '../components/error';
 
-const Single = ({texts}) => {
-  //const { texts, saveText, deleteText } = useContext(WriteContext);
+const Single = ({texts, modFuncs}) => {
   const { name } = useParams();
 
   const id = name.substr(0, name.lastIndexOf("."))
@@ -24,8 +22,8 @@ const Single = ({texts}) => {
   }
 
   return (
-    <Text key={makeKey(text.id)} text={text} /*saveFn={saveText} delFn={deleteText}*/
-    minRows={20} focus={true} />
+    <Text key={makeKey(text.id)} focus={true} minRows={20}
+      text={text} saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
   )
 }
 

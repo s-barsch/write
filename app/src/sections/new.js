@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-//import { WriteContext } from "../write";
 import { Text } from "../components/text";
 import { makeKey } from "../funcs/date";
 import emptyText from "../funcs/new";
 import { useHistory } from "react-router-dom";
 
-const NewText = () => {
-  //const { saveText } = useContext(WriteContext);
+const NewText = ({modFuncs}) => {
   const [newText, setNewText] = useState(emptyText());
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const NewText = () => {
 
   const save = t => {
     setNewText(emptyText());
-    //saveText(t); TODO
+    modFuncs.saveText(t);
     history.push("/texts/" + t.id + ".txt");
   }
 

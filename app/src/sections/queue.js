@@ -1,16 +1,13 @@
-import React, { useContext} from 'react';
-
-import { WriteContext } from "../write";
+import React from 'react';
 import { TextList } from "../components/text";
 
-const Queue = () => {
-  const { writes, deletes, saveText, delWrite, revertDelete } = useContext(WriteContext);
+const Queue = ({writes, deletes, modFuncs}) => {
   return (
     <section>
       { writes.length > 0 && "Writes:"}
-      <TextList texts={writes} saveFn={saveText} delFn={delWrite} />
+      <TextList texts={writes} saveFn={modFuncs.saveText} delFn={modFuncs.delWrite} />
       { deletes.length > 0 && "Deletes:"}
-      <TextList texts={deletes} saveFn={saveText} delFn={revertDelete} />
+      <TextList texts={deletes} saveFn={modFuncs.saveText} delFn={modFuncs.revertDelete} />
     </section>
   )
 }

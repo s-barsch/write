@@ -2,11 +2,9 @@ import React from 'react';
 
 import { TextList } from "../components/text";
 
-const Texts = ({texts, saveText, deleteText}) => {
-  console.log(texts);
-  //const { texts, saveText, deleteText } = useContext(WriteContext);
+const Texts = ({texts, modFuncs}) => {
   return (
-    <TextList texts={texts} saveFn={saveText} delFn={deleteText} />
+    <TextList texts={texts} saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
   )
 }
 
