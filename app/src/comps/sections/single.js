@@ -22,8 +22,8 @@ const Single = ({texts, modFuncs}) => {
   }
 
   return (
-    <Text key={makeKey(text.id)} focus={true} minRows={20}
-      text={text} saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
+    <Text key={makeKey(text.id)} highlight={true} single={true} text={text}
+      saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
   )
 }
 

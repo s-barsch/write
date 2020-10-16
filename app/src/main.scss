@@ -117,6 +117,10 @@ button:hover {
     color: var(--color-fg);
 }
 
+.active.name {
+    color:red;
+}
+
 .mod {
     user-select:none;
     cursor: pointer;

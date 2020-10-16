@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink }  from "react-router-dom";
-//import { WriteContext } from "./write";
 import OnlineIcon from '@material-ui/icons/WifiSharp';
 import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
@@ -33,7 +32,7 @@ const Top = ({conStates, switchFuncs}) => {
   return (
     <nav id="nav">
       <NavLink to="/" exact={true}>Write</NavLink>
-      <NavLink to="/texts/">Texts</NavLink>
+      <NavLink to="/texts/" exact={true}>Texts</NavLink>
       { /* conStates.offline && <NavLink to="/queue/">Local</NavLink> */ }
       <nav className="options">
         <ConnectionToggle conStates={conStates} switchFuncs={switchFuncs} />

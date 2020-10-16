@@ -18,17 +18,20 @@ export const TextList = ({ texts, saveFn, delFn }) => {
   )
 }
 
-const Info = ({ text, delFn }) => {
+const Info = ({ text, highlight, delFn }) => {
+  const className = highlight ? "active " : "";
   return (
     <header className="info">
-      <Link className="name" to={"/texts/" + text.id + ".txt"}>{text.id + ".txt"}</Link>
+      <Link className={className + "name"} to={"/texts/" + text.id + ".txt"}>
+        {text.id + ".txt"}
+      </Link>
       <button className="mod">{text.mod.toString(16).substr(-6)}</button>
       { delFn && <Del text={text} delFn={delFn} /> }
     </header>
   )
 }
 
-export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
+export const Text = ({ text, saveFn, delFn, single, highlight }) => {
   const [body, setBody] = useState(text.body);
 
   useEffect(() => {
@@ -38,10 +41,10 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
   const textRef = useRef(null);
 
   useEffect(() => {
-    if (focus) {
+    if (single) {
       textRef.current.focus({preventScroll:true});
     }
-  }, [focus]);
+  }, [single]);
 
   const handleTyping = event => {
     setBody(event.target.value);
@@ -62,22 +65,14 @@ export const Text = ({ text, saveFn, delFn, minRows, focus }) => {
     saveFn(text);
   }
 
-  if (!minRows) {
-    minRows = 1
-  }
-
-  if (minRows > 5) {
-    minRows = Math.round(window.screen.height/(2.25*16)) - 6;
-  }
-
-  // autoFocus={focus ? true : false}
+  let rows = !single ? 1 : screenRows();
 
   return (
     <article className="text">
-      <Info text={text} delFn={delFn} />
+      <Info text={text} highlight={highlight} delFn={delFn} />
       <TextareaAutosize
         inputRef={textRef}
-        minRows={minRows}
+        minRows={rows}
         value={body}
         onChange={handleTyping}
         onBlur={submit}
@@ -95,4 +90,6 @@ const Del = ({ text, delFn }) => {
   return <button className="del" onClick={del}><DeleteIcon /></button>
 }
 
-
+function screenRows() {
+  return Math.round(window.screen.height/(2.25*16)) - 6;
+}
