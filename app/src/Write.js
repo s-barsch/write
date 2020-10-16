@@ -10,7 +10,7 @@ import { updateList, trimList } from "./funcs/list";
 import { getRemoteTexts, deleteRemote, saveRemote } from "./funcs/remote";
 import { readState, storeState, readBoolState, storeBoolState } from "./funcs/storage";
 
-const App = () => {
+const Write = () => {
 
   const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
 
@@ -266,6 +266,6 @@ const App = () => {
 }
 
 
-export default App;
+export default Write;
 
 
