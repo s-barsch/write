@@ -18,13 +18,12 @@ export const TextList = ({ texts, saveFn, delFn }) => {
   )
 }
 
-const Info = ({ text, highlight, delFn }) => {
-  const className = highlight ? "active " : "";
+const Info = ({ text, single, highlight, delFn }) => {
   return (
     <header className="info">
-      <Link className={className + "name"} to={"/texts/" + text.id + ".txt"}>
+      <TextLink text={text} single={single} highlight={highlight}>
         {text.id + ".txt"}
-      </Link>
+      </TextLink>
       <button className="mod">{text.mod.toString(16).substr(-6)}</button>
       { delFn && <Del text={text} delFn={delFn} /> }
     </header>
@@ -69,7 +68,7 @@ export const Text = ({ text, saveFn, delFn, single, highlight }) => {
 
   return (
     <article className="text">
-      <Info text={text} highlight={highlight} delFn={delFn} />
+      <Info text={text} single={single} highlight={highlight} delFn={delFn} />
       <TextareaAutosize
         inputRef={textRef}
         minRows={rows}
@@ -93,3 +92,13 @@ const Del = ({ text, delFn }) => {
 function screenRows() {
   return Math.round(window.screen.height/(2.25*16)) - 6;
 }
+
+const TextLink = ({ text, single, highlight, children }) => {
+  const className = highlight ? "active " : "";
+  if (!single) {
+    return <Link className="name" to={"/texts/" + text.id + ".txt"}>{children}</Link>
+  }
+  return <span className={className + "name"}>{children}</span>
+}
+
+

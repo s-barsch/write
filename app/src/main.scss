@@ -28,6 +28,7 @@ $breakWide:   90rem;
 .dark-theme {
     --color-bg: black;
     --color-fg: white;
+    --color-highlight: pink;
     --color-text-fg: white;
     --color-text-bg: hsl(0 0% 0%);
     --color-text-bg-focus: hsl(0 0% 7%);
@@ -84,7 +85,7 @@ button:hover {
 }
 
 #nav {
-    margin:.5rem 0 0;
+    margin:.5rem 0 1rem;
     font-size:var(--fontsize-nav);
 }
 
@@ -94,7 +95,7 @@ button:hover {
 }
 
 #nav .active {
-    color:red;
+    color:var(--color-highlight);
 }
 
 .options {
@@ -118,7 +119,8 @@ button:hover {
 }
 
 .active.name {
-    color:red;
+    color:var(--color-highlight);
+    //color:black;
 }
 
 .mod {
@@ -162,14 +164,12 @@ button:hover {
 }
 
 .del {
-    color:red;
     float:right;
-    ////padding:.25rem;
 }
 
 .del svg {
-    vertical-align:middle;
-    font-size:var(--fontsize-body);
+    height:1rem;
+    fill:var(--color-highlight);
 }
 
 #nav input, 
@@ -188,6 +188,12 @@ button:hover {
 }
 
 @media (min-width: $breakSingle) {
+    #nav a {
+        margin-right:1.375rem;
+    }
+    .del svg {
+        height:1.3rem;
+    }
     .text {
         margin-bottom:6rem;
     }
