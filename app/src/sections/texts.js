@@ -1,10 +1,10 @@
-import React, { useContext} from 'react';
+import React from 'react';
 
-import { WriteContext } from "../write";
 import { TextList } from "../components/text";
 
-const Texts = () => {
-  const { texts, saveText, deleteText } = useContext(WriteContext);
+const Texts = ({texts, saveText, deleteText}) => {
+  console.log(texts);
+  //const { texts, saveText, deleteText } = useContext(WriteContext);
   return (
     <TextList texts={texts} saveFn={saveText} delFn={deleteText} />
   )

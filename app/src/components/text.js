@@ -6,6 +6,7 @@ import DeleteIcon from '@material-ui/icons/ClearSharp';
 import Error from './error';
 
 export const TextList = ({ texts, saveFn, delFn }) => {
+  console.log(texts);
   if (!texts || texts.length === 0) {
     return (
       <Error message={<>No <samp>Texts</samp> found.</>} />

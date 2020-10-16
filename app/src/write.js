@@ -10,14 +10,6 @@ const WriteProvider = ({ children }) => {
 
   const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
 
-  // texts are the displayed texts within the app
-  // writes are queued texts that wait to be saved remotely
-  // delete is the equivalent delete queue
-
-  const [texts, setTexts] = useState(readState("texts"));
-  const [writes, setWrites] = useState(readState("writes"));
-  const [deletes, setDeletes] = useState(readState("deletes"));
-
   // connection states
 
   const [offline, setOfflineState] = useState(readBoolState("offline"));
@@ -31,107 +23,7 @@ const WriteProvider = ({ children }) => {
       : document.body.classList.remove("dark-theme")
   })
 
-  // map states for easy access
 
-  const states = {
-    "texts": {
-      "state":    texts,
-      "setState": setTexts,
-    },
-    "writes": {
-      "state":    writes,
-      "setState": setWrites,
-    },
-    "deletes": {
-      "state":    deletes,
-      "setState": setDeletes,
-    },
-  }
-
-  // load texts conditionally
-  
-  useEffect(() => {
-
-    if (!offline && isEmpty(writes) && isEmpty(deletes)) {
-      loadTexts();
-    }
-
-    let wasFocus = true;
-
-    const onPageFocusChange = event => {
-      if (!offline && !document.hidden && !wasFocus) {
-        loadTexts();
-      }
-      wasFocus = !document.hidden;
-    };
-
-    document.addEventListener("visibilitychange", onPageFocusChange);
-    
-    return () => {
-      document.removeEventListener("visibilitychange", onPageFocusChange);
-    }
-  }, [offline, writes, deletes]);
-
-
-  // write and delete actions
-
-  const saveText = t => {
-    setEntry("texts", t)
-    setEntry("writes", t)
-
-    if (offline) return;
-
-    saveRemote(t).then(
-      () => removeEntry("writes", t),
-      err => {
-        console.log(err);
-        setOffline(true)
-      }
-    )
-  }
-
-  const deleteText = t => {
-    removeEntry("texts", t);
-    removeEntry("writes", t);
-    setEntry("deletes", t);
-
-    if (offline) return;
-    
-    deleteRemote(t).then(
-      () => removeEntry("deletes", t),
-      err => {
-        console.log(err);
-        setOffline(true);
-      }
-    )
-  }
-
-  const revertDelete = t => {
-    setEntry("texts", t)
-    setEntry("writes", t)
-    removeEntry("deletes", t)
-  }
-
-  const delWrite = t => {
-    removeEntry("writes", t)
-  }
-
-
-  // underlying saving functions
-
-  const removeEntry = (key, t) => {
-    setList(key, trimList(states[key].state.slice(), t))
-  }
-
-  const setEntry = (key, t) => {
-    setList(key, updateList(states[key].state.slice(), t))
-  }
-
-  const setList = (key, list) => {
-    states[key].setState(list);
-    saveState(key, list);
-  }
-  
   // dark theme
 
   const toggleDarkTheme = () => {
@@ -161,29 +53,6 @@ const WriteProvider = ({ children }) => {
       return;
     }
     setOffline(true);
-  }
-
-  // going online
-  
-  const loadTexts = () => {
-    return new Promise(async (resolve, reject) => {
-      // Rules of Hooks don’t allow functions "setList" and "setOffline".
-      setConnecting(true);
-      await getRemoteTexts().then(
-        texts => {
-          setConnecting(false);
-          setTexts(texts);
-          saveState("texts", texts);
-          resolve()
-        },
-        err => {
-          setConnecting(false);
-          setOfflineState(true);
-          saveBoolState("offline", true);
-          reject(err);
-        }
-      );
-    });
   }
 
   const isEmpty = list => {

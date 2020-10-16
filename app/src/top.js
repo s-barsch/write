@@ -1,5 +1,6 @@
-import React, { useContext} from "react";
+import React from "react";
 import { NavLink }  from "react-router-dom";
+/*
 import { WriteContext } from "./write";
 import OnlineIcon from '@material-ui/icons/WifiSharp';
 import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
@@ -31,6 +32,7 @@ const DarkThemeCheckbox = () => {
     <button onClick={toggleDarkTheme}><ColorModeIcon /></button>
   )
 }
+*/
 
 const Top = () => {
   //const { offline } = useContext(WriteContext);
@@ -39,10 +41,12 @@ const Top = () => {
       <NavLink to="/" exact={true}>Write</NavLink>
       <NavLink to="/texts/">Texts</NavLink>
       { /* offline && <NavLink to="/queue/">Local</NavLink> */ }
+      { /*
       <nav className="options">
         <OfflineCheckbox />
         <DarkThemeCheckbox />
       </nav>
+      */ }
     </nav>
   );
 }
