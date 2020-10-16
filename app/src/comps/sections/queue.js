@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextList } from "../components/text";
+import { TextList } from "../text";
 
 const Queue = ({writes, deletes, modFuncs}) => {
   return (

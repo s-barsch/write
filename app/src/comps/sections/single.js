@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeKey } from "../funcs/date";
+import { makeKey } from "../../funcs/date";
 import { useParams } from "react-router-dom";
 
-import { Text } from "../components/text";
-import Error from '../components/error';
+import { Text } from "../text";
+import Error from '../error';
 
 const Single = ({texts, modFuncs}) => {
   const { name } = useParams();

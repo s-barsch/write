@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Text } from "../components/text";
-import { makeKey } from "../funcs/date";
-import emptyText from "../funcs/new";
+import { Text } from "../text";
+import { makeKey } from "../../funcs/date";
+import emptyText from "../../funcs/new";
 import { useHistory } from "react-router-dom";
 
 const NewText = ({modFuncs}) => {
