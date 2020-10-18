@@ -18,13 +18,26 @@ export const TextList = ({ texts, saveFn, delFn }) => {
   )
 }
 
-const Info = ({ text, single, highlight, delFn }) => {
+const Saved = ({saved, mod}) => {
+  let className = "mod";
+  if (saved === 1) {
+    className += " unsaved"
+  }
+  if (saved === 2) {
+    className += " saved"
+  }
+  return (
+    <button className={className}>{mod}</button>
+  )
+}
+
+const Info = ({ text, single, saved, highlight, delFn }) => {
   return (
     <header className="info">
       <TextLink text={text} single={single} highlight={highlight}>
         {text.id + ".txt"}
       </TextLink>
-      <button className="mod">{text.mod.toString(16).substr(-6)}</button>
+      <Saved saved={saved} mod={text.mod.toString(16).substr(-6)} />
       { delFn && <Del text={text} delFn={delFn} /> }
     </header>
   )
@@ -32,6 +45,7 @@ const Info = ({ text, single, highlight, delFn }) => {
 
 export const Text = ({ text, saveFn, delFn, single, highlight }) => {
   const [body, setBody] = useState(text.body);
+  const [saved, setSaved] = useState(0);
 
   useEffect(() => {
       setBody(text.body)
@@ -46,6 +60,7 @@ export const Text = ({ text, saveFn, delFn, single, highlight }) => {
   }, [single]);
 
   const handleTyping = event => {
+    setSaved(1);
     setBody(event.target.value);
   }
 
@@ -62,13 +77,17 @@ export const Text = ({ text, saveFn, delFn, single, highlight }) => {
     text.mod  = Date.now();
     text.body = body;
     saveFn(text);
+    setSaved(2);
+    setTimeout(() => {
+      setSaved(0);
+    }, 600);
   }
 
   let rows = !single ? 1 : screenRows();
 
   return (
     <article className="text">
-      <Info text={text} single={single} highlight={highlight} delFn={delFn} />
+      <Info text={text} single={single} saved={saved} highlight={highlight} delFn={delFn} />
       <TextareaAutosize
         inputRef={textRef}
         minRows={rows}

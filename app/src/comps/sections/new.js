@@ -27,9 +27,8 @@ const NewText = ({modFuncs}) => {
   const history = useHistory();
 
   const save = t => {
-    setNewText(emptyText());
     modFuncs.saveText(t);
-    history.push("/texts/" + t.id + ".txt");
+    history.push("/texts/" + t.id + ".txt")
   }
 
   return (

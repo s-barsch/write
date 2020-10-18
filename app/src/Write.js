@@ -52,6 +52,29 @@ const Write = () => {
       : document.body.classList.remove("dark-theme")
   })
 
+  // load texts conditionally
+  
+  useEffect(() => {
+    if (!offline && isEmpty(writes) && isEmpty(deletes)) {
+      loadTexts();
+    }
+
+    let wasFocus = true;
+
+    const onPageFocusChange = event => {
+      if (!offline && !document.hidden && !wasFocus) {
+        loadTexts();
+      }
+      wasFocus = !document.hidden;
+    };
+
+    document.addEventListener("visibilitychange", onPageFocusChange);
+    
+    return () => {
+      document.removeEventListener("visibilitychange", onPageFocusChange);
+    }
+  }, [offline, writes, deletes]);
+
 
   // dark theme
 
@@ -117,29 +140,6 @@ const Write = () => {
       resolve();
     })
   }
-
-  // load texts conditionally
-  
-  useEffect(() => {
-    if (!offline && isEmpty(writes) && isEmpty(deletes)) {
-      loadTexts();
-    }
-
-    let wasFocus = true;
-
-    const onPageFocusChange = event => {
-      if (!offline && !document.hidden && !wasFocus) {
-        loadTexts();
-      }
-      wasFocus = !document.hidden;
-    };
-
-    document.addEventListener("visibilitychange", onPageFocusChange);
-    
-    return () => {
-      document.removeEventListener("visibilitychange", onPageFocusChange);
-    }
-  }, [offline, writes, deletes]);
 
 
   // write and delete actions
@@ -220,10 +220,6 @@ const Write = () => {
       );
     });
   }
-
-  useEffect(() => {
-    loadTexts();
-  }, []) 
 
   const conStates = {
     offline:    offline,

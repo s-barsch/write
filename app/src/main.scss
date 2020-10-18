@@ -130,6 +130,22 @@ button:hover {
     font-family:monospace;
 }
 
+.mod:hover,
+.mod {
+    background:black;
+    color:black;
+}
+
+.mod.unsaved {
+    background:orange;
+    color:orange;
+}
+
+.mod.saved {
+    background:green;
+    color:green;
+}
+
 .mod:active {
 }
 
