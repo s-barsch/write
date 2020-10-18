@@ -1,5 +1,8 @@
 # ✎ Write
 
+View the demo: [write.stefba.com](https://write.stefba.com/)
+
+---
 
 Create production built:
 
@@ -8,3 +11,7 @@ Create production built:
 Start the server:
 
 `go run server/*go`
+
+---
+
+I built this app to take notes on the go and sync them with my server. It is fully operational without a network connection.
