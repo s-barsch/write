@@ -16,7 +16,7 @@ const Write = () => {
 
   // `texts` are the displayed texts within the app.
   // `writes` are queued texts that wait to be saved remotely.
-  // `delete` is the equivalent delete queue.
+  // `deletes` is the equivalent delete queue.
 
   const [texts, setTexts] = useState(readState("texts"));
   const [writes, setWrites] = useState(readState("writes"));
@@ -60,8 +60,6 @@ const Write = () => {
     storeBoolState("dark-theme", !darkTheme);
   }
 
-
-
   // offline state
 
   const setOffline = state => {
@@ -94,6 +92,7 @@ const Write = () => {
 
   const emptyQueue = () => {
     return new Promise(async (resolve, reject) => {
+
       let wrs = writes.slice();
       for (const t of wrs) {
         try {

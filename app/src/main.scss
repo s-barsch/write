@@ -85,7 +85,7 @@ button:hover {
 }
 
 #nav {
-    margin:.5rem 0 1rem;
+    margin:.5rem 0 .5rem;
     font-size:var(--fontsize-nav);
 }
 
@@ -134,7 +134,7 @@ button:hover {
 }
 
 .name {
-    margin-right:1.25rem;
+    margin-right:1.5rem;
 }
 
 
@@ -164,11 +164,12 @@ button:hover {
 }
 
 .del {
-    float:right;
+    padding:0 .5rem;
+    position:absolute;
+    right:var(--side-margin);
 }
 
 .del svg {
-    height:1rem;
     fill:var(--color-highlight);
 }
 
@@ -191,9 +192,14 @@ button:hover {
     #nav a {
         margin-right:1.375rem;
     }
-    .del svg {
-        height:1.3rem;
+    #nav {
+        margin-bottom:1rem;
     }
+    /*
+    .del {
+        right:20%;
+    }
+    */
     .text {
         margin-bottom:6rem;
     }
