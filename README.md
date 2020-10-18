@@ -1,4 +1,6 @@
-<img src="app/public/favicon-512.png" alt="Write" width=256>
+<img src="app/public/favicon.png" alt="Write" height=50 align=left>
+
+# Write
 
 ---
 
