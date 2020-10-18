@@ -1,8 +1,5 @@
-<img src="app/public/favicon.png" alt="Write" height=50 align=left>
+# ✎ Write
 
-# Write
-
----
 
 Create production built:
 
