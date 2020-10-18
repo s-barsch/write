@@ -1,6 +1,6 @@
 # ✏️ Write
 
-View the demo: [write.stefba.com](https://write.stefba.com/)
+View the demo here: [write.stefba.com](https://write.stefba.com/)
 
 ---
 
