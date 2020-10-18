@@ -32,7 +32,7 @@ const Top = ({conStates, switchFuncs}) => {
   return (
     <nav id="nav">
       <NavLink to="/" exact={true}>Write</NavLink>
-      <NavLink to="/texts/" exact={true}>Texts</NavLink>
+      <NavLink to="/texts/">Texts</NavLink>
       { /* conStates.offline && <NavLink to="/queue/">Local</NavLink> */ }
       <nav className="options">
         <ConnectionToggle conStates={conStates} switchFuncs={switchFuncs} />

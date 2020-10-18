@@ -9,6 +9,7 @@ import Queue from "./comps/sections/queue";
 import { updateList, trimList } from "./funcs/list";
 import { getRemoteTexts, deleteRemote, saveRemote } from "./funcs/remote";
 import { readState, storeState, readBoolState, storeBoolState } from "./funcs/storage";
+import { demoText } from './funcs/new';
 
 const Write = () => {
 
@@ -238,6 +239,15 @@ const Write = () => {
     delWrite: delWrite
   }
 
+  useEffect(() => {
+    if (texts.length === 0 && process.env.REACT_APP_IS_DEMO === "true") {
+      const demo = [demoText()]
+      setTexts(demo);
+      storeState("text", demo);
+      storeState("writes", demo);
+    }
+  }, [texts]);
+
 
   return (
     <Router>
@@ -262,5 +272,4 @@ const Write = () => {
 
 
 export default Write;
-
 

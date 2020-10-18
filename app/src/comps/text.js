@@ -31,19 +31,17 @@ const Saved = ({saved, mod}) => {
   )
 }
 
-const Info = ({ text, single, saved, highlight, delFn }) => {
+const Info = ({ text, isSingle, isNew, saved, delFn }) => {
   return (
     <header className="info">
-      <TextLink text={text} single={single} highlight={highlight}>
-        {text.id + ".txt"}
-      </TextLink>
+      <TextLink text={text} isSingle={isSingle} isNew={isNew} />
       <Saved saved={saved} mod={text.mod.toString(16).substr(-6)} />
       { delFn && <Del text={text} delFn={delFn} /> }
     </header>
   )
 }
 
-export const Text = ({ text, saveFn, delFn, single, highlight }) => {
+export const Text = ({ text, saveFn, delFn, isSingle, isNew }) => {
   const [body, setBody] = useState(text.body);
   const [saved, setSaved] = useState(0);
 
@@ -54,15 +52,27 @@ export const Text = ({ text, saveFn, delFn, single, highlight }) => {
   const textRef = useRef(null);
 
   useEffect(() => {
-    if (single) {
+    if (isSingle) {
       textRef.current.focus({preventScroll:true});
     }
-  }, [single]);
+    if (!isNew && isSingle && text.firstEdit) {
+      blinkGreen();
+      text.firstEdit = false;
+    }
+  }, [isSingle, isNew, text]);
 
   const handleTyping = event => {
     setSaved(1);
     setBody(event.target.value);
   }
+
+  const blinkGreen = () => {
+    setSaved(2);
+    setTimeout(() => {
+      setSaved(0);
+    }, 600);
+  }
+  
 
   const submit = e => {
     if (body === "") {
@@ -77,17 +87,14 @@ export const Text = ({ text, saveFn, delFn, single, highlight }) => {
     text.mod  = Date.now();
     text.body = body;
     saveFn(text);
-    setSaved(2);
-    setTimeout(() => {
-      setSaved(0);
-    }, 600);
+    blinkGreen();
   }
 
-  let rows = !single ? 1 : screenRows();
+  let rows = !isSingle ? 1 : screenRows();
 
   return (
     <article className="text">
-      <Info text={text} single={single} saved={saved} highlight={highlight} delFn={delFn} />
+      <Info text={text} saved={saved} isSingle={isSingle} isNew={isNew} delFn={delFn} />
       <TextareaAutosize
         inputRef={textRef}
         minRows={rows}
@@ -112,12 +119,12 @@ function screenRows() {
   return Math.round(window.screen.height/(2.25*16)) - 6;
 }
 
-const TextLink = ({ text, single, highlight, children }) => {
-  const className = highlight ? "active " : "";
-  if (!single) {
-    return <Link className="name" to={"/texts/" + text.id + ".txt"}>{children}</Link>
+const TextLink = ({ text, isSingle, isNew }) => {
+  const name = text.id + ".txt"
+  if (!isNew && !isSingle) {
+    return <Link className="name" to={"/texts/" + name}>{name}</Link>
   }
-  return <span className={className + "name"}>{children}</span>
+  return <span className="name">{!isNew ? "> " : ""}{name}</span>
 }
 
 

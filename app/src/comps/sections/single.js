@@ -22,7 +22,7 @@ const Single = ({texts, modFuncs}) => {
   }
 
   return (
-    <Text key={makeKey(text.id)} highlight={true} single={true} text={text}
+    <Text key={makeKey(text.id)} isSingle={true} text={text}
       saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
   )
 }

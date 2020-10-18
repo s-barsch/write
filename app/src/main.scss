@@ -28,7 +28,7 @@ $breakWide:   90rem;
 .dark-theme {
     --color-bg: black;
     --color-fg: white;
-    --color-highlight: pink;
+    --color-highlight: hsl(0, 100%, 67%);
     --color-text-fg: white;
     --color-text-bg: hsl(0 0% 0%);
     --color-text-bg-focus: hsl(0 0% 7%);
@@ -91,7 +91,7 @@ button:hover {
 
 #nav a {
     color:var(--color-fg);
-    font-family:'Noto Serif', serif;
+    font-family:'Noto Serif', 'Georgia', serif;
 }
 
 #nav .active {
@@ -118,6 +118,10 @@ button:hover {
     color: var(--color-fg);
 }
 
+a.name:hover {
+    color:var(--color-highlight);
+}
+
 .active.name {
     color:var(--color-highlight);
     //color:black;
@@ -132,18 +136,16 @@ button:hover {
 
 .mod:hover,
 .mod {
-    background:black;
-    color:black;
+    color:transparent;
+    background:var(--color-bg);
 }
 
 .mod.unsaved {
     background:orange;
-    color:orange;
 }
 
 .mod.saved {
     background:green;
-    color:green;
 }
 
 .mod:active {
@@ -173,6 +175,7 @@ button:hover {
     
     font-size:var(--fontsize-textarea);
     line-height:var(--fontsize-lineheight);
+    font-family:monospace;
 }
 
 .text textarea:focus {

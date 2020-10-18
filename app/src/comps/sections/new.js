@@ -32,7 +32,7 @@ const NewText = ({modFuncs}) => {
   }
 
   return (
-    <Text key={makeKey(newText.id)} text={newText} saveFn={save} single={true} />
+    <Text key={makeKey(newText.id)} text={newText} saveFn={save} isSingle={true} isNew={true} />
   )
 }
 

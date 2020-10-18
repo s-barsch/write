@@ -67,8 +67,9 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "REACT_APP_IS_DEMO=true node scripts/start.js",
     "build": "node scripts/build.js",
+    "build-demo": "REACT_APP_IS_DEMO=true node scripts/build.js",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
