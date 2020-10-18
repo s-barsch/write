@@ -1,4 +1,4 @@
-# ✎ Write
+# ✏️ Write
 
 View the demo: [write.stefba.com](https://write.stefba.com/)
 
