@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	//log "github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
@@ -24,20 +24,24 @@ func routes() *mux.Router {
 
 	r.HandleFunc("/login/verify", loginVerify)
 	r.HandleFunc("/login", login)
+	r.HandleFunc("/manifest.json", serveBuild)
 
 	s := r.PathPrefix("/").Subrouter()
 
 	s.Use(authHandler)
 
-	s.HandleFunc("/api/texts/", serveTexts)
-	s.HandleFunc("/api/text/{name}", textApi)
+	s.HandleFunc("/api/texts", serveTexts)
+
+	s.Path("/api/text/{name}").Methods("PUT").HandlerFunc(h(writeFile))
+	s.Path("/api/text/{name}").Methods("DELETE").HandlerFunc(h(deleteFile))
+
 	s.PathPrefix("/").HandlerFunc(serveBuild)
 
 	return r
 }
 
 func serveTemplate(w io.Writer, tmpl string) error {
-	t, err := template.ParseFiles("./response.html")
+	t, err := template.ParseFiles(srv.paths.root + "/server/response.html")
 	if err != nil {
 		return err
 	}
@@ -66,5 +70,15 @@ func serveTexts(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
+	}
+}
+
+func h(fn func(http.ResponseWriter, *http.Request) *Err) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := fn(w, r)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), err.Code)
+		}
 	}
 }

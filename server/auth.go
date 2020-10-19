@@ -85,6 +85,7 @@ func loginVerify(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed login", 401)
 		return
 	}
+	println("login worked")
 	http.Redirect(w, r, "/", 302)
 }
 
@@ -111,7 +112,7 @@ func initializeSession(w http.ResponseWriter, pass string) error {
 }
 
 func checkPass(pass string) error {
-	hash, err := ioutil.ReadFile("./pass")
+	hash, err := ioutil.ReadFile(srv.paths.root + "/server/pass")
 	if err != nil {
 		return err
 	}

@@ -2,65 +2,89 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"os"
+	p "path/filepath"
 )
 
-func textApi(w http.ResponseWriter, r *http.Request) {
-	var err error
-	var fn string
-	switch r.Method {
-	case "PUT":
-		fn = "writeFile"
-		err = writeFile(w, r)
-	case "DELETE":
-		fn = "deleteFile"
-		err = deleteFile(w, r)
-	default:
-		fn = "textApi"
-		err = fmt.Errorf("GET request not suported.")
-	}
-
-	if err != nil {
-		log.WithFields(log.Fields{
-			"func": fn,
-			"path": r.URL.Path,
-		}).Error(err)
-		http.Error(w, err.Error(), 500)
-	}
+type Err struct {
+	Func string
+	Path string
+	Code int
+	Err  error
 }
 
-func deleteFile(w http.ResponseWriter, r *http.Request) error {
-	path := r.URL.Path[len("/api/text"):]
-	if path == "/" {
-		return fmt.Errorf("invalid path")
+func (e *Err) Error() string {
+	return fmt.Sprintf(
+		"%v: %v (%d)\n%v",
+		e.Func,
+		e.Err.Error(),
+		e.Code,
+		e.Path,
+	)
+}
+
+func deleteFile(w http.ResponseWriter, r *http.Request) *Err {
+	e := &Err{
+		Func: "deleteFile",
+		Path: r.URL.Path,
+		Code: 500,
 	}
-	_, err := os.Stat(srv.paths.texts + path)
+
+	name := mux.Vars(r)["name"]
+	path := p.Join(srv.paths.texts, name)
+
+	if name == "" {
+		e.Err = fmt.Errorf("invalid name: %v", name)
+		return e
+	}
+
+	_, err := os.Stat(path)
 	if err != nil {
 		log.Info("file not found, so see it as removed. %v", path)
 		return nil
 	}
-	err = os.Remove(srv.paths.texts + path)
-	if err == nil {
-		log.Infof("file removed %v\n", path)
+
+	err = os.Remove(path)
+	if err != nil {
+		e.Err = err
+		return e
 	}
-	return err
+	log.Infof("file removed %v\n", name)
+
+	return nil
 }
 
-func writeFile(w http.ResponseWriter, r *http.Request) error {
-	path := r.URL.Path[len("/api/text"):]
-	if path == "/" {
-		return fmt.Errorf("invalid path")
+func writeFile(w http.ResponseWriter, r *http.Request) *Err {
+	e := &Err{
+		Func: "writeFile",
+		Path: r.URL.Path,
+		Code: 500,
 	}
+
+	name := mux.Vars(r)["name"]
+	path := p.Join(srv.paths.texts, name)
+
+	if name == "" {
+		e.Err = fmt.Errorf("invalid name: %v", name)
+		return e
+	}
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return err
+		e.Err = err
+		return e
 	}
-	err = ioutil.WriteFile(srv.paths.texts+path, body, 0664)
-	if err == nil {
-		log.Infof("written.\n{%s}\n", body)
+
+	err = ioutil.WriteFile(path, body, 0664)
+	if err != nil {
+		e.Err = err
+		return e
 	}
-	return err
+	log.Infof("written.\n{%s}\n", body)
+
+	return nil
 }
