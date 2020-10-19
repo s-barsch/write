@@ -9,7 +9,7 @@ import Queue from "./comps/sections/queue";
 import { updateList, trimList } from "./funcs/list";
 import { getRemoteTexts, deleteRemote, saveRemote } from "./funcs/remote";
 import { readState, storeState, readBoolState, storeBoolState } from "./funcs/storage";
-import { demoText } from './funcs/new';
+import { demoText } from './funcs/file';
 
 const Write = () => {
 
