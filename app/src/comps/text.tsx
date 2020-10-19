@@ -83,7 +83,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
     const textRef = useRef<HTMLTextAreaElement>(null!);
 
     useEffect(() => {
-        if (isSingle) {
+        if (isSingle && textRef && textRef.current) {
             textRef.current.focus({preventScroll:true});
         }
         if (!isNew && isSingle && text.firstEdit) {
