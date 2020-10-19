@@ -2,7 +2,7 @@
 
 View the demo here: [write.stefba.com](https://write.stefba.com/)
 
-<img src="https://stefba.com/write-screen4.jpg?v=3" alt="Write screenshot" height=400>
+<img src="https://stefba.com/write-screen4.jpg?v=3" alt="Write screenshot">
 
 ### Installation
 
