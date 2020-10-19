@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
 import "./main.scss";
+import { File } from './funcs/file';
 import Top from "./top";
 import NewText from "./comps/sections/new";
 import Texts from "./comps/sections/texts";
@@ -280,4 +281,5 @@ const Write = () => {
 
 
 export default Write;
+
 

@@ -3,37 +3,42 @@ import { Text } from "../text";
 import { makeKey } from "../../funcs/date";
 import emptyText from "../../funcs/file";
 import { useHistory } from "react-router-dom";
+import { ModFuncs } from '../../helper';
 
-const NewText = ({modFuncs}) => {
-  const [newText, setNewText] = useState(emptyText());
+type NewTextProps = {
+    modFuncs: ModFuncs;
+}
 
-  useEffect(() => {
-    let wasFocus = true;
+function NewText({modFuncs}: NewTextProps) => {
+    const [newText, setNewText] = useState(emptyText());
 
-    const onFocusChange = event => {
-      if (!wasFocus) {
-        setNewText(emptyText());
-      }
-      wasFocus = !document.hidden;
-    };
+    useEffect(() => {
+        let wasFocus = true;
 
-    document.addEventListener("visibilitychange", onFocusChange);
-    
-    return () => {
-      document.removeEventListener("visibilitychange", onFocusChange);
+        const onFocusChange = event => {
+            if (!wasFocus) {
+                setNewText(emptyText());
+            }
+            wasFocus = !document.hidden;
+        };
+
+        document.addEventListener("visibilitychange", onFocusChange);
+
+        return () => {
+            document.removeEventListener("visibilitychange", onFocusChange);
+        }
+    }, []);
+
+    const history = useHistory();
+
+    const save = t => {
+        modFuncs.saveText(t);
+        history.push("/texts/" + t.id + ".txt")
     }
-  }, []);
 
-  const history = useHistory();
-
-  const save = t => {
-    modFuncs.saveText(t);
-    history.push("/texts/" + t.id + ".txt")
-  }
-
-  return (
-    <Text key={makeKey(newText.id)} text={newText} saveFn={save} isSingle={true} isNew={true} />
-  )
+    return (
+        <Text key={makeKey(newText.id)} text={newText} saveFn={save} isSingle={true} isNew={true} />
+    )
 }
 
 export default NewText;

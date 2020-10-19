@@ -4,9 +4,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
 import DeleteIcon from '@material-ui/icons/ClearSharp';
 import { File } from '../funcs/file';
+import { ActionFunc } from '../helper';
 import Error from './error';
-
-type ActionFunc = (f: File) => void;
 
 type TextListProps = {
     texts:  File[];
