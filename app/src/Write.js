@@ -100,7 +100,7 @@ const Write = () => {
     if (offline) {
       setConnecting(true);
       try {
-        await emptyQueue();
+        await emptyQueues();
         await loadTexts();
         setOffline(false);
       } catch(err) {
@@ -197,26 +197,26 @@ const Write = () => {
 
   // delete and write queues have to be empty before load
 
-  const emptyQueue = () => {
+  const emptyQueues = () => {
     return new Promise(async (resolve, reject) => {
 
-      let wrs = writes.slice();
-      for (const t of wrs) {
+      let writeq = writes.slice();
+      for (const t of writeq) {
         try {
           await saveRemote(t);
-          wrs = trimList(wrs, t);
-          setList("writes", wrs);
+          writeq = trimList(writeq, t);
+          setList("writes", writeq);
         } catch(err) {
           reject(err);
         }
       }
 
-      let dels = deletes.slice();
-      for (const t of dels) {
+      let delq = deletes.slice();
+      for (const t of delq) {
         try {
           await deleteRemote(t);
-          dels = trimList(dels, t)
-          setList("deletes", dels)
+          delq = trimList(delq, t)
+          setList("deletes", delq)
         } catch(err) {
           reject(err);
         }
