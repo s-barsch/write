@@ -1,6 +1,7 @@
 import React from 'react';
 
-const Error = ({ message }) => {
+type ErrProps = { message: string };
+const Error = ({ message }: ErrProps) => {
   return (
     <section className="error">{message}</section>
   )

@@ -1,8 +1,9 @@
-const fill = str => {
+
+function fill(str: string): string {
   return str.length < 2 ? "0" + str : str
 };
 
-export const newTimestamp = () => {
+export function newTimestamp(): string {
   let d = new Date();
   return d.getFullYear().toString().substr(2) +
     fill((d.getMonth() + 1).toString()) +
@@ -13,9 +14,10 @@ export const newTimestamp = () => {
     fill(d.getSeconds().toString());
 }
 
-export const makeKey = timestamp => {
+export function makeKey(timestamp: string): number {
     return parseInt(timestamp.substr(0, 6) + timestamp.substr(7), 10)
 }
+
 
 
 /*
