@@ -1,5 +1,6 @@
+import Text from './text';
 
-export function readState(key: string): File[] {
+export function readState(key: string): Text[] {
   const list = localStorage.getItem(key);
   if (list == null) {
     return [];
@@ -7,7 +8,7 @@ export function readState(key: string): File[] {
   return JSON.parse(list);
 }
 
-export function storeState(key: string, list: File[]) {
+export function storeState(key: string, list: Text[]) {
   localStorage.setItem(key, JSON.stringify(list));
 }
 

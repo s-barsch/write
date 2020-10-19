@@ -1,6 +1,6 @@
 import { newTimestamp } from "./date";
 
-export type File = {
+type Text = {
     id:   string,
     path: string,
     body: string,
@@ -8,7 +8,9 @@ export type File = {
     firstEdit: boolean,
 }
 
-export default function emptyText(): File {
+export default Text;
+
+export function emptyText(): Text {
   const ts = newTimestamp();
   return {
     id:   ts,
@@ -19,7 +21,7 @@ export default function emptyText(): File {
   }
 }
 
-export function demoText(): File {
+export function demoText(): Text {
   let t = emptyText();
   t.body = "This is a demo entry."
   t.firstEdit = false;

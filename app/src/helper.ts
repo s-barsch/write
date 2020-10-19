@@ -1,6 +1,6 @@
-import { File } from './funcs/file';
+import Text from './funcs/text';
 
-export type ActionFunc = (f: File) => void;
+export type ActionFunc = (t: Text) => void;
 
 export type ModFuncs = {
   saveText: ActionFunc;
@@ -10,7 +10,7 @@ export type ModFuncs = {
 }
 
 export type SectionProps = {
-    texts: File[];
+    texts: Text[];
     modFuncs: ModFuncs;
 }
 

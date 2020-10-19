@@ -3,14 +3,14 @@ import { Link }  from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import { makeKey } from "../funcs/date";
 import DeleteIcon from '@material-ui/icons/ClearSharp';
-import { File } from '../funcs/file';
+import Text from '../funcs/text';
 import { ActionFunc } from '../helper';
 import Error from './error';
 
 type TextListProps = {
-    texts:  File[];
-    saveFn: (f: File) => void;
-    delFn:  (f: File) => void;
+    texts:  Text[];
+    saveFn: (f: Text) => void;
+    delFn:  (f: Text) => void;
 }
 
 export function TextList({ texts, saveFn, delFn }: TextListProps) {
@@ -21,7 +21,7 @@ export function TextList({ texts, saveFn, delFn }: TextListProps) {
     }
     return (
         <>{texts.map((text, i) => (
-                <Text key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn}
+                <TextField key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn}
                 isSingle={false} isNew={false} />
         ))}</>
     )
@@ -46,7 +46,7 @@ function Saved({saved, mod}: SavedProps) {
 }
 
 type InfoProps = {
-    text: File;
+    text: Text;
     isSingle: boolean;
     isNew: boolean;
     saved: number; 
@@ -65,14 +65,14 @@ export function Info({ text, isSingle, isNew, saved, delFn }: InfoProps) {
 }
 
 type TextProps = {
-    text: File;
+    text: Text;
     saveFn: ActionFunc;
     delFn: ActionFunc;
     isSingle: boolean;
     isNew: boolean;
 }
 
-export function Text({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
+export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
     const [body, setBody] = useState(text.body);
     const [saved, setSaved] = useState(0);
 
@@ -133,7 +133,7 @@ export function Text({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
 }
 
 type DelProps = {
-    text: File;
+    text: Text;
     delFn: ActionFunc;
 }
 
@@ -151,7 +151,7 @@ function screenRows() {
 }
 
 type TextLinkProps = {
-    text: File;
+    text: Text;
     isSingle: boolean;
     isNew: boolean;
 }

@@ -2,11 +2,11 @@ import React from 'react';
 import { TextList } from "../text";
 
 import { ModFuncs } from '../../helper';
-import { File } from '../../funcs/file';
+import Text from '../../funcs/text';
 
 type QueueProps = {
-    writes: File[];
-    deletes: File[];
+    writes: Text[];
+    deletes: Text[];
     modFuncs: ModFuncs;
 }
 

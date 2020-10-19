@@ -1,6 +1,6 @@
-import { File } from './file';
+import Text from './text';
 
-export function getRemoteTexts(): Promise<File[]> {
+export function getRemoteTexts(): Promise<Text[]> {
     const ms = 1500;
     const abortController = new AbortController();
     return new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ export function getRemoteTexts(): Promise<File[]> {
                 clearTimeout(run);
                 if (resp.ok) {
                     resp.json().then(
-                        (texts: File[]) => resolve(texts),
+                        (texts: Text[]) => resolve(texts),
                         err => reject(err)
                     )
                 } else {
@@ -56,22 +56,22 @@ function makeFetch(fetchPromise: Promise<any>, abortController: AbortController)
     });
 }
 
-export function saveRemote(f: File) {
+export function saveRemote(t: Text) {
     let controller = new AbortController();
     return makeFetch(
-        fetch("/api/text/" + f.id + ".txt", {
+        fetch("/api/text/" + t.id + ".txt", {
             method: "PUT",
             signal: controller.signal,
-            body: f.body
+            body: t.body
         }),
         controller,
     );
 }
 
-export function deleteRemote(f: File) {
+export function deleteRemote(t: Text) {
     let controller = new AbortController();
     return makeFetch(
-        fetch("/api/text/" + f.id + ".txt", {
+        fetch("/api/text/" + t.id + ".txt", {
             method: "DELETE",
             signal: controller.signal
         }),

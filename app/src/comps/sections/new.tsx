@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Text } from "../text";
+import { TextField } from "../text";
 import { makeKey } from "../../funcs/date";
-import emptyText, { File} from "../../funcs/file";
+import Text, { emptyText } from "../../funcs/text";
 import { useHistory } from "react-router-dom";
 import { ModFuncs } from '../../helper';
 
@@ -31,13 +31,13 @@ function NewText({modFuncs}: NewTextProps) {
 
     const history = useHistory();
 
-    function save(f: File) {
-        modFuncs.saveText(f);
-        history.push("/texts/" + f.id + ".txt")
+    function save(t: Text) {
+        modFuncs.saveText(t);
+        history.push("/texts/" + t.id + ".txt")
     }
 
     return (
-        <Text key={makeKey(newText.id)} text={newText} saveFn={save} delFn={() => void(0)} isSingle={true} isNew={true} />
+        <TextField key={makeKey(newText.id)} text={newText} saveFn={save} delFn={() => void(0)} isSingle={true} isNew={true} />
     )
 }
 

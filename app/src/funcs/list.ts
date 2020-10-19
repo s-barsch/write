@@ -1,21 +1,21 @@
-import { File } from './file';
+import Text from './text';
 
-export function hasEntry(list: File[], f: File): boolean {
+export function hasEntry(list: Text[], t: Text): boolean {
     list.forEach(el => {
-        if (el.id === f.id) {
+        if (el.id === t.id) {
             return true;
         }
     });
     return false;
 }
 
-export function updateList(list: File[], f: File): File[] {
+export function updateList(list: Text[], t: Text): Text[] {
 
     let isPresent = false;
 
     list.forEach(el => {
-        if (el.id === f.id) {
-            el = f
+        if (el.id === t.id) {
+            el = t
             isPresent = true;
         }
     });
@@ -24,12 +24,12 @@ export function updateList(list: File[], f: File): File[] {
         return list
     }
 
-    return [f].concat(list);
+    return [t].concat(list);
 }
 
-export function trimList(list: File[], f: File): File[] {
+export function trimList(list: Text[], t: Text): Text[] {
     return list.filter(el => {
-        return el.id !== f.id
+        return el.id !== t.id
     });
 }
 

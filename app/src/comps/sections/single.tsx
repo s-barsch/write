@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeKey } from "../../funcs/date";
 import { useParams } from "react-router-dom";
-import { Text } from "../text";
+import { TextField } from "../text";
 import Error from '../error';
 import { SectionProps } from '../../helper';
 
@@ -26,7 +26,7 @@ function Single({texts, modFuncs}: SectionProps) {
     }
 
     return (
-        <Text key={makeKey(text.id)} isSingle={true} isNew={false} text={text}
+        <TextField key={makeKey(text.id)} isSingle={true} isNew={false} text={text}
         saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
     )
 }
