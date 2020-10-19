@@ -173,10 +173,10 @@ const Write = () => {
   // load function
 
   const loadTexts = () => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       // Hooks don’t allow 'setList' and 'setOffline'.
       setConnecting(true);
-      await getRemoteTexts().then(
+      getRemoteTexts().then(
         texts => {
           setConnecting(false);
        // setList("texts", texts)
