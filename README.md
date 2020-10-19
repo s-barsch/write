@@ -14,6 +14,8 @@ Start the server:
 
 `go run server/*go`
 
+Go to: http://localhost:8231/
+
 ### Purpose
 
 I built this app to take notes on the go and sync them with my server. It is fully operational without a network connection.
