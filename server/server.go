@@ -38,6 +38,7 @@ func newPaths(root string, debug bool) *paths {
 
 func newServer() *server {
 	debug := flag.Bool("debug", false, "set true for extended logging and sandbox text dir")
+	path := flag.String("path", ".", "path of the app")
 	flag.Parse()
 
 	setLogger(*debug)
@@ -50,7 +51,7 @@ func newServer() *server {
 	}
 	return &server{
 		memdb: memdb,
-		paths: newPaths("..", *debug),
+		paths: newPaths(*path, *debug),
 		flags: &flags{
 			debug: *debug,
 		},
