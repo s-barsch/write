@@ -1,9 +1,3 @@
-/*
-const textsKey = "write_texts";
-const writesKey = "write_writes";
-const deletesKey = "write_deletes";
-const offlineKey = "write_isOffline";
-*/
 
 export const readState = (key) => {
   const list = localStorage.getItem(key);
