@@ -53,13 +53,18 @@ const Write = () => {
       : document.body.classList.remove("dark-theme")
   })
 
-  // load texts conditionally
+  // load texts when queues are empty
   
   useEffect(() => {
     if (!offline && isEmpty(writes) && isEmpty(deletes)) {
       loadTexts();
     }
+  }, [offline, writes, deletes]);
 
+
+  // load texts when you open the app
+
+  useEffect(() => {
     let wasFocus = true;
 
     const onPageFocusChange = event => {
@@ -74,7 +79,7 @@ const Write = () => {
     return () => {
       document.removeEventListener("visibilitychange", onPageFocusChange);
     }
-  }, [offline, writes, deletes]);
+  }, [offline]);
 
 
   // dark theme
@@ -106,42 +111,6 @@ const Write = () => {
     }
     setOffline(true);
   }
-
-  const isEmpty = list => {
-    if (!list) return true
-    return list.length === 0
-  }
-
-  // delete and write queues have to be empty before load
-
-  const emptyQueue = () => {
-    return new Promise(async (resolve, reject) => {
-
-      let wrs = writes.slice();
-      for (const t of wrs) {
-        try {
-          await saveRemote(t);
-          wrs = trimList(wrs, t);
-          setList("writes", wrs);
-        } catch(err) {
-          reject(err);
-        }
-      }
-
-      let dels = deletes.slice();
-      for (const t of dels) {
-        try {
-          await deleteRemote(t);
-          dels = trimList(dels, t)
-          setList("deletes", dels)
-        } catch(err) {
-          reject(err);
-        }
-      }
-      resolve();
-    })
-  }
-
 
   // write and delete actions
 
@@ -201,25 +170,64 @@ const Write = () => {
     storeState(key, list);
   }
 
+  // load function
+
   const loadTexts = () => {
     return new Promise(async (resolve, reject) => {
-      // Hooks don’t allow functions "setList" and "setOffline".
+      // Hooks don’t allow 'setList' and 'setOffline'.
       setConnecting(true);
       await getRemoteTexts().then(
         texts => {
           setConnecting(false);
-          setTexts(texts);
-          storeState("texts", texts);
+       // setList("texts", texts)
+            setTexts(texts);
+            storeState("texts", texts);
           resolve()
         },
         err => {
           setConnecting(false);
-          setOfflineState(true);
-          storeBoolState("offline", true);
+       // setOffline(true)
+            setOfflineState(true);
+            storeBoolState("offline", true);
           reject(err);
         }
       );
     });
+  }
+
+  // delete and write queues have to be empty before load
+
+  const emptyQueue = () => {
+    return new Promise(async (resolve, reject) => {
+
+      let wrs = writes.slice();
+      for (const t of wrs) {
+        try {
+          await saveRemote(t);
+          wrs = trimList(wrs, t);
+          setList("writes", wrs);
+        } catch(err) {
+          reject(err);
+        }
+      }
+
+      let dels = deletes.slice();
+      for (const t of dels) {
+        try {
+          await deleteRemote(t);
+          dels = trimList(dels, t)
+          setList("deletes", dels)
+        } catch(err) {
+          reject(err);
+        }
+      }
+      resolve();
+    })
+  }
+
+  const isEmpty = list => {
+    if (!list) return true
+    return list.length === 0
   }
 
   const conStates = {
