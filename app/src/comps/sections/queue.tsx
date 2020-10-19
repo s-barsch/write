@@ -1,7 +1,16 @@
 import React from 'react';
 import { TextList } from "../text";
 
-const Queue = ({writes, deletes, modFuncs}) => {
+import { ModFuncs } from '../../helper';
+import { File } from '../../funcs/file';
+
+type QueueProps = {
+    writes: File[];
+    deletes: File[];
+    modFuncs: ModFuncs;
+}
+
+function Queue({writes, deletes, modFuncs}: QueueProps) {
     return (
         <section>
         { writes.length > 0 && "Writes:"}

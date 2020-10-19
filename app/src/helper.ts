@@ -9,4 +9,8 @@ export type ModFuncs = {
   delWrite: ActionFunc;
 }
 
+export type SectionProps = {
+    texts: File[];
+    modFuncs: ModFuncs;
+}
 

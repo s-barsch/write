@@ -20,10 +20,10 @@ export function TextList({ texts, saveFn, delFn }: TextListProps) {
         )
     }
     return (
-        texts.map((text, i) => (
-            <Text key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn}
-            isSingle={false} isNew={false} />
-        ))
+        <>{texts.map((text, i) => (
+                <Text key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn}
+                isSingle={false} isNew={false} />
+        ))}</>
     )
 }
 
