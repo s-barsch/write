@@ -267,21 +267,21 @@ function Write() {
 
     return (
         <Router>
-        <Top conStates={conStates} switchFuncs={switchFuncs} />
-        <Switch>
-        <Route exact={true} path="/">
-        <NewText modFuncs={modFuncs} />
-        </Route>
-        <Route path="/texts/:name">
-        <Single texts={texts} modFuncs={modFuncs} />
-        </Route>
-        <Route path="/texts/">
-        <Texts texts={texts} modFuncs={modFuncs} />
-        </Route>
-        <Route path="/queue/">
-        <Queue writes={writes} deletes={deletes} modFuncs={modFuncs} />
-        </Route>
-        </Switch>
+            <Top conStates={conStates} switchFuncs={switchFuncs} />
+            <Switch>
+                <Route exact={true} path="/">
+                    <NewText modFuncs={modFuncs} />
+                </Route>
+                <Route path="/texts/:name">
+                    <Single texts={texts} modFuncs={modFuncs} />
+                </Route>
+                <Route path="/texts/">
+                    <Texts texts={texts} modFuncs={modFuncs} />
+                </Route>
+                <Route path="/queue/">
+                    <Queue writes={writes} deletes={deletes} modFuncs={modFuncs} />
+                </Route>
+            </Switch>
         </Router>
     );
 }
