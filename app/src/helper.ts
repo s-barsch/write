@@ -1,10 +1,10 @@
 import { File } from './funcs/file';
 
-type ActionFunc = (f: File) => void;
+export type ActionFunc = (f: File) => void;
 
 export type ModFuncs = {
-  deleteFile: ActionFunc;
-  writeFile: ActionFunc;
+  saveText: ActionFunc;
+  deleteText: ActionFunc;
   revertDelete: ActionFunc;
   delWrite: ActionFunc;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from "../text";
 import { makeKey } from "../../funcs/date";
-import emptyText from "../../funcs/file";
+import emptyText, { File} from "../../funcs/file";
 import { useHistory } from "react-router-dom";
 import { ModFuncs } from '../../helper';
 
@@ -9,13 +9,13 @@ type NewTextProps = {
     modFuncs: ModFuncs;
 }
 
-function NewText({modFuncs}: NewTextProps) => {
+function NewText({modFuncs}: NewTextProps) {
     const [newText, setNewText] = useState(emptyText());
 
     useEffect(() => {
         let wasFocus = true;
 
-        const onFocusChange = event => {
+        const onFocusChange: (e: any) => void = e => {
             if (!wasFocus) {
                 setNewText(emptyText());
             }
@@ -31,13 +31,13 @@ function NewText({modFuncs}: NewTextProps) => {
 
     const history = useHistory();
 
-    const save = t => {
-        modFuncs.saveText(t);
-        history.push("/texts/" + t.id + ".txt")
+    function save(f: File) {
+        modFuncs.saveText(f);
+        history.push("/texts/" + f.id + ".txt")
     }
 
     return (
-        <Text key={makeKey(newText.id)} text={newText} saveFn={save} isSingle={true} isNew={true} />
+        <Text key={makeKey(newText.id)} text={newText} saveFn={save} delFn={() => void(0)} isSingle={true} isNew={true} />
     )
 }
 
