@@ -18,7 +18,7 @@ const NewText = ({modFuncs}) => {
     };
 
     document.addEventListener("visibilitychange", onFocusChange);
-
+    
     return () => {
       document.removeEventListener("visibilitychange", onFocusChange);
     }
