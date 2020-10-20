@@ -1,8 +1,10 @@
 # ✏️ Write
 
-View the demo here: [write.stefba.com](https://write.stefba.com/)
+Offline-first writing app
 
-<img src="https://stefba.com/write-screen4.jpg?v=3" alt="Write screenshot">
+[<img src="https://stefba.com/write-screen4.jpg?v=3" alt="Write screenshot">](https://write.stefba.com/)
+
+View the demo here: [write.stefba.com](https://write.stefba.com/)
 
 ### Installation
 
