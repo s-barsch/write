@@ -85,7 +85,6 @@ func loginVerify(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed login", 401)
 		return
 	}
-	println("login worked")
 	http.Redirect(w, r, "/", 302)
 }
 

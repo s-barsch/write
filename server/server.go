@@ -31,8 +31,8 @@ func newPaths(root string, debug bool) *paths {
 	return &paths{
 		root:  root,
 		texts: root + textsDir,
-		app:   root + "/app",
-		build: root + "/app/build",
+		app:   root,
+		build: root + "/build",
 	}
 }
 

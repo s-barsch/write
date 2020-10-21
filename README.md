@@ -12,7 +12,7 @@ View the demo here: [write.stefba.com](https://write.stefba.com/)
 
 Create production built:
 
-`yarn --cwd ./app build`
+`yarn build`
 
 Start the server:
 
