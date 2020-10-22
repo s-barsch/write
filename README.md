@@ -8,9 +8,9 @@ View the demo here: [write.stefba.com](https://write.stefba.com/)
 
 ### Installation
 
-*Note: you need to have memcached installed and running.*
+First, install and start `memcached`. Then,
 
-Create production built:
+create production built:
 
 `yarn build`
 
