@@ -14,41 +14,56 @@ type setErrFn = (err: reqErr) => void;
 function request(path: string, method: string, body: string, err: reqErr): Promise<Response> {
     return new Promise(async (resolve, reject) => {
 
+        err.path = path;
+
         let controller = new AbortController();
-        let run = setTimeout(function() {
+        let reqTimeout = setTimeout(function() {
             controller.abort();
-            reject("Request terminated after " + timeoutMs + "ms.");
+            err.code = 408;
+            err.msg = "request timed out";
+            reject(err);
         }, timeoutMs)
 
-        const options = {method: "GET"} as RequestInit;
+        const options = {
+            method: "GET",
+            signal: controller.signal
+        } as RequestInit;
 
         if (method !== "GET") {
             options.method = method;
             options.body = body;
         }
 
-        const resp = await fetch(path, options);
-        clearTimeout(run);
+        try {
+            const resp = await fetch(path, options);
+            clearTimeout(reqTimeout);
 
-        if (!resp.ok) {
-            err.path = path;
-            err.code = resp.status;
+            if (!resp.ok) {
+                err.code = resp.status;
 
-            switch (resp.status) {
-                case 403:
-                    err.msg = "not logged in";
-                    break;
-                case 502:
-                    err.msg = "server not running";
-                    break;
-                default:
-                    err.msg = await resp.text();
+                switch (resp.status) {
+                    case 403:
+                        err.msg = "not logged in";
+                        break;
+                    case 502:
+                        err.msg = "server not running";
+                        break;
+                    default:
+                        err.msg = await resp.text();
+                }
+
+                reject(err);
+                return;
             }
+            resolve(resp);
 
-            reject(err);
-            return;
+        } catch(fetchErr) {
+            if (fetchErr.name === "AbortError") {
+                // this error was handled via reqTimeout.
+                return;
+            }
+            throw fetchErr;
         }
-        resolve(resp);
     });
 }
 

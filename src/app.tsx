@@ -65,16 +65,16 @@ export default function Write() {
     const [isConnecting, setConnecting] = useState(false);
 
     const loadTexts = useCallback(async () => {
-            setConnecting(true);
-            try {
-                const texts = await getRemoteTexts();
-                saveState("texts", setTexts, texts);
-                setOffline(false);
-            } catch(err) {
-                setErr(err);
-                setOffline(true);
-            }
-            setConnecting(false);
+        setConnecting(true);
+        try {
+            const texts = await getRemoteTexts();
+            saveState("texts", setTexts, texts);
+            setOffline(false);
+        } catch(err) {
+            setErr(err);
+            setOffline(true);
+        }
+        setConnecting(false);
     }, [])
 
     // load texts when queues are empty
