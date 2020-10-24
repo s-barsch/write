@@ -136,35 +136,35 @@ export default function Write() {
 
     // write and delete actions
 
-    function saveText(t: Text) {
+    async function saveText(t: Text) {
         setEntry("texts", t)
         setEntry("writes", t)
 
         if (isOffline) return;
 
-        saveRemote(t).then(
-            () => removeEntry("writes", t),
-            err => {
-                console.log(err);
-                setOffline(true)
-            }
-        )
+        try {
+            await saveRemote(t);
+            removeEntry("writes", t);
+        } catch(err) {
+            setErr(err);
+            setOffline(true);
+        }
     }
 
-    function deleteText(t: Text) {
+    async function deleteText(t: Text) {
         removeEntry("texts", t);
         removeEntry("writes", t);
         setEntry("deletes", t);
 
         if (isOffline) return;
 
-        deleteRemote(t).then(
-            () => removeEntry("deletes", t),
-            err => {
-                console.log(err);
-                setOffline(true);
-            }
-        )
+        try {
+            deleteRemote(t);
+            removeEntry("deletes", t);
+        } catch(err) {
+            setErr(err);
+            setOffline(true);
+        }
     }
 
     function revertDelete(t: Text) {
