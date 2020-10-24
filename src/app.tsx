@@ -236,9 +236,8 @@ export default function Write() {
     useEffect(() => {
         if (texts.length === 0 && process.env.REACT_APP_IS_DEMO === "true") {
             const demo = [demoText()]
-            setTexts(demo);
-            storeState("text", demo);
-            storeState("writes", demo);
+            saveState("texts", setTexts, demo);
+            saveState("writes", setWrites, demo);
         }
     }, [texts]);
 

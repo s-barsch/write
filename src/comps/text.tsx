@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link }  from "react-router-dom";
-import TextareaAutosize from 'react-textarea-autosize';
+import { Link }  from 'react-router-dom';
+//import TextareaAutosize from 'react-textarea-autosize';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { makeKey } from "../funcs/date";
 import DeleteIcon from '@material-ui/icons/ClearSharp';
 import Text from '../funcs/text';
@@ -81,15 +82,22 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
     }, [text.body]);
 
     const textRef = useRef<HTMLTextAreaElement>(null!);
+    let blink = useRef({} as NodeJS.Timeout);
 
     useEffect(() => {
         if (isSingle && textRef && textRef.current) {
             textRef.current.focus({preventScroll:true});
         }
+
         if (!isNew && isSingle && text.firstEdit) {
-            blinkGreen();
+            blink.current = blinkGreen();
             text.firstEdit = false;
         }
+
+        return () => {
+            clearTimeout(blink.current);
+        }
+
     }, [isSingle, isNew, text]);
 
     const handleTyping = (e: React.FormEvent<HTMLTextAreaElement>): void => {
@@ -97,9 +105,9 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         setBody(e.currentTarget.value);
     }
 
-    const blinkGreen = () => {
+    const blinkGreen: () => NodeJS.Timeout = () => {
         setSaved(2);
-        setTimeout(() => {
+        return setTimeout(() => {
             setSaved(0);
         }, 600);
     }
@@ -113,7 +121,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         text.mod  = Date.now();
         text.body = body;
         saveFn(text);
-        blinkGreen();
+        blink.current = blinkGreen();
     }
 
     let rows = !isSingle ? 1 : screenRows();
@@ -122,8 +130,8 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         <article className="text">
         <Info text={text} saved={saved} isSingle={isSingle} isNew={isNew} delFn={delFn} />
         <TextareaAutosize
-        inputRef={textRef}
-        minRows={rows}
+        ref={textRef}
+        rowsMin={rows}
         value={body}
         onChange={handleTyping}
         onBlur={submit}
