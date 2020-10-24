@@ -4,7 +4,7 @@ import OnlineIcon from '@material-ui/icons/WifiSharp';
 import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
 import ThemeIcon from '@material-ui/icons/WbSunnySharp';
-import { ConStates, SwitchFuncs } from './helper';
+import { ConStates, SwitchFuncs } from 'helper';
 
 function ConnectionIcon(connecting: boolean, offline: boolean) {
     if (connecting) {

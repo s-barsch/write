@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import Write from './Write';
+import Write from './app';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

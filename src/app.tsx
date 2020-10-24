@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch }  from "react-router-dom";
-import "./main.scss";
-import Top from "./top";
-import NewText from "./comps/sections/new";
-import Texts from "./comps/sections/texts";
-import Single from "./comps/sections/single";
-import Queue from "./comps/sections/queue";
-import { updateList, trimList } from "./funcs/list";
-import { getRemoteTexts, deleteRemote, saveRemote } from "./funcs/remote";
-import { readState, storeState, readBoolState, storeBoolState } from "./funcs/storage";
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch }  from 'react-router-dom';
+import './main.scss';
+import Top from './comps/top/top';
+import NewText from './comps/sections/new';
+import Texts from './comps/sections/texts';
+import Single from './comps/sections/single';
+import Queue from './comps/sections/queue';
+import { updateList, trimList } from './funcs/list';
+import { getRemoteTexts, deleteRemote, saveRemote } from './funcs/remote';
+import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
 
 type States = {
@@ -20,7 +20,7 @@ type StateObject = {
     setState: React.Dispatch<React.SetStateAction<Text[]>>;
 }
 
-function Write() {
+export default function Write() {
     const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
 
     // `texts` are the displayed texts within the app.
@@ -285,8 +285,3 @@ function Write() {
         </Router>
     );
 }
-
-
-export default Write;
-
-
