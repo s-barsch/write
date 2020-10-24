@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch }  from 'react-router-dom';
 import './main.scss';
 import Top from './comps/top/top';
@@ -61,17 +61,29 @@ export default function Write() {
 
     // connection states
 
-    const [isOffline, setOfflineState] = useState(readBoolState("isOffline"));
+    const [isOffline, setIsOffline] = useState(readBoolState("isOffline"));
     const [isConnecting, setConnecting] = useState(false);
 
-    // load texts when queues are empty
+    const loadTexts = useCallback(async () => {
+            setConnecting(true);
+            try {
+                const texts = await getRemoteTexts();
+                saveState("texts", setTexts, texts);
+                setOffline(false);
+            } catch(err) {
+                setErr(err);
+                setOffline(true);
+            }
+            setConnecting(false);
+    }, [])
 
+    // load texts when queues are empty
+    
     useEffect(() => {
         if (!isOffline && isEmpty(writes) && isEmpty(deletes)) {
             loadTexts();
         }
-    }, [isOffline, writes, deletes]);
-
+    }, [loadTexts, isOffline, writes, deletes]);
 
     // load texts when you open the app
 
@@ -90,7 +102,7 @@ export default function Write() {
         return () => {
             document.removeEventListener("visibilitychange", onFocusChange);
         }
-    }, [isOffline]);
+    }, [loadTexts, isOffline]);
 
 
     // dark theme
@@ -103,7 +115,7 @@ export default function Write() {
     // isOffline state
 
     function setOffline(state: boolean) {
-        setOfflineState(state);
+        setIsOffline(state);
         storeBoolState("isOffline", state);
     }
 
@@ -112,8 +124,7 @@ export default function Write() {
             setConnecting(true);
             try {
                 await emptyQueues();
-                await loadTexts();
-                setOffline(false);
+                loadTexts();
             } catch(err) {
                 setErr(err);
             }
@@ -181,29 +192,9 @@ export default function Write() {
         storeState(key, list);
     }
 
-    // load function
-
-    function loadTexts(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            // Hooks don’t allow 'setList' and 'setOffline'.
-            setConnecting(true);
-            getRemoteTexts().then(
-                texts => {
-                    setConnecting(false);
-                    // setList("texts", texts)
-                    setTexts(texts);
-                    storeState("texts", texts);
-                    resolve()
-                },
-                err => {
-                    setConnecting(false);
-                    // setOffline(true)
-                    setOfflineState(true);
-                    storeBoolState("isOffline", true);
-                    reject(err);
-                }
-            );
-        });
+    function saveState(key: string, setState: (list: Text[]) => void, list: Text[]) {
+        setState(list);
+        storeState(key, list);
     }
 
     // delete and write queues have to be empty before load
@@ -289,6 +280,7 @@ function emptyQueue(key: string, queue: Text[], setState: (list: Text[]) => void
     });
 }
 
+// corresponding functions to a key are returned
 function savingFunc(key: string): (t: Text) => Promise<Response> {
     if (key === "writes") {
         return saveRemote;
