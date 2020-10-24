@@ -1,82 +1,77 @@
 import Text from './text';
 
-export function getRemoteTexts(): Promise<Text[]> {
-    const ms = 1500;
-    const abortController = new AbortController();
-    return new Promise((resolve, reject) => {
-        let run = setTimeout(function() {
-            abortController.abort();
-            reject("Request terminated after " + ms + "ms.");
-        }, ms)
+const timeoutMs = 1500;
 
-        fetch("/api/texts/", {
-            signal: abortController.signal,
-        }).then(
-            resp => {
-                clearTimeout(run);
-                if (resp.ok) {
-                    resp.json().then(
-                        (texts: Text[]) => resolve(texts),
-                        err => reject(err)
-                    )
-                } else {
-                    resp.text().then((text: string) => reject(text));
-                }
+export type reqErr = {
+    path: string;
+    func: string;
+    code: number;
+    msg:  string;
+}
+
+type setErrFn = (err: reqErr) => void;
+
+function request(path: string, method: string, body: string, err: reqErr): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+
+        let controller = new AbortController();
+        let run = setTimeout(function() {
+            controller.abort();
+            reject("Request terminated after " + timeoutMs + "ms.");
+        }, timeoutMs)
+
+        const options = {method: "GET"} as RequestInit;
+
+        if (method !== "GET") {
+            options.method = method;
+            options.body = body;
+        }
+
+        const resp = await fetch(path, options);
+        clearTimeout(run);
+
+        if (!resp.ok) {
+            err.path = path;
+            err.code = resp.status;
+
+            switch (resp.status) {
+                case 403:
+                    err.msg = "not logged in";
+                    break;
+                case 502:
+                    err.msg = "server not running";
+                    break;
+                default:
+                    err.msg = await resp.text();
             }
-        )
-            .catch(err => {
-                console.log(err);
-                reject(err)
-            });
+
+            reject(err);
+            return;
+        }
+        resolve(resp);
     });
 }
 
-function makeFetch(fetchPromise: Promise<any>, abortController: AbortController): Promise<any> {
-    const ms = 1500;
-    return new Promise((resolve, reject) => {
-        let run = setTimeout(function() {
-            abortController.abort();
-            reject("Request terminated after " + ms + "ms.");
-        }, ms)
-
-        fetchPromise.then(
-            resp => {
-                clearTimeout(run);
-                if (resp.ok) {
-                    resolve();
-                } else {
-                    resp.text().then((text: string) => reject(text));
-                }
-            }
-        )
-            .catch(err => {
-                console.log(err);
-                //reject(err)
-            });
-    });
+function newErr(funcName: string): reqErr {
+    return {
+        func: funcName,
+        path: "",
+        code: 0,
+        msg:  ""
+    }
 }
 
-export function saveRemote(t: Text) {
-    let controller = new AbortController();
-    return makeFetch(
-        fetch("/api/text/" + t.id + ".txt", {
-            method: "PUT",
-            signal: controller.signal,
-            body: t.body
-        }),
-        controller,
-    );
+export async function getRemoteTexts(): Promise<Text[]> {
+    const resp = await request("/api/texts/", "GET", "", newErr("getTexts"));
+    return await resp.json();
 }
 
-export function deleteRemote(t: Text) {
-    let controller = new AbortController();
-    return makeFetch(
-        fetch("/api/text/" + t.id + ".txt", {
-            method: "DELETE",
-            signal: controller.signal
-        }),
-        controller,
-    );
+export function saveRemote(t: Text): Promise<Response> {
+    return request("/api/text/" + t.id + ".txt", "PUT", t.body, newErr("saveRemote"));
+}
+
+export function deleteRemote(t: Text): Promise<Response> {
+    return request("/api/text/" + t.id + ".txt", "DELETE", "", newErr("deleteRemote"));
 }
 
 

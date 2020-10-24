@@ -4,27 +4,29 @@ import OnlineIcon from '@material-ui/icons/WifiSharp';
 import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
 import ThemeIcon from '@material-ui/icons/WbSunnySharp';
-import { ConStates, SwitchFuncs } from 'helper';
+import { conStatesObj, SwitchFuncs } from 'helper';
+import { reqErr } from 'funcs/remote';
+import { ErrComponent } from './error';
 
-function ConnectionIcon(connecting: boolean, offline: boolean) {
-    if (connecting) {
+function ConnectionIcon(isConnecting: boolean, isOffline: boolean) {
+    if (isConnecting) {
         return ConnectingIcon;
-    } else if (offline) {
+    } else if (isOffline) {
         return OfflineIcon;
     } 
     return OnlineIcon;
 }
 
-type TopProps = {
-    conStates: ConStates;
-    switchFuncs: SwitchFuncs;
+type ConnectionToggleProps = {
+    switchConnection: () => void;
+    conStates: conStatesObj;
 }
 
-function ConnectionToggle({conStates, switchFuncs}: TopProps) {
-    const Icon = ConnectionIcon(conStates.connecting, conStates.offline)
+function ConnectionToggle({switchConnection, conStates}: ConnectionToggleProps) {
+    const Icon = ConnectionIcon(conStates.isConnecting, conStates.isOffline)
 
     return (
-        <button onClick={switchFuncs.connection}><Icon /></button>
+        <button onClick={switchConnection}><Icon /></button>
     )
 }
 
@@ -34,19 +36,24 @@ function ThemeToggle({switchTheme}: {switchTheme: () => void}) {
     )
 }
 
-function Top({conStates, switchFuncs}: TopProps) {
+type TopProps = {
+    conStates: conStatesObj;
+    switchFuncs: SwitchFuncs;
+    err: reqErr;
+}
+
+export default function Top({conStates, switchFuncs, err}: TopProps) {
     return (
         <nav id="nav">
         <NavLink to="/" exact={true}>Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
-        { /* conStates.offline && <NavLink to="/queue/">Local</NavLink> */ }
+        { /* conStates.isOffline && <NavLink to="/queue/">Local</NavLink> */ }
         <nav className="options">
-        <ConnectionToggle conStates={conStates} switchFuncs={switchFuncs} />
+        <ErrComponent err={err} />
+        <ConnectionToggle switchConnection={switchFuncs.connection} conStates={conStates} />
         <ThemeToggle switchTheme={switchFuncs.theme} />
         </nav>
         </nav>
     );
 }
 
-
-export default Top

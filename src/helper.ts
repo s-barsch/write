@@ -14,9 +14,9 @@ export type SectionProps = {
     modFuncs: ModFuncs;
 }
 
-export type ConStates = {
-    offline: boolean;
-    connecting: boolean;
+export type conStatesObj = {
+    isOffline: boolean;
+    isConnecting: boolean;
 }
 
 export type SwitchFuncs = {

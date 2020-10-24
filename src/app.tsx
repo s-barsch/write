@@ -7,7 +7,7 @@ import Texts from './comps/sections/texts';
 import Single from './comps/sections/single';
 import Queue from './comps/sections/queue';
 import { updateList, trimList } from './funcs/list';
-import { getRemoteTexts, deleteRemote, saveRemote } from './funcs/remote';
+import { getRemoteTexts, deleteRemote, saveRemote, reqErr } from './funcs/remote';
 import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
 
@@ -21,7 +21,8 @@ type StateObject = {
 }
 
 export default function Write() {
-    const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
+
+    const [err, setErr] = useState({} as reqErr);
 
     // `texts` are the displayed texts within the app.
     // `writes` are queued texts that wait to be saved remotely.
@@ -48,12 +49,9 @@ export default function Write() {
         },
     };
 
-    // connection states
-
-    const [offline, setOfflineState] = useState(readBoolState("offline"));
-    const [connecting, setConnecting] = useState(false);
-
     // set theme based on setting
+
+    const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
 
     useEffect(() => {
         darkTheme
@@ -61,13 +59,18 @@ export default function Write() {
             : document.body.classList.remove("dark-theme")
     })
 
+    // connection states
+
+    const [isOffline, setOfflineState] = useState(readBoolState("isOffline"));
+    const [isConnecting, setConnecting] = useState(false);
+
     // load texts when queues are empty
 
     useEffect(() => {
-        if (!offline && isEmpty(writes) && isEmpty(deletes)) {
+        if (!isOffline && isEmpty(writes) && isEmpty(deletes)) {
             loadTexts();
         }
-    }, [offline, writes, deletes]);
+    }, [isOffline, writes, deletes]);
 
 
     // load texts when you open the app
@@ -76,7 +79,7 @@ export default function Write() {
         let wasFocus = true;
 
         const onFocusChange: (e: any) => void = e => {
-            if (!offline && !document.hidden && !wasFocus) {
+            if (!isOffline && !document.hidden && !wasFocus) {
                 loadTexts();
             }
             wasFocus = !document.hidden;
@@ -87,7 +90,7 @@ export default function Write() {
         return () => {
             document.removeEventListener("visibilitychange", onFocusChange);
         }
-    }, [offline]);
+    }, [isOffline]);
 
 
     // dark theme
@@ -97,22 +100,22 @@ export default function Write() {
         storeBoolState("dark-theme", !darkTheme);
     }
 
-    // offline state
+    // isOffline state
 
     function setOffline(state: boolean) {
         setOfflineState(state);
-        storeBoolState("offline", state);
+        storeBoolState("isOffline", state);
     }
 
     async function switchConnection() {
-        if (offline) {
+        if (isOffline) {
             setConnecting(true);
             try {
                 await emptyQueues();
                 await loadTexts();
                 setOffline(false);
             } catch(err) {
-                console.log(err);
+                setErr(err);
             }
             setConnecting(false);
             return;
@@ -126,7 +129,7 @@ export default function Write() {
         setEntry("texts", t)
         setEntry("writes", t)
 
-        if (offline) return;
+        if (isOffline) return;
 
         saveRemote(t).then(
             () => removeEntry("writes", t),
@@ -142,7 +145,7 @@ export default function Write() {
         removeEntry("writes", t);
         setEntry("deletes", t);
 
-        if (offline) return;
+        if (isOffline) return;
 
         deleteRemote(t).then(
             () => removeEntry("deletes", t),
@@ -180,7 +183,7 @@ export default function Write() {
 
     // load function
 
-    function loadTexts() {
+    function loadTexts(): Promise<string> {
         return new Promise((resolve, reject) => {
             // Hooks don’t allow 'setList' and 'setOffline'.
             setConnecting(true);
@@ -196,7 +199,7 @@ export default function Write() {
                     setConnecting(false);
                     // setOffline(true)
                     setOfflineState(true);
-                    storeBoolState("offline", true);
+                    storeBoolState("isOffline", true);
                     reject(err);
                 }
             );
@@ -205,29 +208,13 @@ export default function Write() {
 
     // delete and write queues have to be empty before load
 
-    function emptyQueues() {
+    function emptyQueues(): Promise<string> {
         return new Promise(async (resolve, reject) => {
-
-            let writeq = writes.slice();
-            for (const t of writeq) {
-                try {
-                    await saveRemote(t);
-                    writeq = trimList(writeq, t);
-                    setList("writes", writeq);
-                } catch(err) {
-                    reject(err);
-                }
-            }
-
-            let delq = deletes.slice();
-            for (const t of delq) {
-                try {
-                    await deleteRemote(t);
-                    delq = trimList(delq, t)
-                    setList("deletes", delq)
-                } catch(err) {
-                    reject(err);
-                }
+            try {
+                await emptyQueue("writes", writes, setWrites);
+                await emptyQueue("deletes", deletes, setDeletes);
+            } catch(err) {
+                reject(err);
             }
             resolve();
         })
@@ -239,8 +226,8 @@ export default function Write() {
     }
 
     const conStates = {
-        offline:    offline,
-        connecting: connecting,
+        isOffline:    isOffline,
+        isConnecting: isConnecting,
     }
 
     const switchFuncs = {
@@ -267,7 +254,7 @@ export default function Write() {
 
     return (
         <Router>
-            <Top conStates={conStates} switchFuncs={switchFuncs} />
+            <Top conStates={conStates} switchFuncs={switchFuncs} err={err} />
             <Switch>
                 <Route exact={true} path="/">
                     <NewText modFuncs={modFuncs} />
@@ -284,4 +271,30 @@ export default function Write() {
             </Switch>
         </Router>
     );
+}
+
+function emptyQueue(key: string, queue: Text[], setState: (list: Text[]) => void): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+        for (const t of queue) {
+            try {
+                await savingFunc(key)(t);
+                queue = trimList(queue, t);
+                setState(queue.slice());
+                storeState(key, queue);
+            } catch(err) {
+                reject(err);
+            }
+        }
+        resolve();
+    });
+}
+
+function savingFunc(key: string): (t: Text) => Promise<Response> {
+    if (key === "writes") {
+        return saveRemote;
+    }
+    if (key === "deletes") {
+        return deleteRemote;
+    }
+    throw new Error("Could not find saving func. Key was: " + key + ".");
 }
