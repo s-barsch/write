@@ -5,7 +5,13 @@ export function readState(key: string): Text[] {
     if (list == null || list === "{}") {
         return [];
     }
-    return JSON.parse(list);
+    let texts: Text[] = [];
+    try {
+        texts = JSON.parse(list);
+    } catch(err) {
+        throw err;
+    }
+    return texts;
 }
 
 export function storeState(key: string, list: Text[]) {
