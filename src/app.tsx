@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch }  from 'react-router-dom';
 import './main.scss';
 import Top from './comps/top/top';
@@ -7,7 +7,7 @@ import Texts from './comps/sections/texts';
 import Single from './comps/sections/single';
 import Queue from './comps/sections/queue';
 import { updateList, trimList } from './funcs/list';
-import { getRemoteTexts, deleteRemote, saveRemote, reqErr } from './funcs/remote';
+import { getRemoteTexts, deleteRemote, saveRemote, newOkStatus, reqStatus } from './funcs/remote';
 import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
 
@@ -17,16 +17,14 @@ type States = {
 
 type StateObject = {
     state: Text[];
-    setState: React.Dispatch<React.SetStateAction<Text[]>>;
+    setState: (texts: Text[]) => void;
 }
 
 export default function Write() {
 
-    const [err, setErr] = useState({} as reqErr);
+    const [status, setStatus] = useState({code: 0} as reqStatus);
 
-    // `texts` are the displayed texts within the app.
-    // `writes` are queued texts that wait to be saved remotely.
-    // `deletes` is the equivalent delete queue.
+    // `texts` are the displayed texts. `writes` and `deletes` are queues.
 
     const [texts, setTexts] = useState(readState("texts"));
     const [writes, setWrites] = useState(readState("writes"));
@@ -64,37 +62,36 @@ export default function Write() {
     const [isOffline, setIsOffline] = useState(readBoolState("isOffline"));
     const [isConnecting, setConnecting] = useState(false);
 
-    const loadTexts = useCallback(async () => {
-        setConnecting(true);
-        try {
-            const texts = await getRemoteTexts();
-            saveState("texts", setTexts, texts);
-            setOffline(false);
-        } catch(err) {
-            setErr(err);
-            setOffline(true);
-        }
-        setConnecting(false);
-    }, [])
+    const wasFocus = useRef(true);
 
-    // load texts when queues are empty
-    
     useEffect(() => {
-        if (!isOffline && isEmpty(writes) && isEmpty(deletes)) {
+        async function loadTexts() { 
+            setConnecting(true);
+            try {
+                const texts = await getRemoteTexts();
+                saveState("texts", setTexts, texts);
+                setOffline(false);
+                flashRequest();
+            } catch(err) {
+                setOffline(true);
+                setStatus(err);
+            }
+            setConnecting(false);
+        }
+
+        // only load when online.
+
+        if (!isOffline) {
             loadTexts();
         }
-    }, [loadTexts, isOffline, writes, deletes]);
 
-    // load texts when you open the app
+        // reload texts after tab switch or app close to sync devices.
 
-    useEffect(() => {
-        let wasFocus = true;
-
-        const onFocusChange: (e: any) => void = e => {
-            if (!isOffline && !document.hidden && !wasFocus) {
+        const onFocusChange: (e: Event) => void = e => {
+            if (!isOffline && !document.hidden && !wasFocus.current) {
                 loadTexts();
             }
-            wasFocus = !document.hidden;
+            wasFocus.current = !document.hidden;
         };
 
         document.addEventListener("visibilitychange", onFocusChange);
@@ -102,8 +99,7 @@ export default function Write() {
         return () => {
             document.removeEventListener("visibilitychange", onFocusChange);
         }
-    }, [loadTexts, isOffline]);
-
+    }, [isOffline]);
 
     // dark theme
 
@@ -124,9 +120,12 @@ export default function Write() {
             setConnecting(true);
             try {
                 await emptyQueues();
-                loadTexts();
+                const texts = await getRemoteTexts();
+                flashRequest();
+                setList("texts", texts);
+                setOffline(false);
             } catch(err) {
-                setErr(err);
+                setStatus(err);
             }
             setConnecting(false);
             return;
@@ -144,9 +143,10 @@ export default function Write() {
 
         try {
             await saveRemote(t);
+            flashRequest();
             removeEntry("writes", t);
         } catch(err) {
-            setErr(err);
+            setStatus(err);
             setOffline(true);
         }
     }
@@ -160,9 +160,10 @@ export default function Write() {
 
         try {
             deleteRemote(t);
+            flashRequest();
             removeEntry("deletes", t);
         } catch(err) {
-            setErr(err);
+            setStatus(err);
             setOffline(true);
         }
     }
@@ -203,7 +204,9 @@ export default function Write() {
         return new Promise(async (resolve, reject) => {
             try {
                 await emptyQueue("writes", writes, setWrites);
+                flashRequest();
                 await emptyQueue("deletes", deletes, setDeletes);
+                flashRequest();
             } catch(err) {
                 reject(err);
             }
@@ -211,9 +214,10 @@ export default function Write() {
         })
     }
 
-    function isEmpty(list: Text[]): boolean {
-        if (!list) return true
-        return list.length === 0
+    //
+
+    function flashRequest() {
+        setStatus(newOkStatus());
     }
 
     const conStates = {
@@ -244,7 +248,7 @@ export default function Write() {
 
     return (
         <Router>
-            <Top conStates={conStates} switchFuncs={switchFuncs} err={err} />
+            <Top conStates={conStates} switchFuncs={switchFuncs} status={status} />
             <Switch>
                 <Route exact={true} path="/">
                     <NewText modFuncs={modFuncs} />
@@ -289,3 +293,12 @@ function savingFunc(key: string): (t: Text) => Promise<Response> {
     }
     throw new Error("Could not find saving func. Key was: " + key + ".");
 }
+
+        /*
+    function isEmpty(list: Text[]): boolean {
+        if (!list) return true
+        return list.length === 0
+    }
+         */
+
+

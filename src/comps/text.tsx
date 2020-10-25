@@ -95,6 +95,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         }
 
         return () => {
+            setSaved(0);
             clearTimeout(blink.current);
         }
 

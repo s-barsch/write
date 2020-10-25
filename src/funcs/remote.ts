@@ -2,19 +2,19 @@ import Text from './text';
 
 const timeoutMs = 1500;
 
-export type reqErr = {
+export type reqStatus = {
     path: string;
     func: string;
     code: number;
     msg:  string;
 }
 
-type setErrFn = (err: reqErr) => void;
+type setErrFn = (err: reqStatus) => void;
 
 function request(path: string, options: RequestInit, fnName: string): Promise<Response> {
     return new Promise(async (resolve, reject) => {
 
-        let err: reqErr = {
+        let status: reqStatus = {
             func: fnName,
             path: path,
             code: 0,
@@ -24,9 +24,9 @@ function request(path: string, options: RequestInit, fnName: string): Promise<Re
         let controller = new AbortController();
         let reqTimeout = setTimeout(function() {
             controller.abort();
-            err.code = 408;
-            err.msg = "request timed out";
-            reject(err);
+            status.code = 408;
+            status.msg = "request timed out";
+            reject(status);
         }, timeoutMs)
 
         options.signal = controller.signal;
@@ -35,31 +35,31 @@ function request(path: string, options: RequestInit, fnName: string): Promise<Re
             const resp = await fetch(path, options);
             clearTimeout(reqTimeout);
 
-            if (!resp.ok) {
-                err.code = resp.status;
+            status.code = resp.status;
 
+            if (!resp.ok) {
                 switch (resp.status) {
                     case 403:
-                        err.msg = "not logged in";
+                        status.msg = "not logged in";
                         break;
                     case 502:
-                        err.msg = "server not running";
+                        status.msg = "server not running";
                         break;
                     default:
-                        err.msg = await resp.text();
+                        status.msg = await resp.text();
                 }
 
-                reject(err);
+                reject(status);
                 return;
             }
             resolve(resp);
 
-        } catch(fetchErr) {
-            if (fetchErr.name === "AbortError") {
+        } catch(err) {
+            if (err.name === "AbortError") {
                 // this error was handled via reqTimeout.
                 return;
             }
-            throw fetchErr;
+            throw err;
         }
     });
 }
@@ -82,6 +82,15 @@ export function deleteRemote(t: Text): Promise<Response> {
         method: "DELETE"
     } as RequestInit;
     return request("/api/text/" + t.id + ".txt", options, "deleteRemote");
+}
+
+export function newOkStatus(): reqStatus {
+    return {
+        func: "",
+        code: 200,
+        path: "",
+        msg:  ""
+    }
 }
 
 

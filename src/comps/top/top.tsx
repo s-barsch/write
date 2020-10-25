@@ -5,8 +5,15 @@ import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
 import OfflineIcon from '@material-ui/icons/WifiOffSharp';
 import ThemeIcon from '@material-ui/icons/WbSunnySharp';
 import { conStatesObj, SwitchFuncs } from 'helper';
-import { reqErr } from 'funcs/remote';
-import { ErrComponent } from './error';
+import { reqStatus } from 'funcs/remote';
+import { Status } from './status';
+
+function ThemeToggle({switchTheme}: {switchTheme: () => void}) {
+    return (
+        <button onClick={switchTheme}><ThemeIcon /></button>
+    )
+}
+
 
 function ConnectionIcon(isConnecting: boolean, isOffline: boolean) {
     if (isConnecting) {
@@ -30,27 +37,23 @@ function ConnectionToggle({switchConnection, conStates}: ConnectionToggleProps) 
     )
 }
 
-function ThemeToggle({switchTheme}: {switchTheme: () => void}) {
-    return (
-        <button onClick={switchTheme}><ThemeIcon /></button>
-    )
-}
 
 type TopProps = {
     conStates: conStatesObj;
     switchFuncs: SwitchFuncs;
-    err: reqErr;
+    status: reqStatus;
 }
 
-export default function Top({conStates, switchFuncs, err}: TopProps) {
+export default function Top({conStates, switchFuncs, status}: TopProps) {
     return (
         <nav id="nav">
         <NavLink to="/" exact={true}>Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
         { /* conStates.isOffline && <NavLink to="/queue/">Local</NavLink> */ }
         <nav className="options">
-        <ErrComponent err={err} />
-        <ConnectionToggle switchConnection={switchFuncs.connection} conStates={conStates} />
+        <Status status={status}>
+            <ConnectionToggle switchConnection={switchFuncs.connection} conStates={conStates} />
+        </Status>
         <ThemeToggle switchTheme={switchFuncs.theme} />
         </nav>
         </nav>
