@@ -65,8 +65,20 @@ function request(path: string, options: RequestInit, fnName: string): Promise<Re
 }
 
 export async function getRemoteTexts(): Promise<Text[]> {
-    const resp = await request("/api/texts/", {} as RequestInit, "getTexts");
-    return await resp.json();
+    return new Promise(async (resolve, reject) => {
+        try {
+            const resp = await request("/api/texts/", {} as RequestInit, "getTexts");
+            const texts = await resp.json();
+            resolve(texts);
+        } catch(err) {
+            // custom error object
+            if (err.func !== "") {
+                reject(err)
+            }
+            // json parse error
+            throw err;
+        }
+    });
 }
 
 export function saveRemote(t: Text): Promise<Response> {

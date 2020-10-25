@@ -125,7 +125,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         blink.current = blinkGreen();
     }
 
-    let rows = !isSingle ? 1 : screenRows();
+    let rows = !isSingle ? 1 : 8;
 
     return (
         <article className="text">
@@ -153,10 +153,6 @@ function Del({ text, delFn }: DelProps) {
         }
     }
     return <button className="del" onClick={del}><DeleteIcon /></button>
-}
-
-function screenRows() {
-    return Math.round(window.screen.height/(2.25*16)) - 6;
 }
 
 type TextLinkProps = {
