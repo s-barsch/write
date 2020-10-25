@@ -2,7 +2,7 @@ import Text from './text';
 
 export function readState(key: string): Text[] {
     const list = localStorage.getItem(key);
-    if (list == null) {
+    if (list == null || list === "{}") {
         return [];
     }
     return JSON.parse(list);
