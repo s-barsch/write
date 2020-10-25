@@ -11,10 +11,15 @@ export type reqErr = {
 
 type setErrFn = (err: reqErr) => void;
 
-function request(path: string, method: string, body: string, err: reqErr): Promise<Response> {
+function request(path: string, options: RequestInit, fnName: string): Promise<Response> {
     return new Promise(async (resolve, reject) => {
 
-        err.path = path;
+        let err: reqErr = {
+            func: fnName,
+            path: path,
+            code: 0,
+            msg:  ""
+        }
 
         let controller = new AbortController();
         let reqTimeout = setTimeout(function() {
@@ -24,15 +29,7 @@ function request(path: string, method: string, body: string, err: reqErr): Promi
             reject(err);
         }, timeoutMs)
 
-        const options = {
-            method: "GET",
-            signal: controller.signal
-        } as RequestInit;
-
-        if (method !== "GET") {
-            options.method = method;
-            options.body = body;
-        }
+        options.signal = controller.signal;
 
         try {
             const resp = await fetch(path, options);
@@ -67,26 +64,24 @@ function request(path: string, method: string, body: string, err: reqErr): Promi
     });
 }
 
-function newErr(funcName: string): reqErr {
-    return {
-        func: funcName,
-        path: "",
-        code: 0,
-        msg:  ""
-    }
-}
-
 export async function getRemoteTexts(): Promise<Text[]> {
-    const resp = await request("/api/texts/", "GET", "", newErr("getTexts"));
+    const resp = await request("/api/texts/", {} as RequestInit, "getTexts");
     return await resp.json();
 }
 
 export function saveRemote(t: Text): Promise<Response> {
-    return request("/api/text/" + t.id + ".txt", "PUT", t.body, newErr("saveRemote"));
+    const options = {
+        method: "PUT",
+        body: t.body
+    } as RequestInit;
+    return request("/api/text/" + t.id + ".txt", options, "saveRemote");
 }
 
 export function deleteRemote(t: Text): Promise<Response> {
-    return request("/api/text/" + t.id + ".txt", "DELETE", "", newErr("deleteRemote"));
+    const options = {
+        method: "DELETE"
+    } as RequestInit;
+    return request("/api/text/" + t.id + ".txt", options, "deleteRemote");
 }
 
 
