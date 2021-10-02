@@ -38,7 +38,7 @@ export function Status({status, children}: StatusProps) {
 
     switch (code) {
         case 0:
-            return <>{children}</>
+            return <>{children}</>;
         case 200:
             return <span className="success">{children}</span>
         default:
