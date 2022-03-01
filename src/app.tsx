@@ -73,8 +73,12 @@ export default function Write() {
                 setOffline(false);
                 flashRequest();
             } catch(err) {
+                // TODO: improve error handling
+                if (err instanceof Error) {
+                    setStatus({msg: err.message} as reqStatus)
+                }
                 setOffline(true);
-                setStatus(err);
+                //setStatus(err);
             }
             setConnecting(false);
         }
@@ -125,7 +129,11 @@ export default function Write() {
                 setList("texts", texts);
                 setOffline(false);
             } catch(err) {
-                setStatus(err);
+                // TODO: improve error handling
+                if (err instanceof Error) {
+                    setStatus({msg: err.message} as reqStatus)
+                }
+                //setStatus(err);
             }
             setConnecting(false);
             return;
@@ -146,7 +154,11 @@ export default function Write() {
             flashRequest();
             removeEntry("writes", t);
         } catch(err) {
-            setStatus(err);
+            // TODO: improve error handling
+            if (err instanceof Error) {
+                setStatus({msg: err.message} as reqStatus)
+            }
+            //setStatus(err);
             setOffline(true);
         }
     }
@@ -163,7 +175,11 @@ export default function Write() {
             flashRequest();
             removeEntry("deletes", t);
         } catch(err) {
-            setStatus(err);
+            // TODO: improve error handling
+            if (err instanceof Error) {
+                setStatus({msg: err.message} as reqStatus)
+            }
+            //setStatus(err);
             setOffline(true);
         }
     }
@@ -210,7 +226,7 @@ export default function Write() {
             } catch(err) {
                 reject(err);
             }
-            resolve();
+            resolve("");
         })
     }
 
@@ -279,7 +295,7 @@ function emptyQueue(key: string, queue: Text[], setState: (list: Text[]) => void
                 reject(err);
             }
         }
-        resolve();
+        resolve("");
     });
 }
 

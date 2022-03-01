@@ -55,9 +55,12 @@ function request(path: string, options: RequestInit, fnName: string): Promise<Re
             resolve(resp);
 
         } catch(err) {
-            if (err.name === "AbortError") {
-                // this error was handled via reqTimeout.
-                return;
+            // TODO: improve error handling
+            if (err instanceof Error) {
+                if (err.name === "AbortError") {
+                    // this error was handled via reqTimeout.
+                    return;
+                }
             }
             throw err;
         }
@@ -72,7 +75,13 @@ export async function getRemoteTexts(): Promise<Text[]> {
             resolve(texts);
         } catch(err) {
             // custom error object
-            if (err.func !== "") {
+            /*
+                if (err.func !== "") {
+                    reject(err)
+                }
+             */
+            // TODO: improve error handling
+            if (err instanceof Error) {
                 reject(err)
             }
             // json parse error
