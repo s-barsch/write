@@ -1,12 +1,10 @@
 import Text from './funcs/text';
 
-export type ActionFunc = (t: Text) => void;
-
 export type ModFuncs = {
-  saveText: ActionFunc;
-  deleteText: ActionFunc;
-  revertDelete: ActionFunc;
-  delWrite: ActionFunc;
+  saveText: (t: Text) => void;
+  deleteText: (t: Text) => void;
+  revertDelete: (t: Text) => void;
+  delWrite: (t: Text) => void;
 }
 
 export type SectionProps = {

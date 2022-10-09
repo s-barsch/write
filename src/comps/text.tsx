@@ -5,7 +5,6 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { makeKey } from "../funcs/date";
 import DeleteIcon from '@material-ui/icons/ClearSharp';
 import Text from '../funcs/text';
-import { ActionFunc } from '../helper';
 import Error from './error';
 
 type TextListProps = {
@@ -51,7 +50,7 @@ type InfoProps = {
     isSingle: boolean;
     isNew: boolean;
     saved: number; 
-    delFn: ActionFunc;
+    delFn: (t: Text) => void;
 }
 
 
@@ -67,8 +66,8 @@ export function Info({ text, isSingle, isNew, saved, delFn }: InfoProps) {
 
 type TextProps = {
     text: Text;
-    saveFn: ActionFunc;
-    delFn: ActionFunc;
+    saveFn: (t: Text) => void;
+    delFn: (t: Text) => void;
     isSingle: boolean;
     isNew: boolean;
 }
@@ -132,7 +131,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         <Info text={text} saved={saved} isSingle={isSingle} isNew={isNew} delFn={delFn} />
         <TextareaAutosize
         ref={textRef}
-        rowsMin={rows}
+        minRows={rows}
         value={body}
         onChange={handleTyping}
         onBlur={submit}
@@ -143,7 +142,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
 
 type DelProps = {
     text: Text;
-    delFn: ActionFunc;
+    delFn: (t: Text) => void;
 }
 
 function Del({ text, delFn }: DelProps) {
