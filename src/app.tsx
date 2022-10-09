@@ -12,12 +12,11 @@ import { readState, storeState, readBoolState, storeBoolState } from './funcs/st
 import Text, { demoText } from './funcs/text';
 
 type States = {
-    [key: string]: StateObject;
+    [key: string]: Text[];
 }
 
-type StateObject = {
-    state: Text[];
-    setState: (texts: Text[]) => void;
+type Sets = {
+    [key: string]: (texts: Text[]) => void;
 }
 
 export default function Write() {
@@ -29,23 +28,6 @@ export default function Write() {
     const [texts, setTexts] = useState(readState("texts"));
     const [writes, setWrites] = useState(readState("writes"));
     const [deletes, setDeletes] = useState(readState("deletes"));
-
-    // map states for easy access
-
-    const states: States = {
-        "texts": {
-            state:    texts,
-            setState: setTexts,
-        },
-        "writes": {
-            state:    writes,
-            setState: setWrites,
-        },
-        "deletes": {
-            state:    deletes,
-            setState: setDeletes,
-        },
-    };
 
     // set theme based on setting
 
@@ -69,9 +51,9 @@ export default function Write() {
             setConnecting(true);
             try {
                 const texts = await getRemoteTexts();
-                saveState("texts", setTexts, texts);
+                setList("texts", texts);
                 setOffline(false);
-                flashRequest();
+                flash();
             } catch(err) {
                 // TODO: improve error handling
                 if (err instanceof Error) {
@@ -125,7 +107,7 @@ export default function Write() {
             try {
                 await emptyQueues();
                 const texts = await getRemoteTexts();
-                flashRequest();
+                flash();
                 setList("texts", texts);
                 setOffline(false);
             } catch(err) {
@@ -151,7 +133,7 @@ export default function Write() {
 
         try {
             await saveRemote(t);
-            flashRequest();
+            flash();
             removeEntry("writes", t);
         } catch(err) {
             // TODO: improve error handling
@@ -172,7 +154,7 @@ export default function Write() {
 
         try {
             deleteRemote(t);
-            flashRequest();
+            flash();
             removeEntry("deletes", t);
         } catch(err) {
             // TODO: improve error handling
@@ -196,21 +178,28 @@ export default function Write() {
 
     // underlying saving functions
 
+    const states: {[key: string]: Text[]}= {
+        "texts": texts,
+        "writes": writes,
+        "deletes": deletes
+    };
+
     function removeEntry(key: string, t: Text) {
-        setList(key, trimList(states[key].state.slice(), t))
+        setList(key, trimList(states[key].slice(), t))
     }
 
     function setEntry(key: string, t: Text) {
-        setList(key, updateList(states[key].state.slice(), t))
+        setList(key, updateList(states[key].slice(), t))
     }
 
     function setList(key: string, list: Text[]) {
-        states[key].setState(list);
-        storeState(key, list);
-    }
+        const setFns: {[key: string]: (texts: Text[]) => void}= {
+            "texts": setTexts,
+            "writes": setWrites,
+            "deletes": setDeletes
+        };
 
-    function saveState(key: string, setState: (list: Text[]) => void, list: Text[]) {
-        setState(list);
+        setFns[key](list);
         storeState(key, list);
     }
 
@@ -219,10 +208,10 @@ export default function Write() {
     function emptyQueues(): Promise<string> {
         return new Promise(async (resolve, reject) => {
             try {
-                await emptyQueue("writes", writes, setWrites);
-                flashRequest();
-                await emptyQueue("deletes", deletes, setDeletes);
-                flashRequest();
+                await emptyQueue("writes", writes);
+                flash();
+                await emptyQueue("deletes", deletes);
+                flash();
             } catch(err) {
                 reject(err);
             }
@@ -230,9 +219,37 @@ export default function Write() {
         })
     }
 
+    function emptyQueue(key: string, queue: Text[]): Promise<string> {
+        return new Promise(async (resolve, reject) => {
+            for (const t of queue) {
+                try {
+                    await saveFn(key)(t);
+                    queue = trimList(queue, t);
+                    setList(key, queue.slice())
+                } catch (err) {
+                    reject(err);
+                }
+            }
+            resolve("");
+        });
+    }
+
+    // corresponding functions to a key are returned
+    function saveFn(key: string): (t: Text) => Promise<Response> {
+        switch (key) {
+            case "writes":
+                return saveRemote;
+            case "deletes":
+                return deleteRemote;
+            default:
+                throw new Error("Could not find saving func. Key was: " + key + ".");
+        }
+    }
+
+
     //
 
-    function flashRequest() {
+    function flash() {
         setStatus(newOkStatus());
     }
 
@@ -256,8 +273,8 @@ export default function Write() {
     useEffect(() => {
         if (texts.length === 0 && process.env.REACT_APP_IS_DEMO === "true") {
             const demo = [demoText()]
-            saveState("texts", setTexts, demo);
-            saveState("writes", setWrites, demo);
+            setList("texts", demo);
+            setList("writes", demo);
         }
     }, [texts]);
 
@@ -282,34 +299,6 @@ export default function Write() {
         </Router>
     );
 }
-
-function emptyQueue(key: string, queue: Text[], setState: (list: Text[]) => void): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-        for (const t of queue) {
-            try {
-                await savingFunc(key)(t);
-                queue = trimList(queue, t);
-                setState(queue.slice());
-                storeState(key, queue);
-            } catch(err) {
-                reject(err);
-            }
-        }
-        resolve("");
-    });
-}
-
-// corresponding functions to a key are returned
-function savingFunc(key: string): (t: Text) => Promise<Response> {
-    if (key === "writes") {
-        return saveRemote;
-    }
-    if (key === "deletes") {
-        return deleteRemote;
-    }
-    throw new Error("Could not find saving func. Key was: " + key + ".");
-}
-
         /*
     function isEmpty(list: Text[]): boolean {
         if (!list) return true
