@@ -14,9 +14,9 @@ Create production built:
 
 `yarn build`
 
-Start the server:
+Compile and run the server:
 
-`make/server`
+`make/server; ./write`
 
 Go to: http://localhost:8231/
 
