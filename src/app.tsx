@@ -11,13 +11,7 @@ import { getRemoteTexts, deleteRemote, saveRemote, reqStatus, setStatusFn } from
 import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
 
-type States = {
-    [key: string]: Text[];
-}
 
-type Sets = {
-    [key: string]: (texts: Text[]) => void;
-}
 
 export default function Write() {
 
