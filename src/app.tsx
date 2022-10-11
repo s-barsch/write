@@ -7,7 +7,7 @@ import Texts from './comps/sections/texts';
 import Single from './comps/sections/single';
 import Queue from './comps/sections/queue';
 import { updateList, trimList } from './funcs/list';
-import { getRemoteTexts, deleteRemote, saveRemote, newOkStatus, reqStatus } from './funcs/remote';
+import { getRemoteTexts, deleteRemote, saveRemote, reqStatus, setStatusFn } from './funcs/remote';
 import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
 
@@ -47,28 +47,22 @@ export default function Write() {
     const wasFocus = useRef(true);
 
     useEffect(() => {
-        async function loadTexts() { 
-            setConnecting(true);
-            try {
-                const texts = await getRemoteTexts();
-                setList("texts", texts);
-                setOffline(false);
-                flash();
-            } catch(err) {
-                // TODO: improve error handling
-                if (err instanceof Error) {
-                    setStatus({msg: err.message} as reqStatus)
-                }
-                setOffline(true);
-                //setStatus(err);
-            }
-            setConnecting(false);
-        }
-
         // only load when online.
 
         if (!isOffline) {
             loadTexts();
+        }
+
+        async function loadTexts() {
+            setConnecting(true);
+            try {
+                const newTexts = await getRemoteTexts(setStatus);
+                setList("texts", newTexts);
+                setOffline(false);
+            } catch (err) {
+                setOffline(true);
+            }
+            setConnecting(false);
         }
 
         // reload texts after tab switch or app close to sync devices.
@@ -86,6 +80,7 @@ export default function Write() {
             document.removeEventListener("visibilitychange", onFocusChange);
         }
     }, [isOffline]);
+
 
     // dark theme
 
@@ -106,19 +101,13 @@ export default function Write() {
             setConnecting(true);
             try {
                 await emptyQueues();
-                const texts = await getRemoteTexts();
-                flash();
+                const texts = await getRemoteTexts(setStatus);
                 setList("texts", texts);
                 setOffline(false);
-            } catch(err) {
-                // TODO: improve error handling
-                if (err instanceof Error) {
-                    setStatus({msg: err.message} as reqStatus)
-                }
-                //setStatus(err);
+            } finally {
+                setConnecting(false);
+                return;
             }
-            setConnecting(false);
-            return;
         }
         setOffline(true);
     }
@@ -132,15 +121,9 @@ export default function Write() {
         if (isOffline) return;
 
         try {
-            await saveRemote(t);
-            flash();
+            await saveRemote(t, setStatus);
             removeEntry("writes", t);
-        } catch(err) {
-            // TODO: improve error handling
-            if (err instanceof Error) {
-                setStatus({msg: err.message} as reqStatus)
-            }
-            //setStatus(err);
+        } finally {
             setOffline(true);
         }
     }
@@ -153,15 +136,9 @@ export default function Write() {
         if (isOffline) return;
 
         try {
-            deleteRemote(t);
-            flash();
+            await deleteRemote(t, setStatus);
             removeEntry("deletes", t);
         } catch(err) {
-            // TODO: improve error handling
-            if (err instanceof Error) {
-                setStatus({msg: err.message} as reqStatus)
-            }
-            //setStatus(err);
             setOffline(true);
         }
     }
@@ -207,25 +184,25 @@ export default function Write() {
 
     function emptyQueues(): Promise<string> {
         return new Promise(async (resolve, reject) => {
-            try {
-                await emptyQueue("writes", writes);
-                flash();
-                await emptyQueue("deletes", deletes);
-                flash();
-            } catch(err) {
-                reject(err);
+            let queues = ["writes", "deletes"]
+            for (const queue of queues) {
+                try {
+                    await emptyQueue(queue);
+                } catch(err) {
+                    reject(err)
+                }
             }
             resolve("");
         })
     }
 
-    function emptyQueue(key: string, queue: Text[]): Promise<string> {
+    function emptyQueue(key: string): Promise<string> {
         return new Promise(async (resolve, reject) => {
-            for (const t of queue) {
+            for (const t of states[key]) {
                 try {
-                    await saveFn(key)(t);
-                    queue = trimList(queue, t);
-                    setList(key, queue.slice())
+                    await saveFn(key)(t, setStatus);
+                    states[key] = trimList(states[key], t);
+                    setList(key, states[key].slice())
                 } catch (err) {
                     reject(err);
                 }
@@ -235,7 +212,7 @@ export default function Write() {
     }
 
     // corresponding functions to a key are returned
-    function saveFn(key: string): (t: Text) => Promise<Response> {
+    function saveFn(key: string): (t: Text, setStatus: setStatusFn) => Promise<Response> {
         switch (key) {
             case "writes":
                 return saveRemote;
@@ -244,13 +221,6 @@ export default function Write() {
             default:
                 throw new Error("Could not find saving func. Key was: " + key + ".");
         }
-    }
-
-
-    //
-
-    function flash() {
-        setStatus(newOkStatus());
     }
 
     const conStates = {
@@ -299,11 +269,3 @@ export default function Write() {
         </Router>
     );
 }
-        /*
-    function isEmpty(list: Text[]): boolean {
-        if (!list) return true
-        return list.length === 0
-    }
-         */
-
-

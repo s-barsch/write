@@ -9,9 +9,11 @@ export type reqStatus = {
     msg:  string;
 }
 
-type setErrFn = (err: reqStatus) => void;
+export type setStatusFn = (reqStatus: reqStatus) => void;
 
-function request(path: string, options: RequestInit, fnName: string): Promise<Response> {
+//type setErrFn = (err: reqStatus) => void;
+
+function request(path: string, options: RequestInit, fnName: string, setStatus: setStatusFn): Promise<Response> {
     return new Promise(async (resolve, reject) => {
 
         let status: reqStatus = {
@@ -49,60 +51,50 @@ function request(path: string, options: RequestInit, fnName: string): Promise<Re
                         status.msg = await resp.text();
                 }
 
+                if (setStatus !== undefined) {
+                    setStatus(status);
+                }
                 reject(status);
-                return;
             }
+            setStatus(status);
             resolve(resp);
 
         } catch(err) {
-            // TODO: improve error handling
-            if (err instanceof Error) {
-                if (err.name === "AbortError") {
-                    // this error was handled via reqTimeout.
-                    return;
-                }
+            status.code = 900;
+            status.msg = "could not connect to server"
+            if (setStatus !== undefined) {
+                setStatus(status);
             }
-            throw err;
+            reject(status);
         }
     });
 }
 
-export async function getRemoteTexts(): Promise<Text[]> {
+export async function getRemoteTexts(setStatus: setStatusFn): Promise<Text[]> {
     return new Promise(async (resolve, reject) => {
         try {
-            const resp = await request("/api/texts/", {} as RequestInit, "getTexts");
+            const resp = await request("/api/texts/", {} as RequestInit, "getTexts", setStatus);
             const texts = await resp.json();
             resolve(texts);
         } catch(err) {
-            // custom error object
-            /*
-                if (err.func !== "") {
-                    reject(err)
-                }
-             */
-            // TODO: improve error handling
-            if (err instanceof Error) {
-                reject(err)
-            }
-            // json parse error
-            throw err;
+            reject(err);
         }
     });
 }
 
-export function saveRemote(t: Text): Promise<Response> {
+export function saveRemote(t: Text, setStatus: setStatusFn): Promise<Response> {
     const options = {
         method: "PUT",
         body: t.body
     } as RequestInit;
-    return request("/api/text/" + t.id + ".txt", options, "saveRemote");
+    return request("/api/text/" + t.id + ".txt", options, "saveRemote", setStatus);
 }
 
-export function deleteRemote(t: Text): Promise<Response> {
+export function deleteRemote(t: Text, setStatus: setStatusFn): Promise<Response> {
     const options = {
         method: "DELETE"
     } as RequestInit;
-    return request("/api/text/" + t.id + ".txt", options, "deleteRemote");
+    return request("/api/text/" + t.id + ".txt", options, "deleteRemote", setStatus);
 }
 
 export function newOkStatus(): reqStatus {

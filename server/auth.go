@@ -3,12 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/gorilla/securecookie"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
-	"io/ioutil"
-	"net/http"
 )
 
 const COOKIE_NAME = "session"
@@ -130,4 +131,9 @@ func storeToken(token, value string) error {
 	}
 
 	return srv.memdb.Set(it)
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	deleteAuthCookie(w)
+	http.Redirect(w, r, "/_login", 307)
 }

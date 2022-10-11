@@ -49,7 +49,7 @@ export default function Top({conStates, switchFuncs, status}: TopProps) {
         <nav id="nav">
         <NavLink to="/" exact={true}>Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
-        { /* conStates.isOffline && <NavLink to="/queue/">Local</NavLink> */ }
+        { conStates.isOffline && <NavLink to="/queue/">Local</NavLink> }
         <nav className="options">
         <Status status={status}>
             <ConnectionToggle switchConnection={switchFuncs.connection} conStates={conStates} />

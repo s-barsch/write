@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
 	"text/template"
+
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 var srv *server
@@ -24,6 +25,7 @@ func routes() *mux.Router {
 
 	r.HandleFunc("/_login/verify", loginVerify)
 	r.HandleFunc("/_login", login)
+	r.HandleFunc("/_logout", logout)
 	r.HandleFunc("/manifest.json", serveBuild)
 
 	s := r.PathPrefix("/").Subrouter()
