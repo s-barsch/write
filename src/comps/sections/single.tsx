@@ -12,6 +12,10 @@ type ParamTypes = {
 function Single({texts, modFuncs}: SectionProps) {
     const { name } = useParams<ParamTypes>();
 
+    if (name === undefined) {
+        return <>{'/texts/:name undefined'}</>
+    }
+
     const id = name.substr(0, name.lastIndexOf("."))
     const text = texts.find((t) => t.id === id);
 

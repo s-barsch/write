@@ -47,7 +47,7 @@ type TopProps = {
 export default function Top({conStates, switchFuncs, status}: TopProps) {
     return (
         <nav id="nav">
-        <NavLink to="/" exact={true}>Write</NavLink>
+        <NavLink to="/">Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
         { conStates.isOffline && <NavLink to="/queue/">Local</NavLink> }
         <nav className="options">

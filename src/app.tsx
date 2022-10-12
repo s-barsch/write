@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch }  from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route }  from 'react-router-dom';
 import './main.scss';
 import Top from './comps/top/top';
 import NewText from './comps/sections/new';
@@ -246,20 +246,12 @@ export default function Write() {
     return (
         <Router>
             <Top conStates={conStates} switchFuncs={switchFuncs} status={status} />
-            <Switch>
-                <Route exact={true} path="/">
-                    <NewText modFuncs={modFuncs} />
-                </Route>
-                <Route path="/texts/:name">
-                    <Single texts={texts} modFuncs={modFuncs} />
-                </Route>
-                <Route path="/texts/">
-                    <Texts texts={texts} modFuncs={modFuncs} />
-                </Route>
-                <Route path="/queue/">
-                    <Queue writes={writes} deletes={deletes} modFuncs={modFuncs} />
-                </Route>
-            </Switch>
+            <Routes>
+                <Route path="/" element={<NewText modFuncs={modFuncs} />} />
+                <Route path="/texts/:name" element={<Single texts={texts} modFuncs={modFuncs} />} />
+                <Route path="/texts/" element={<Texts texts={texts} modFuncs={modFuncs} />} />
+                <Route path="/queue/" element={<Queue writes={writes} deletes={deletes} modFuncs={modFuncs} />} />
+            </Routes>
         </Router>
     );
 }
