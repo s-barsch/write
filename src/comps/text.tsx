@@ -27,43 +27,6 @@ export function TextList({ texts, saveFn, delFn }: TextListProps) {
     )
 }
 
-type SavedProps = {
-    saved: number;
-    mod: string;
-}
-
-function Saved({saved, mod}: SavedProps) {
-    let className = "mod";
-    if (saved === 1) {
-        className += " unsaved"
-    }
-    if (saved === 2) {
-        className += " saved"
-    }
-    return (
-        <button className={className}>{mod}</button>
-    )
-}
-
-type InfoProps = {
-    text: Text;
-    isSingle: boolean;
-    isNew: boolean;
-    saved: number; 
-    delFn: (t: Text) => void;
-}
-
-
-export function Info({ text, isSingle, isNew, saved, delFn }: InfoProps) {
-    return (
-        <header className="info">
-        <TextLink text={text} isSingle={isSingle} isNew={isNew} />
-        <Saved saved={saved} mod={text.mod.toString(16).substr(-6)} />
-        { delFn && <Del text={text} delFn={delFn} /> }
-        </header>
-    )
-}
-
 type TextProps = {
     text: Text;
     saveFn: (t: Text) => void;
@@ -140,27 +103,56 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
     )
 }
 
-type DelProps = {
+type InfoProps = {
     text: Text;
+    isSingle: boolean;
+    isNew: boolean;
+    saved: number; 
     delFn: (t: Text) => void;
 }
 
-function Del({ text, delFn }: DelProps) {
+
+export function Info({ text, isSingle, isNew, saved, delFn }: InfoProps) {
+    return (
+        <header className="info">
+        <TextLink text={text} isSingle={isSingle} isNew={isNew} />
+        <Saved saved={saved} mod={text.mod.toString(16).substr(-6)} />
+        { delFn && <Del text={text} delFn={delFn} isNew={isNew} /> }
+        </header>
+    )
+}
+
+type SavedProps = {
+    saved: number;
+    mod: string;
+}
+
+function Saved({saved, mod}: SavedProps) {
+    let className = "mod";
+    if (saved === 1) {
+        className += " unsaved"
+    }
+    if (saved === 2) {
+        className += " saved"
+    }
+    return (
+        <button className={className}>{mod}</button>
+    )
+}
+
+function Del({ text, delFn, isNew }: {text: Text; delFn: (t: Text) => void; isNew?: boolean}) {
     const del = () => {
         if (window.confirm("Delete this text?")) {
             delFn(text);
         }
     }
-    return <button className="del" onClick={del}><DeleteIcon /></button>
+    if (isNew) {
+        return null;
+    }
+    return <button className="del" onClick={del}><DeleteIcon /></button>;
 }
 
-type TextLinkProps = {
-    text: Text;
-    isSingle: boolean;
-    isNew: boolean;
-}
-
-function TextLink({ text, isSingle, isNew }: TextLinkProps) {
+function TextLink({ text, isSingle, isNew }: {text: Text; isSingle: boolean; isNew: boolean}) {
     const name = text.id + ".txt"
     if (!isNew && !isSingle) {
         return <Link className="name" to={"/texts/" + name}>{name}</Link>
