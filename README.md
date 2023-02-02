@@ -12,6 +12,7 @@ View the demo here: [write.stefba.com](https://write.stefba.com/)
 
 Create production built:
 
+`yarn install`
 `yarn build`
 
 Compile and run the server:
