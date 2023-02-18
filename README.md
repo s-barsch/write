@@ -4,7 +4,7 @@ Offline-first writing app
 
 [<img src="https://stefba.com/write.jpg?v=0" alt="WRITE screenshot">](https://write.stefba.com/)
 
-View the demo here: [write.stefba.com](https://write.stefba.com/)
+View the demo here: [write.stefba.com](https://write.stefba.com/).
 
 ### Installation
 
