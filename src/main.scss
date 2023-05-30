@@ -23,6 +23,8 @@ $breakWide:   90rem;
     --fontsize-textarea: 1.5625rem;
     --fontsize-lineheight: 1.35;
     --side-margin: .5rem;
+    --font-monospace: 'DejaVu Sans Mono', 'Consolas', 'SF Mono', monospace;
+    //font-family: 'SF Mono', SFMono-Regular, ui-monospace;
 }
 
 .dark-theme {
@@ -111,7 +113,7 @@ button:hover {
 }
 
 .info {
-    font-family: 'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+    font-family:var(--font-monospace);
 }
 
 .name {
@@ -131,7 +133,7 @@ a.name:hover {
     user-select:none;
     cursor: pointer;
     font-size:1em;
-    font-family:monospace;
+    font-family:var(--font-monospace);
 }
 
 .mod:hover,
@@ -146,9 +148,6 @@ a.name:hover {
 
 .mod.saved {
     background:green;
-}
-
-.mod:active {
 }
 
 .name {
@@ -175,11 +174,7 @@ a.name:hover {
     
     font-size:var(--fontsize-textarea);
     line-height:var(--fontsize-lineheight);
-    font-family:monospace;
-}
-
-.text textarea:focus {
-    // background:var(--color-text-bg-focus);
+    font-family:var(--font-monospace);
 }
 
 .del {
@@ -198,7 +193,7 @@ a.name:hover {
 }
 
 #sub a {
-    font-family:monospace;
+    font-family:var(--font-monospace);
     margin-right:1rem;
 }
 
@@ -233,5 +228,5 @@ a.name:hover {
 
 .status {
     font-size:1rem;
-    font-family:monospace;
+    font-family:var(--font-monospace);
 }
