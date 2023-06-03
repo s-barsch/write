@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link }  from 'react-router-dom';
 //import TextareaAutosize from 'react-textarea-autosize';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { makeKey } from "../funcs/date";
-import DeleteIcon from '@material-ui/icons/ClearSharp';
+import DeleteIcon from '@mui/icons-material/ClearSharp';
 import Text from '../funcs/text';
 import Error from './error';
 
