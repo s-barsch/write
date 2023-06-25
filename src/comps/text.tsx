@@ -94,13 +94,15 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
     const placeText = (): void => {
         if (body === '') return
         save();
-        navigate("/texts/" + text.id + ".txt")
+        if (isNew) {
+            navigate("/texts/" + text.id + ".txt")
+        }
     }
 
     const placeGoToNew = (): void => {
         if (body === '') return
         save();
-        navigate('');
+        navigate('/');
     }
 
     const save = (): void => {
