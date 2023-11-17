@@ -3,8 +3,8 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/gorilla/securecookie"
@@ -112,7 +112,7 @@ func initializeSession(w http.ResponseWriter, pass string) error {
 }
 
 func checkPass(pass string) error {
-	hash, err := ioutil.ReadFile(srv.paths.root + "/server/pass")
+	hash, err := os.ReadFile(srv.paths.root + "/server/pass")
 	if err != nil {
 		return err
 	}

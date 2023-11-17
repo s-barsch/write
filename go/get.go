@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -19,29 +19,33 @@ type Text struct {
 type Texts []*Text
 
 func getTexts() (Texts, error) {
-	l, err := ioutil.ReadDir(srv.paths.texts)
+	l, err := os.ReadDir(srv.paths.texts)
 	if err != nil {
 		return nil, err
 	}
 	texts := Texts{}
-	for _, fi := range l {
-		path := filepath.Join(srv.paths.texts, fi.Name())
-		b, err := ioutil.ReadFile(path)
+	for _, de := range l {
+		path := filepath.Join(srv.paths.texts, de.Name())
+		b, err := os.ReadFile(path)
 		if err != nil {
 			return nil, err
 		}
 		texts = append(texts, &Text{
-			Id:   makeId(fi.Name()),
+			Id:   makeId(de.Name()),
 			Path: path,
 			Body: string(b),
-			Mod:  modTime(fi),
+			Mod:  modTime(de),
 		})
 	}
 	sort.Sort(Desc(texts))
 	return texts, nil
 }
 
-func modTime(fi os.FileInfo) int64 {
+func modTime(de os.DirEntry) int64 {
+	fi, err := de.Info()
+	if err != nil {
+		fmt.Println(err)
+	}
 	return fi.ModTime().UnixNano() / int64(time.Millisecond)
 }
 

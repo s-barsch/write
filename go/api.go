@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	p "path/filepath"
@@ -74,13 +74,13 @@ func writeFile(w http.ResponseWriter, r *http.Request) *Err {
 		return e
 	}
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		e.Err = err
 		return e
 	}
 
-	err = ioutil.WriteFile(path, body, 0664)
+	err = os.WriteFile(path, body, 0664)
 	if err != nil {
 		e.Err = err
 		return e
