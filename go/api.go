@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"os"
 	p "path/filepath"
+
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 type Err struct {
@@ -44,7 +45,7 @@ func deleteFile(w http.ResponseWriter, r *http.Request) *Err {
 
 	_, err := os.Stat(path)
 	if err != nil {
-		log.Info("file not found, so see it as removed. %v", path)
+		log.Info(fmt.Sprintf("file not found, so see it as removed. %v", path))
 		return nil
 	}
 
