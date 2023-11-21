@@ -112,7 +112,7 @@ func initializeSession(w http.ResponseWriter, pass string) error {
 }
 
 func checkPass(pass string) error {
-	hash, err := os.ReadFile(srv.paths.root + "/server/pass")
+	hash, err := os.ReadFile(srv.paths.root + "/go/pass")
 	if err != nil {
 		return err
 	}
