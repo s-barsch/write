@@ -1,9 +1,9 @@
 import React from "react";
 import { NavLink }  from "react-router-dom";
-import OnlineIcon from '@material-ui/icons/WifiSharp';
-import ConnectingIcon from '@material-ui/icons/NetworkCheckSharp';
-import OfflineIcon from '@material-ui/icons/WifiOffSharp';
-import ThemeIcon from '@material-ui/icons/WbSunnySharp';
+import OnlineIcon from '@mui/icons-material/WifiSharp';
+import ConnectingIcon from '@mui/icons-material/NetworkCheckSharp';
+import OfflineIcon from '@mui/icons-material/WifiOffSharp';
+import ThemeIcon from '@mui/icons-material/WbSunnySharp';
 import { conStatesObj, SwitchFuncs } from 'helper';
 import { reqStatus } from 'funcs/remote';
 import { Status } from './status';

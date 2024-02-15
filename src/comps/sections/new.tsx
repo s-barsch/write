@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from "../text";
 import { makeKey } from "../../funcs/date";
 import Text, { emptyText } from "../../funcs/text";
-import { useNavigate } from "react-router-dom";
 import { ModFuncs } from '../../helper';
 
 type NewTextProps = {
@@ -29,11 +28,9 @@ function NewText({modFuncs}: NewTextProps) {
         }
     }, []);
 
-    const navigate = useNavigate();
-
     function save(t: Text) {
         modFuncs.saveText(t);
-        navigate("/texts/" + t.id + ".txt")
+        setNewText(emptyText());
     }
 
     return (

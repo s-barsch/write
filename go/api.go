@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	p "path/filepath"
+
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 type Err struct {
@@ -44,7 +45,7 @@ func deleteFile(w http.ResponseWriter, r *http.Request) *Err {
 
 	_, err := os.Stat(path)
 	if err != nil {
-		log.Info("file not found, so see it as removed. %v", path)
+		log.Info(fmt.Sprintf("file not found, so see it as removed. %v", path))
 		return nil
 	}
 
@@ -73,13 +74,13 @@ func writeFile(w http.ResponseWriter, r *http.Request) *Err {
 		return e
 	}
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		e.Err = err
 		return e
 	}
 
-	err = ioutil.WriteFile(path, body, 0664)
+	err = os.WriteFile(path, body, 0664)
 	if err != nil {
 		e.Err = err
 		return e

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link }  from 'react-router-dom';
+import { Link, useNavigate }  from 'react-router-dom';
 //import TextareaAutosize from 'react-textarea-autosize';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { makeKey } from "../funcs/date";
-import DeleteIcon from '@material-ui/icons/ClearSharp';
+import DeleteIcon from '@mui/icons-material/ClearSharp';
 import Text from '../funcs/text';
 import Error from './error';
 
@@ -46,6 +46,8 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
     const textRef = useRef<HTMLTextAreaElement>(null!);
     let blink = useRef({} as NodeJS.Timeout);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (isSingle && textRef && textRef.current) {
             textRef.current.focus({preventScroll:true});
@@ -75,12 +77,35 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         }, 600);
     }
 
-
-    const submit = (e: React.FormEvent<HTMLTextAreaElement>): void => {
-        if (body === "") {
-            return
+    const submitKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+        if (e.ctrlKey && e.key === "s") {
+            e.preventDefault();
+            placeText();
         }
+        if (e.ctrlKey && e.key === "Enter") {
+            placeGoToNew();
+        }
+    }
 
+    const submitOnBlur = (e: React.FormEvent<HTMLTextAreaElement>): void => {
+        placeText();
+    }
+
+    const placeText = (): void => {
+        if (body === '') return
+        save();
+        if (isNew) {
+            navigate("/texts/" + text.id + ".txt")
+        }
+    }
+
+    const placeGoToNew = (): void => {
+        if (body === '') return
+        save();
+        navigate('/');
+    }
+
+    const save = (): void => {
         text.mod  = Date.now();
         text.body = body;
         saveFn(text);
@@ -96,8 +121,9 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         ref={textRef}
         minRows={rows}
         value={body}
+        onKeyDown={submitKeyDown}
+        onBlur={submitOnBlur}
         onChange={handleTyping}
-        onBlur={submit}
         />
         </article>
     )

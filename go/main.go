@@ -43,7 +43,7 @@ func routes() *mux.Router {
 }
 
 func serveTemplate(w io.Writer, tmpl string) error {
-	t, err := template.ParseFiles(srv.paths.root + "/server/response.html")
+	t, err := template.ParseFiles(srv.paths.root + "/go/response.html")
 	if err != nil {
 		return err
 	}

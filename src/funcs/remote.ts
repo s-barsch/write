@@ -1,6 +1,6 @@
 import Text from './text';
 
-const timeoutMs = 1500;
+const timeoutMs = 3500;
 
 export type reqStatus = {
     path: string;

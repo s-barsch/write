@@ -2,9 +2,9 @@
 
 Offline-first writing app
 
-[<img src="https://stefba.com/write.jpg?v=0" alt="WRITE screenshot">](https://write.stefba.com/)
+[<img src="https://stefba.com/write-frame.jpg?v=0" alt="WRITE screenshot">](https://write.stefba.com/)
 
-View the demo here: [write.stefba.com](https://write.stefba.com/)
+View the **demo** here: [write.stefba.com](https://write.stefba.com/).
 
 ### Installation
 
@@ -12,6 +12,7 @@ View the demo here: [write.stefba.com](https://write.stefba.com/)
 
 Create production built:
 
+`yarn install`
 `yarn build`
 
 Compile and run the server:
