@@ -51,5 +51,6 @@
   },
   "resolutions": {
     "workbox-webpack-plugin": "6.4.1"
-  }
+  },
+  "packageManager": "yarn@4.2.1"
 }
