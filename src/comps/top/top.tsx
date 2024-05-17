@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink }  from "react-router-dom";
+import React from 'react';
+import { NavLink }  from 'react-router-dom';
 import OnlineIcon from '@mui/icons-material/WifiSharp';
 import ConnectingIcon from '@mui/icons-material/NetworkCheckSharp';
 import OfflineIcon from '@mui/icons-material/WifiOffSharp';

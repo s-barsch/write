@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TextField } from "../text";
-import { makeKey } from "../../funcs/date";
-import Text, { emptyText } from "../../funcs/text";
+import { TextField } from '../text';
+import { makeKey } from '../../funcs/date';
+import Text, { emptyText } from '../../funcs/text';
 import { ModFuncs } from '../../helper';
 
 type NewTextProps = {

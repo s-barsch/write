@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextList } from "../text";
+import { TextList } from '../text';
 
 import { ModFuncs } from '../../helper';
 import Text from '../../funcs/text';
