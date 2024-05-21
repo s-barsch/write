@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route }  from 'react-router-dom';
 import './main.scss';
-import Top from './comps/top/top';
-import NewText from './comps/sections/new';
-import Texts from './comps/sections/texts';
-import Single from './comps/sections/single';
-import Queue from './comps/sections/queue';
+import Top from './components/top/top';
+import NewText from './components/sections/new';
+import Texts from './components/sections/texts';
+import Single from './components/sections/single';
+import Queue from './components/sections/queue';
 import { updateList, trimList } from './funcs/list';
 import { getRemoteTexts, deleteRemote, saveRemote, reqStatus, setStatusFn } from './funcs/remote';
 import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
