@@ -118,6 +118,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         <article className="text">
         <Info text={text} saved={saved} isSingle={isSingle} isNew={isNew} delFn={delFn} />
         <TextareaAutosize
+        id={text.id}
         ref={textRef}
         minRows={rows}
         value={body}
