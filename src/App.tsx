@@ -21,7 +21,7 @@ export default function Write() {
 
     const [status, setStatus] = useState({code: 0} as reqStatus);
 
-    const { isOffline, setOffline, isConnecting, setConnecting } = useConnectionStore();
+    const { isOffline, setOffline, setConnecting } = useConnectionStore();
 
     // `texts` are the displayed texts. `writes` and `deletes` are queues.
 
@@ -195,11 +195,6 @@ export default function Write() {
         }
     }
 
-    const conStates = {
-        isOffline:    isOffline,
-        isConnecting: isConnecting,
-    }
-
     const switchFuncs = {
         connection: switchConnection,
     }
@@ -222,7 +217,7 @@ export default function Write() {
 
     return (
         <Router>
-            <Top conStates={conStates} switchFuncs={switchFuncs} status={status} />
+            <Top switchFuncs={switchFuncs} status={status} />
             <Routes>
                 <Route path="/" element={<NewText modFuncs={modFuncs} />} />
                 <Route path="/texts/:name" element={<Single texts={texts} modFuncs={modFuncs} />} />
