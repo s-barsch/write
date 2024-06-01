@@ -18,6 +18,5 @@ export type conStatesObj = {
 }
 
 export type SwitchFuncs = {
-    theme: () => void;
     connection: () => void;
 }

@@ -10,8 +10,13 @@ import { updateList, trimList } from './funcs/list';
 import { getRemoteTexts, deleteRemote, saveRemote, reqStatus, setStatusFn } from './funcs/remote';
 import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
+import useThemeStore, { setThemeStyling } from 'stores/theme';
 
 export default function Write() {
+    const { isDarkTheme } = useThemeStore();
+    useEffect(() => {
+        setThemeStyling(isDarkTheme)
+    }, [isDarkTheme]);
 
     const [status, setStatus] = useState({code: 0} as reqStatus);
 
@@ -20,16 +25,6 @@ export default function Write() {
     const [texts, setTexts] = useState(readState("texts"));
     const [writes, setWrites] = useState(readState("writes"));
     const [deletes, setDeletes] = useState(readState("deletes"));
-
-    // set theme based on setting
-
-    const [darkTheme, setDarkTheme] = useState(readBoolState("dark-theme"));
-
-    useEffect(() => {
-        darkTheme
-            ? document.body.classList.add("dark-theme")
-            : document.body.classList.remove("dark-theme")
-    })
 
     // connection states
 
@@ -73,13 +68,6 @@ export default function Write() {
         }
     }, [isOffline]);
 
-
-    // dark theme
-
-    function switchTheme() {
-        setDarkTheme(!darkTheme);
-        storeBoolState("dark-theme", !darkTheme);
-    }
 
     // isOffline state
 
@@ -222,7 +210,6 @@ export default function Write() {
 
     const switchFuncs = {
         connection: switchConnection,
-        theme: switchTheme
     }
 
     const modFuncs = {

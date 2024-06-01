@@ -7,10 +7,12 @@ import ThemeIcon from '@mui/icons-material/WbSunnySharp';
 import { conStatesObj, SwitchFuncs } from 'helper';
 import { reqStatus } from 'funcs/remote';
 import { Status } from './status';
+import useThemeStore from 'stores/theme';
 
-function ThemeToggle({switchTheme}: {switchTheme: () => void}) {
+function ThemeToggle() {
+    const { switchTheme } = useThemeStore();
     return (
-        <button onClick={switchTheme}><ThemeIcon /></button>
+        <button onClick={() => {switchTheme(); console.log("click")}}><ThemeIcon /></button>
     )
 }
 
@@ -54,7 +56,7 @@ export default function Top({conStates, switchFuncs, status}: TopProps) {
         <Status status={status}>
             <ConnectionToggle switchConnection={switchFuncs.connection} conStates={conStates} />
         </Status>
-        <ThemeToggle switchTheme={switchFuncs.theme} />
+        <ThemeToggle />
         </nav>
         </nav>
     );
