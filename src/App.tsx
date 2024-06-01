@@ -8,9 +8,10 @@ import Single from './components/sections/single';
 import Queue from './components/sections/queue';
 import { updateList, trimList } from './funcs/list';
 import { getRemoteTexts, deleteRemote, saveRemote, reqStatus, setStatusFn } from './funcs/remote';
-import { readState, storeState, readBoolState, storeBoolState } from './funcs/storage';
+import { readState, storeState } from './funcs/storage';
 import Text, { demoText } from './funcs/text';
 import useThemeStore, { setThemeStyling } from 'stores/theme';
+import useConnectionStore from 'stores/connection';
 
 export default function Write() {
     const { isDarkTheme } = useThemeStore();
@@ -20,16 +21,13 @@ export default function Write() {
 
     const [status, setStatus] = useState({code: 0} as reqStatus);
 
+    const { isOffline, setOffline, isConnecting, setConnecting } = useConnectionStore();
+
     // `texts` are the displayed texts. `writes` and `deletes` are queues.
 
     const [texts, setTexts] = useState(readState("texts"));
     const [writes, setWrites] = useState(readState("writes"));
     const [deletes, setDeletes] = useState(readState("deletes"));
-
-    // connection states
-
-    const [isOffline, setIsOffline] = useState(readBoolState("isOffline"));
-    const [isConnecting, setConnecting] = useState(false);
 
     const wasFocus = useRef(true);
 
@@ -66,15 +64,9 @@ export default function Write() {
         return () => {
             document.removeEventListener("visibilitychange", onFocusChange);
         }
-    }, [isOffline]);
+    }, [isOffline, setConnecting, setOffline]);
 
 
-    // isOffline state
-
-    function setOffline(state: boolean) {
-        setIsOffline(state);
-        storeBoolState("isOffline", state);
-    }
 
     async function switchConnection() {
         if (isOffline) {
