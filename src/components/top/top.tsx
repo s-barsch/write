@@ -4,11 +4,10 @@ import OnlineIcon from '@mui/icons-material/WifiSharp';
 import ConnectingIcon from '@mui/icons-material/NetworkCheckSharp';
 import OfflineIcon from '@mui/icons-material/WifiOffSharp';
 import ThemeIcon from '@mui/icons-material/WbSunnySharp';
-import { SwitchFuncs } from 'helper';
-import { reqStatus } from 'funcs/remote';
 import { Status } from './status';
 import useThemeStore from 'stores/theme';
 import useConnectionStore from 'stores/connection';
+import useWriteStore from 'stores/states';
 
 function ThemeToggle() {
     const { switchTheme } = useThemeStore();
@@ -27,34 +26,27 @@ function ConnectionIcon(isConnecting: boolean, isOffline: boolean) {
     return OnlineIcon;
 }
 
-type ConnectionToggleProps = {
-    switchConnection: () => void;
-}
-
-function ConnectionToggle({switchConnection}: ConnectionToggleProps) {
+function ConnectionToggle() {
     const { isOffline, isConnecting } = useConnectionStore()
+    const { syncTexts } = useWriteStore();
     const Icon = ConnectionIcon(isConnecting, isOffline)
 
     return (
-        <button onClick={switchConnection}><Icon /></button>
+        <button onClick={syncTexts}><Icon /></button>
     )
 }
 
-
-type TopProps = {
-    switchFuncs: SwitchFuncs;
-    status: reqStatus;
-}
-
-export default function Top({switchFuncs, status}: TopProps) {
+export default function Top() {
+    const { status } = useWriteStore()
     return (
         <nav id="nav">
         <NavLink to="/" end>Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
+        <NavLink to="/queue/">Local</NavLink>
         { /* conStates.isOffline && <NavLink to="/queue/">Local</NavLink> */ }
         <nav className="options">
         <Status status={status}>
-            <ConnectionToggle switchConnection={switchFuncs.connection} />
+            <ConnectionToggle />
         </Status>
         <ThemeToggle />
         </nav>

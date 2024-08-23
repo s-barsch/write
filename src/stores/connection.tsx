@@ -8,7 +8,7 @@ interface ConnectionStore {
     setOffline: (state: boolean) => void;
 }
 
-let useConnectionStore = create<ConnectionStore>()( 
+const useConnectionStore = create<ConnectionStore>()( 
     (set, get) => ({
         isOffline: readBoolState("isOffline"),
         isConnecting: false,

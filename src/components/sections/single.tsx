@@ -4,13 +4,16 @@ import { useParams } from 'react-router-dom';
 import { TextField } from '../text';
 import Error from '../error';
 import { SectionProps } from '../../helper';
+import useWriteStore from 'stores/states';
 
 type ParamTypes = {
   name: string
 }
 
-function Single({texts, modFuncs}: SectionProps) {
+function Single() {
     const { name } = useParams<ParamTypes>();
+    const { states, saveText, deleteText } = useWriteStore()
+    let texts = states["texts"]
 
     if (name === undefined) {
         return <>{'/texts/:name undefined'}</>
@@ -31,7 +34,7 @@ function Single({texts, modFuncs}: SectionProps) {
 
     return (
         <TextField key={makeKey(text.id)} isSingle={true} isNew={false} text={text}
-        saveFn={modFuncs.saveText} delFn={modFuncs.deleteText} />
+        saveFn={saveText} delFn={deleteText} />
     )
 }
 

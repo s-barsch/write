@@ -3,13 +3,15 @@ import { TextField } from '../text';
 import { makeKey } from '../../funcs/date';
 import Text, { emptyText } from '../../funcs/text';
 import { ModFuncs } from '../../helper';
+import useWriteStore from 'stores/states';
 
 type NewTextProps = {
     modFuncs: ModFuncs;
 }
 
-function NewText({modFuncs}: NewTextProps) {
+function NewText() {
     const [newText, setNewText] = useState(emptyText());
+    const { saveText } = useWriteStore();
 
     useEffect(() => {
         let wasFocus = true;
@@ -29,7 +31,7 @@ function NewText({modFuncs}: NewTextProps) {
     }, []);
 
     function save(t: Text) {
-        modFuncs.saveText(t);
+        saveText(t);
         setNewText(emptyText());
     }
 
