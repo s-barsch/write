@@ -83,10 +83,10 @@ func loginVerify(w http.ResponseWriter, r *http.Request) {
 	err := initializeSession(w, r.FormValue("pass"))
 	if err != nil {
 		log.Error(err)
-		http.Error(w, "Failed login", 401)
+		http.Error(w, "Failed login", http.StatusUnauthorized)
 		return
 	}
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func initializeSession(w http.ResponseWriter, pass string) error {
@@ -135,5 +135,5 @@ func storeToken(token, value string) error {
 
 func logout(w http.ResponseWriter, r *http.Request) {
 	deleteAuthCookie(w)
-	http.Redirect(w, r, "/login", 307)
+	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 }

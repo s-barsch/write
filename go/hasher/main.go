@@ -1,10 +1,11 @@
 package main
 
 import (
-	"golang.org/x/crypto/bcrypt"
-	"os"
-	"log"
 	"fmt"
+	"log"
+	"os"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func HashPass(password string) (string, error) {
