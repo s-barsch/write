@@ -105,7 +105,7 @@ func initializeSession(w http.ResponseWriter, pass string) error {
 		Name:   COOKIE_NAME,
 		Value:  token,
 		Path:   "/",
-		MaxAge: 2592000,
+		MaxAge: 31536000,
 		//Secure: !*local,
 	})
 	return nil

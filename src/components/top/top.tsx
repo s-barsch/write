@@ -40,8 +40,7 @@ export default function Top() {
         <nav id="nav">
         <NavLink to="/" end>Write</NavLink>
         <NavLink to="/texts/">Texts</NavLink>
-        <NavLink to="/queue/">Local</NavLink>
-        { /* conStates.isOffline && <NavLink to="/queue/">Local</NavLink> */ }
+        {/* <NavLink to="/queue/">Local</NavLink> */ }
         <nav className="options">
         <Status>
             <ConnectionToggle />

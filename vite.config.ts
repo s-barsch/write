@@ -27,7 +27,22 @@ export default defineConfig({
       name: 'Write',
       short_name: 'Write',
       description: '',
-      theme_color: '#ffffff',
+      theme_color: '#000000',
+      background_color: '#000000',
+      "icons": [
+        {
+            "src": "/favicon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/favicon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+      ],
     },
 
     workbox: {
