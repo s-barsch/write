@@ -1,8 +1,8 @@
 import { create } from 'zustand'
-import { WriteStates, readWriteStates, storeWriteStates } from 'funcs/storage'
-import Text from 'funcs/text'
-import { trimList, updateList } from 'funcs/list'
-import { deleteRemote, getRemoteTexts, reqStatus, saveRemote, setStatusFn } from 'funcs/remote';
+import { WriteStates, readWriteStates, storeWriteStates } from '../funcs/storage'
+import Text from '../funcs/text'
+import { trimList, updateList } from '../funcs/list'
+import { deleteRemote, getRemoteTexts, reqStatus, saveRemote, setStatusFn } from '../funcs/remote';
 import useConnectionStore from './connection';
 
 interface WriteStore {

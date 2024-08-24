@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route }  from 'react-router-dom';
 import './main.scss';
 import Top from './components/top/top';
@@ -7,9 +7,10 @@ import Texts from './components/sections/texts';
 import Single from './components/sections/single';
 import Queue from './components/sections/queue';
 import { getRemoteTexts } from './funcs/remote';
-import useThemeStore, { setThemeStyling } from 'stores/theme';
-import useConnectionStore from 'stores/connection';
-import useWriteStore from 'stores/states';
+import useThemeStore, { setThemeStyling } from './stores/theme';
+import useConnectionStore from './stores/connection';
+import useWriteStore from './stores/states';
+import PWABadge from './PWABadge.tsx';
 
 export default function Write() {
     const { isDarkTheme } = useThemeStore();
@@ -43,7 +44,7 @@ export default function Write() {
 
         // reload texts after tab switch or app close to sync devices.
 
-        const onFocusChange: (e: Event) => void = e => {
+        const onFocusChange: (e: Event) => void = _e => {
             if (!isOffline && !document.hidden && !wasFocus.current) {
                 loadTexts();
             }
@@ -59,6 +60,7 @@ export default function Write() {
 
     return (
         <Router>
+            <PWABadge />
             <Top />
             <Routes>
                 <Route path="/" element={<NewText />} />

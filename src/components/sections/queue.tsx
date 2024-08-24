@@ -1,13 +1,13 @@
-import React from 'react';
 import { TextList } from '../text';
 
-import Text from '../../funcs/text';
-import useWriteStore from 'stores/states';
+import useWriteStore from '../../stores/states';
 
+/*
 type QueueProps = {
     writes: Text[];
     deletes: Text[];
 }
+*/
 
 function Queue() {
     const { states, saveText, delWrite, revertDelete } = useWriteStore()

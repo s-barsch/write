@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { readBoolState, storeBoolState } from 'funcs/storage';
+import { readBoolState, storeBoolState } from '../funcs/storage';
 
 interface ThemeStore {
     isDarkTheme: boolean;
@@ -16,7 +16,6 @@ let useThemeStore = create<ThemeStore>()(
         },
         switchTheme: () => {
             let inverse = !get().isDarkTheme;
-            console.log(inverse)
             get().setTheme(inverse);
             storeBoolState("dark-theme", inverse);
             get().setThemeStyling(inverse);

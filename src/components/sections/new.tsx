@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField } from '../text';
 import { makeKey } from '../../funcs/date';
 import Text, { emptyText } from '../../funcs/text';
-import { ModFuncs } from '../../helper';
-import useWriteStore from 'stores/states';
+import useWriteStore from '../../stores/states';
 
+/*
 type NewTextProps = {
     modFuncs: ModFuncs;
 }
+*/
 
 function NewText() {
     const [newText, setNewText] = useState(emptyText());
@@ -16,7 +17,7 @@ function NewText() {
     useEffect(() => {
         let wasFocus = true;
 
-        const onFocusChange: (e: any) => void = e => {
+        const onFocusChange: (e: any) => void = _e => {
             if (!wasFocus) {
                 setNewText(emptyText());
             }

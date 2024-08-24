@@ -1,10 +1,8 @@
-import React from 'react';
 import { makeKey } from '../../funcs/date';
 import { useParams } from 'react-router-dom';
 import { TextField } from '../text';
 import Error from '../error';
-import { SectionProps } from '../../helper';
-import useWriteStore from 'stores/states';
+import useWriteStore from '../../stores/states';
 
 type ParamTypes = {
   name: string

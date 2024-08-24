@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/bradfitz/gomemcache/memcache"
 	log "github.com/sirupsen/logrus"
 )
@@ -32,7 +33,7 @@ func newPaths(root string, debug bool) *paths {
 		root:  root,
 		texts: root + textsDir,
 		app:   root,
-		build: root + "/build",
+		build: root + "/dist",
 	}
 }
 

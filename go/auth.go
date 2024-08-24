@@ -135,5 +135,5 @@ func storeToken(token, value string) error {
 
 func logout(w http.ResponseWriter, r *http.Request) {
 	deleteAuthCookie(w)
-	http.Redirect(w, r, "/_login", 307)
+	http.Redirect(w, r, "/login", 307)
 }

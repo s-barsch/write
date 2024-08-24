@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { reqStatus } from 'funcs/remote';
+import React, { useEffect } from 'react';
+import { reqStatus } from '../../funcs/remote';
+import useWriteStore from '../../stores/states';
 
 type StatusProps = {
-    status: reqStatus;
     children: React.ReactNode;
 }
 
-export function Status({status, children}: StatusProps) {
-    const [code, setCode] = useState(status.code);
+export function Status({children}: StatusProps) {
+    const { status, setStatus } = useWriteStore();
 
     useEffect(() => {
-        setCode(status.code);
-
         let timer: NodeJS.Timeout;
 
         switch(status.code) {
@@ -19,6 +17,7 @@ export function Status({status, children}: StatusProps) {
                 timer = nilStatus(300);
                 break;
             case 408:
+            case 900:
             case 502:
                 timer = nilStatus(3000);
                 break;
@@ -32,11 +31,11 @@ export function Status({status, children}: StatusProps) {
 
     function nilStatus(timeMs: number): NodeJS.Timeout {
         return setTimeout(() => {
-            setCode(0)
+            setStatus({ code: 0 } as reqStatus);
         }, timeMs);
     }
 
-    switch (code) {
+    switch (status.code) {
         case 0:
             return <>{children}</>;
         case 200:

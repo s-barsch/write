@@ -23,10 +23,11 @@ func main() {
 func routes() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/_login/verify", loginVerify)
-	r.HandleFunc("/_login", login)
-	r.HandleFunc("/_logout", logout)
+	r.HandleFunc("/login/verify", loginVerify)
+	r.HandleFunc("/login", login)
+	r.HandleFunc("/logout", logout)
 	r.HandleFunc("/manifest.json", serveBuild)
+	r.HandleFunc("/manifest.webmanifest", serveBuild)
 
 	s := r.PathPrefix("/").Subrouter()
 

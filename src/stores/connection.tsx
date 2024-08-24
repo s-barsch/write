@@ -1,4 +1,4 @@
-import { readBoolState, storeBoolState } from 'funcs/storage';
+import { readBoolState, storeBoolState } from '../funcs/storage';
 import { create } from 'zustand'
 
 interface ConnectionStore {
@@ -9,7 +9,7 @@ interface ConnectionStore {
 }
 
 const useConnectionStore = create<ConnectionStore>()( 
-    (set, get) => ({
+    (set) => ({
         isOffline: readBoolState("isOffline"),
         isConnecting: false,
         setOffline: (state: boolean) => {

@@ -1,13 +1,12 @@
-import React from 'react';
 import { NavLink }  from 'react-router-dom';
 import OnlineIcon from '@mui/icons-material/WifiSharp';
 import ConnectingIcon from '@mui/icons-material/NetworkCheckSharp';
 import OfflineIcon from '@mui/icons-material/WifiOffSharp';
 import ThemeIcon from '@mui/icons-material/WbSunnySharp';
 import { Status } from './status';
-import useThemeStore from 'stores/theme';
-import useConnectionStore from 'stores/connection';
-import useWriteStore from 'stores/states';
+import useThemeStore from '../../stores/theme';
+import useConnectionStore from '../../stores/connection';
+import useWriteStore from '../../stores/states';
 
 function ThemeToggle() {
     const { switchTheme } = useThemeStore();
@@ -37,7 +36,6 @@ function ConnectionToggle() {
 }
 
 export default function Top() {
-    const { status } = useWriteStore()
     return (
         <nav id="nav">
         <NavLink to="/" end>Write</NavLink>
@@ -45,7 +43,7 @@ export default function Top() {
         <NavLink to="/queue/">Local</NavLink>
         { /* conStates.isOffline && <NavLink to="/queue/">Local</NavLink> */ }
         <nav className="options">
-        <Status status={status}>
+        <Status>
             <ConnectionToggle />
         </Status>
         <ThemeToggle />

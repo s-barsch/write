@@ -1,7 +1,5 @@
-import React from 'react';
-
 import { TextList } from '../text';
-import useWriteStore from 'stores/states';
+import useWriteStore from '../../stores/states';
 
 function Texts() {
     const { states, saveText, deleteText } = useWriteStore();

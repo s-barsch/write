@@ -20,7 +20,7 @@ export function TextList({ texts, saveFn, delFn }: TextListProps) {
         )
     }
     return (
-        <>{texts.map((text, i) => (
+        <>{texts.map((text, _i) => (
                 <TextField key={makeKey(text.id)} text={text} saveFn={saveFn} delFn={delFn}
                 isSingle={false} isNew={false} />
         ))}</>
@@ -87,7 +87,7 @@ export function TextField({ text, saveFn, delFn, isSingle, isNew }: TextProps) {
         }
     }
 
-    const submitOnBlur = (e: React.FormEvent<HTMLTextAreaElement>): void => {
+    const submitOnBlur = (_e: React.FormEvent<HTMLTextAreaElement>): void => {
         placeText();
     }
 
