@@ -1,4 +1,4 @@
-module g.sacerb.com/write/go
+module g.rg-s.com/write/go
 
 go 1.23.0
 
