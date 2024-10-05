@@ -7,6 +7,7 @@ import (
 	"os"
 	"text/template"
 
+	"g.rg-s.com/org/go/helper/reqerr"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
@@ -76,7 +77,7 @@ func serveTexts(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func h(fn func(http.ResponseWriter, *http.Request) *Err) http.HandlerFunc {
+func h(fn func(http.ResponseWriter, *http.Request) *reqerr.Err) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := fn(w, r)
 		if err != nil {
