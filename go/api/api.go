@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"fmt"
@@ -8,15 +8,16 @@ import (
 	p "path/filepath"
 
 	"g.rg-s.com/org/go/helper/reqerr"
+	s "g.rg-s.com/write/go/server"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
-func deleteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
-	e := reqerr.New("deleteFile", r.URL.Path)
+func DeleteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
+	e := reqerr.New("DeleteFile", r.URL.Path)
 
 	name := mux.Vars(r)["name"]
-	path := p.Join(srv.paths.texts, name)
+	path := p.Join(s.Srv.Paths.Texts, name)
 
 	if name == "" {
 		return e.Set(fmt.Errorf("invalid name: %v", name), 500)
@@ -37,11 +38,11 @@ func deleteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
 	return nil
 }
 
-func writeFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
-	e := reqerr.New("writeFile", r.URL.Path)
+func WriteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
+	e := reqerr.New("WriteFile", r.URL.Path)
 
 	name := mux.Vars(r)["name"]
-	path := p.Join(srv.paths.texts, name)
+	path := p.Join(s.Srv.Paths.Texts, name)
 
 	if name == "" {
 		return e.Set(fmt.Errorf("invalid name: %v", name), 500)

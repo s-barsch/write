@@ -1,11 +1,14 @@
-package main
+package auth
 
 import (
 	"bytes"
 	"fmt"
+	"html/template"
+	"io"
 	"net/http"
 	"os"
 
+	s "g.rg-s.com/write/go/server"
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/gorilla/securecookie"
 	log "github.com/sirupsen/logrus"
@@ -16,7 +19,7 @@ const COOKIE_NAME = "session"
 
 // auth
 
-func authHandler(next http.Handler) http.Handler {
+func AuthHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		err := checkAuth(w, r)
 		if err != nil {
@@ -33,7 +36,11 @@ func authHandler(next http.Handler) http.Handler {
 				return
 			}
 			w.WriteHeader(403)
-			w.Write(buf.Bytes())
+			_, err = w.Write(buf.Bytes())
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "internal error", 500)
+			}
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -45,7 +52,7 @@ func checkAuth(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	_, err = srv.memdb.Get(token)
+	_, err = s.Srv.Memdb.Get(token)
 	if err != nil {
 		deleteAuthCookie(w)
 	}
@@ -71,7 +78,7 @@ func deleteAuthCookie(w http.ResponseWriter) {
 
 // login
 
-func login(w http.ResponseWriter, r *http.Request) {
+func Login(w http.ResponseWriter, r *http.Request) {
 	err := serveTemplate(w, "login")
 	if err != nil {
 		http.Error(w, "internal error", 500)
@@ -79,7 +86,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func loginVerify(w http.ResponseWriter, r *http.Request) {
+func LoginVerify(w http.ResponseWriter, r *http.Request) {
 	err := initializeSession(w, r.FormValue("pass"))
 	if err != nil {
 		log.Error(err)
@@ -112,7 +119,7 @@ func initializeSession(w http.ResponseWriter, pass string) error {
 }
 
 func checkPass(pass string) error {
-	hash, err := os.ReadFile(srv.paths.root + "/go/pass")
+	hash, err := os.ReadFile(s.Srv.Paths.Root + "/go/pass")
 	if err != nil {
 		return err
 	}
@@ -130,10 +137,17 @@ func storeToken(token, value string) error {
 		Expiration: int32(2592000),
 	}
 
-	return srv.memdb.Set(it)
+	return s.Srv.Memdb.Set(it)
 }
 
-func logout(w http.ResponseWriter, r *http.Request) {
+func Logout(w http.ResponseWriter, r *http.Request) {
 	deleteAuthCookie(w)
 	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+}
+func serveTemplate(w io.Writer, tmpl string) error {
+	t, err := template.ParseFiles(s.Srv.Paths.Root + "/go/response.html")
+	if err != nil {
+		return err
+	}
+	return t.ExecuteTemplate(w, tmpl, "")
 }

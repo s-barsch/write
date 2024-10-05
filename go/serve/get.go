@@ -1,12 +1,16 @@
-package main
+package serve
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
+
+	s "g.rg-s.com/write/go/server"
 )
 
 type Text struct {
@@ -18,14 +22,27 @@ type Text struct {
 
 type Texts []*Text
 
+func ServeTexts(w http.ResponseWriter, r *http.Request) {
+	texts, err := getTexts()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	err = json.NewEncoder(w).Encode(texts)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+}
+
 func getTexts() (Texts, error) {
-	l, err := os.ReadDir(srv.paths.texts)
+	l, err := os.ReadDir(s.Srv.Paths.Texts)
 	if err != nil {
 		return nil, err
 	}
 	texts := Texts{}
 	for _, de := range l {
-		path := filepath.Join(srv.paths.texts, de.Name())
+		path := filepath.Join(s.Srv.Paths.Texts, de.Name())
 		b, err := os.ReadFile(path)
 		if err != nil {
 			return nil, err
