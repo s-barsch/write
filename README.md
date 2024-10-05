@@ -12,12 +12,12 @@ View the **demo** here: [write.stefba.com](https://write.stefba.com/).
 
 Create production built:
 
-`pnpm install`
+`pnpm install`\
 `pnpm build`
 
 Compile and run the server:
 
-`make/server; ./write`
+`go build; ./write`
 
 Go to: `http://localhost:8231/`
 
