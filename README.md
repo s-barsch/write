@@ -19,7 +19,7 @@ Compile and run the server:
 
 `go build; ./write`
 
-Go to: `http://localhost:8231/`
+Go to: [http://localhost:8231/](http://localhost:8231/)
 
 ### Purpose
 
