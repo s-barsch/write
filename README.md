@@ -2,11 +2,11 @@
 
 Offline-first writing app
 
-[<img src="https://stefba.com/write-frame.jpg?v=0" alt="WRITE screenshot">](https://write.stefba.com/)
+[![WRITE screenshot](https://stefba.com/write-frame.jpg)](https://write.stefba.com/)
 
 View the **demo** here: [write.stefba.com](https://write.stefba.com/).
 
-### Installation
+## Installation
 
 *Note: you need to have memcached installed and running.*
 
@@ -19,7 +19,7 @@ Compile and run the server:
 
 `make/server; ./write`
 
-Go to: http://localhost:8231/
+Go to: `http://localhost:8231/`
 
 ### Purpose
 
