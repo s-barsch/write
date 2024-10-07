@@ -8,7 +8,7 @@ View the **demo** here: [write.stefba.com](https://write.stefba.com/).
 
 ## Installation
 
-*Note: you need to have memcached installed and running.*
+*Note: memcached is needed to be installed and running.*
 
 Create production built:
 
