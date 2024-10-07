@@ -10,7 +10,6 @@ import (
 	"g.rg-s.com/org/go/helper/reqerr"
 	s "g.rg-s.com/write/go/server"
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 )
 
 func DeleteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
@@ -25,7 +24,6 @@ func DeleteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
 
 	_, err := os.Stat(path)
 	if err != nil {
-		log.Info(fmt.Sprintf("file not found, see it as removed. %v", path))
 		return nil
 	}
 
@@ -33,7 +31,6 @@ func DeleteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
 	if err != nil {
 		return e.Set(err, 500)
 	}
-	log.Infof("file removed %v\n", name)
 
 	return nil
 }
@@ -57,7 +54,6 @@ func WriteFile(w http.ResponseWriter, r *http.Request) *reqerr.Err {
 	if err != nil {
 		return e.Set(err, 500)
 	}
-	log.Infof("written.\n{%s}\n", body)
 
 	return nil
 }
