@@ -8,7 +8,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/securecookie v1.1.2
 	github.com/sirupsen/logrus v1.9.3
-	golang.org/x/crypto v0.29.0
+	golang.org/x/crypto v0.31.0
 )
 
-require golang.org/x/sys v0.27.0 // indirect
+require golang.org/x/sys v0.28.0 // indirect
