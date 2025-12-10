@@ -14,14 +14,14 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.18.0",
-    "@types/node": "^22.18.8",
+    "@types/node": "^22.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.1",
+    "react-router-dom": "^6.30.2",
     "zustand": "^4.5.7"
   },
   "devDependencies": {
-    "@types/react": "^18.3.25",
+    "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
@@ -29,13 +29,13 @@
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.23",
-    "sass": "^1.93.2",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "sass": "^1.95.1",
     "typescript": "^5.9.3",
-    "vite": "^5.4.20",
+    "vite": "^5.4.21",
     "vite-plugin-pwa": "^0.20.5",
-    "workbox-core": "^7.3.0",
-    "workbox-window": "^7.3.0"
+    "workbox-core": "^7.4.0",
+    "workbox-window": "^7.4.0"
   },
   "resolutions": {
     "sharp": "0.32.6",
