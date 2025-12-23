@@ -1,4 +1,12 @@
 ignoredBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
+
+onlyBuiltDependencies:
   - sharp
+
+supportedArchitectures:
+  os:
+  - darwin
+  cpu:
+  - arm64
