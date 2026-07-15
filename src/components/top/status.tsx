@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { reqStatus } from '../../funcs/remote';
 import useWriteStore from '../../stores/states';
 
@@ -40,6 +41,12 @@ export function Status({children}: StatusProps) {
             return <>{children}</>;
         case 200:
             return <span className="success">{children}</span>
+        case 403:
+            return (
+                <span className="fail">
+                    <span className="status">{status.msg} – <NavLink to="/login">Login</NavLink></span>{children}
+                </span>
+            )
         default:
             return (
                 <span className="fail">
