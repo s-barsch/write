@@ -17,8 +17,8 @@ func Routes() *mux.Router {
 	r.HandleFunc("/login/verify", auth.LoginVerify)
 	r.HandleFunc("/login", auth.Login)
 	r.HandleFunc("/logout", auth.Logout)
-	r.HandleFunc("/manifest.json", serve.ServeBuild)
-	r.HandleFunc("/manifest.webmanifest", serve.ServeBuild)
+	r.HandleFunc("/icon-180.png", serve.ServeFile)
+	r.HandleFunc("/manifest.webmanifest", serve.ServeFile)
 
 	s := r.PathPrefix("/").Subrouter()
 

@@ -5,7 +5,6 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
-    watch: {}
   },
   server: {
     hmr: {
@@ -17,6 +16,7 @@ export default defineConfig({
   plugins: [react(), VitePWA({
     registerType: 'prompt',
     injectRegister: false,
+    includeAssets: ['favicon.ico', 'icon-180.png'],
 
     pwaAssets: {
       disabled: false,
@@ -30,6 +30,12 @@ export default defineConfig({
       theme_color: '#000000',
       background_color: '#000000',
       "icons": [
+        {
+          src: 'icon-180.png',
+          sizes: '180x180',
+          type: 'image/png',
+          purpose: 'maskable any',
+        },
         {
             "src": "/favicon-192.png",
             "sizes": "192x192",

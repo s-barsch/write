@@ -1,5 +1,5 @@
 mv .env.demo .env
-yarn build
+pnpm build
 mv .env .env.demo
 rm -rf demo
-cp -R build demo
+cp -R dist demo
